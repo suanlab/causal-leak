@@ -1,3 +1,4 @@
+# --- Python ---
 __pycache__/
 *.pyc
 *.pyo
@@ -8,45 +9,33 @@ venv/
 .pytest_cache/
 .mypy_cache/
 
-# Dataset — do NOT commit AI Hub data
+# --- Data (not redistributed) ---
+# AI Hub vibration dataset — download from https://www.aihub.or.kr/ (id 138)
 Dataset/
 *.csv.gz
 *.zip
-
 # External public benchmarks — large, re-downloadable from original sources
 external_datasets/
 
-# Boosting-library training artefacts
+# --- Boosting-library training artefacts ---
 catboost_info/
 
-# Elsevier template extracted tree (.cls/.bst kept at paper-eaai/ top level)
-paper-eaai/elsarticle/
+# --- Manuscript + submission materials (kept local; not part of the public
+#     code release — the paper is under review at EAAI) ---
+paper/
+paper-eaai/
 
-# Reference PDFs — licensing uncertain for redistribution
-paper/refs/*.pdf
+# --- Internal audit / process notes (kept local) ---
+AUDIT.md
+AUDIT_REPORT.md
+AUDIT_RESOLUTIONS.md
+EAAI_REVISION_PLAN.md
+EAAI_SESSION_PROGRESS.md
+INTEGRITY_AUDIT.md
+PRESUBMISSION_AUDIT.md
+PRESUBMISSION_FINAL.md
 
-# MDPI template source tree (raw download, not needed for submission)
-paper/mdpi-template/
-
-# Local logs (keep one reference run in results/ only)
+# --- OS / editor junk ---
 *.tmp
-.DS_Store
-
-# LaTeX build artefacts
-*.aux
-*.log
-*.out
-*.toc
-*.bbl
-*.blg
-*.synctex.gz
-*.fdb_latexmk
-*.fls
-paper-eaai/paper.spl
-
-# ...but keep the released fold-level run logs (Data Availability)
-!results/*.log
-!results/**/*.log
-
-# Editor/backup junk
 *.bak
+.DS_Store

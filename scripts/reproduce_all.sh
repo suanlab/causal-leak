@@ -85,20 +85,26 @@ run_py make_fig12_multiseed  src/make_fig12_multiseed.py
 run_py make_fig13_sigungu    src/make_fig13_sigungu.py
 run_py make_fig14_pareto     src/make_fig14_pareto.py
 
-# ---------- manuscript ----------
-echo
-echo "==> paper (${PAPER_DIR})"
-(
-  cd "${PAPER_DIR}"
-  pdflatex -interaction=nonstopmode -halt-on-error paper.tex
-  bibtex paper
-  pdflatex -interaction=nonstopmode -halt-on-error paper.tex
-  pdflatex -interaction=nonstopmode -halt-on-error paper.tex
-  pdflatex -interaction=nonstopmode -halt-on-error highlights.tex
-) 2>&1 | tee "${ROOT}/results/run_paper.log"
+# ---------- manuscript (optional) ----------
+# The LaTeX manuscript is not part of the public code release; this step
+# runs only when the source tree is present locally.
+if [[ -f "${PAPER_DIR}/paper.tex" ]]; then
+  echo
+  echo "==> paper (${PAPER_DIR})"
+  (
+    cd "${PAPER_DIR}"
+    pdflatex -interaction=nonstopmode -halt-on-error paper.tex
+    bibtex paper
+    pdflatex -interaction=nonstopmode -halt-on-error paper.tex
+    pdflatex -interaction=nonstopmode -halt-on-error paper.tex
+    pdflatex -interaction=nonstopmode -halt-on-error highlights.tex
+  ) 2>&1 | tee "${ROOT}/results/run_paper.log"
+  echo
+  echo "Outputs: ${PAPER_DIR}/paper.pdf, ${PAPER_DIR}/highlights.pdf"
+else
+  echo
+  echo "==> paper: skipped (${PAPER_DIR}/ not present in this checkout)"
+fi
 
 echo
 echo "Finished: $(date -Is)"
-echo "Outputs:"
-echo "  ${PAPER_DIR}/paper.pdf"
-echo "  ${PAPER_DIR}/highlights.pdf"

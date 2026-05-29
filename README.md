@@ -27,10 +27,10 @@ protocol.
 | MLP IRM (validation-selected sweep) | 57 | 0.2931 | 0.3145 |
 | PGA (best observed test ablation, λc=1) | 534 | 0.2897 | 0.3041 |
 
-**See `paper-eaai/paper.tex` (the canonical submission target, formatted
-for *Engineering Applications of Artificial Intelligence*) for the
-full write-up. `paper/` contains the earlier Sensors-targeted draft
-and is kept for reference only.**
+**The full write-up is under review at *Engineering Applications of
+Artificial Intelligence (EAAI)*. This repository is the reproducibility
+harness — the experiment code, multi-seed runner, raw result JSONs,
+fold-level logs, and figure generators behind every numeric claim.**
 
 ## Eight key findings
 
@@ -72,22 +72,13 @@ causal-leak/
 ├── README.md                         this file
 ├── LICENSE                           MIT
 ├── REPLICATION.md                    full end-to-end recipe
-├── EAAI_AUDIT.md                     pre-submission audit checklist
 ├── Dockerfile                        pinned environment
 ├── requirements.txt                  base Python deps
 ├── requirements-eaai.txt             EAAI revision deps
-├── Makefile                          targets paper-eaai by default
-├── paper-eaai/                       canonical submission (EAAI)
-│   ├── paper.tex                     elsarticle single-column
-│   ├── paper.pdf                     latest build
-│   ├── highlights.tex                EAAI highlights file
-│   ├── references.bib                41 verified entries
-│   ├── claims.csv                    numeric-claim tracker
-│   └── EAAI_AUDIT.md                 guide-for-authors checklist
-├── paper/                            archival Sensors-targeted draft
+├── Makefile                          reproduction targets
 ├── scripts/
-│   ├── reproduce_all.sh              full experiment + paper-eaai pipeline
-│   └── verify.sh                     paper-eaai build / claim consistency
+│   ├── reproduce_all.sh              full experiment + figure pipeline
+│   └── verify.sh                     code / figure / claim consistency
 ├── src/
 │   ├── data.py                       loader (data root via $CAUSAL_LEAK_DATA_DIR)
 │   ├── irm_core.py                   IRM / GroupDRO infrastructure
@@ -133,8 +124,8 @@ python3 -m venv .venv
 #   (a) place under ../kcc-water/Dataset/ so the default path works, or
 #   (b) export CAUSAL_LEAK_DATA_DIR=/your/data/root before running.
 
-# Full canonical pipeline targeting paper-eaai/ (Phase 1 + EAAI E2-E7
-# + figures + LaTeX build). Hard-fails on any non-zero exit.
+# Full pipeline: Phase 1 + EAAI E2-E7 experiments + all figures.
+# Hard-fails on any non-zero exit.
 scripts/reproduce_all.sh
 
 # Multi-seed sweep (E1, ~6 h on 2 GPUs):
@@ -147,12 +138,11 @@ PYTHON=.venv/bin/python scripts/reproduce_all.sh
 scripts/verify.sh
 
 # Make targets:
-make all          # experiments + multiseed + figures + paper + verify
+make all          # experiments + multiseed + figures + verify
 make experiments  # Phase 1 + EAAI E2-E7
 make multiseed    # EAAI E1 (5 seeds)
 make figures      # regenerate every figure (fig1-fig14)
-make paper        # build paper-eaai/paper.pdf + highlights.pdf
-make verify       # gate-check paper-eaai build and claim consistency
+make verify       # gate-check code, figures, and claim consistency
 ```
 
 See `REPLICATION.md` for the full end-to-end recipe (expected
@@ -174,12 +164,12 @@ paper and this repository:
 }
 
 @misc{lee2026causal,
-  author = {Suan Lee and Byeonghak Kim},
-  title  = {From 99.79\% to Field Deployment: A Causal Audit and
-            Out-of-Distribution Redesign of Our Water-Pipeline Leak
-            Detection Pipeline},
+  author = {Suan Lee},
+  title  = {Shortcut Audit, Causal Bands, and an Out-of-Distribution
+            Evaluation Ladder for Vibration-Based Water Leak Detection},
   year   = {2026},
-  note   = {In preparation. Code and data at causal-leak/}
+  note   = {Under review at Engineering Applications of Artificial
+            Intelligence. Code: https://github.com/suanlab/causal-leak}
 }
 ```
 

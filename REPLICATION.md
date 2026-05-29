@@ -108,7 +108,6 @@ All output is in `results/figs/*.pdf` (vector format, no PNG dependencies).
 | Cost metrics (E5+E7) | CPU | ~20 min |
 | Compute cost (E6) | CPU + 1 GPU | ~10 min |
 | Figures | CPU | <1 min |
-| LaTeX build | CPU | <30 s |
 
 ## Troubleshooting
 

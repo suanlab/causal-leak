@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 Suan Lee, Byeonghak Kim, Semyung University.
+Copyright (c) 2026 Suan Lee
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,9 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Note: The vibration-sensor dataset used in this research is distributed
-separately by the Korean AI Hub (https://www.aihub.or.kr/) under its own
-terms. This repository does not redistribute the data.

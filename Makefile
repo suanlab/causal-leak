@@ -9,7 +9,7 @@ PAPER_BASE := paper
 
 .PHONY: all experiments multiseed figures paper verify clean-cache help
 
-all: experiments multiseed figures paper verify
+all: experiments multiseed figures verify
 
 experiments:
 	PYTHON="$(PYTHON)" scripts/reproduce_all.sh
@@ -34,12 +34,18 @@ figures:
 	$(PYTHON) src/make_fig13_sigungu.py
 	$(PYTHON) src/make_fig14_pareto.py
 
+# Manuscript build — the LaTeX source is not part of the public code
+# release, so this target is a no-op unless the source tree is present.
 paper:
-	cd $(PAPER_DIR) && pdflatex -interaction=nonstopmode -halt-on-error $(PAPER_BASE).tex \
-	  && bibtex $(PAPER_BASE) \
-	  && pdflatex -interaction=nonstopmode -halt-on-error $(PAPER_BASE).tex \
-	  && pdflatex -interaction=nonstopmode -halt-on-error $(PAPER_BASE).tex \
-	  && pdflatex -interaction=nonstopmode -halt-on-error highlights.tex
+	@if [ -f $(PAPER_DIR)/$(PAPER_BASE).tex ]; then \
+	  cd $(PAPER_DIR) && pdflatex -interaction=nonstopmode -halt-on-error $(PAPER_BASE).tex \
+	    && bibtex $(PAPER_BASE) \
+	    && pdflatex -interaction=nonstopmode -halt-on-error $(PAPER_BASE).tex \
+	    && pdflatex -interaction=nonstopmode -halt-on-error $(PAPER_BASE).tex \
+	    && pdflatex -interaction=nonstopmode -halt-on-error highlights.tex ; \
+	else \
+	  echo "paper: skipped ($(PAPER_DIR)/ not present in this checkout)" ; \
+	fi
 
 verify:
 	PYTHON="$(PYTHON)" PAPER_DIR="$(PAPER_DIR)" scripts/verify.sh
