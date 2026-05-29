@@ -1,0 +1,240 @@
+{
+  "folds": [
+    {
+      "region": 27,
+      "n_test": 4908,
+      "n_normal_test": 4566,
+      "n_abnormal_test": 342,
+      "n_normal_cal": 3504,
+      "operating_points": {
+        "far_0.005": {
+          "threshold": 0.024230841547250748,
+          "detection_rate": 1.0,
+          "achieved_far": 0.006789312308366185,
+          "n_pos": 342,
+          "n_neg": 4566
+        },
+        "far_0.010": {
+          "threshold": 0.010368895716965199,
+          "detection_rate": 1.0,
+          "achieved_far": 0.01686377573368375,
+          "n_pos": 342,
+          "n_neg": 4566
+        },
+        "far_0.020": {
+          "threshold": 0.005101689137518406,
+          "detection_rate": 1.0,
+          "achieved_far": 0.026062198861147613,
+          "n_pos": 342,
+          "n_neg": 4566
+        },
+        "far_0.050": {
+          "threshold": 0.0019420624012127519,
+          "detection_rate": 1.0,
+          "achieved_far": 0.05409548839246606,
+          "n_pos": 342,
+          "n_neg": 4566
+        }
+      }
+    },
+    {
+      "region": 29,
+      "n_test": 4484,
+      "n_normal_test": 4105,
+      "n_abnormal_test": 379,
+      "n_normal_cal": 3596,
+      "operating_points": {
+        "far_0.005": {
+          "threshold": 0.030677417293190956,
+          "detection_rate": 1.0,
+          "achieved_far": 0.034591961023142506,
+          "n_pos": 379,
+          "n_neg": 4105
+        },
+        "far_0.010": {
+          "threshold": 0.014130947180092335,
+          "detection_rate": 1.0,
+          "achieved_far": 0.050426309378806336,
+          "n_pos": 379,
+          "n_neg": 4105
+        },
+        "far_0.020": {
+          "threshold": 0.006908118724822998,
+          "detection_rate": 1.0,
+          "achieved_far": 0.06479902557856272,
+          "n_pos": 379,
+          "n_neg": 4105
+        },
+        "far_0.050": {
+          "threshold": 0.002151578664779663,
+          "detection_rate": 1.0,
+          "achieved_far": 0.11084043848964677,
+          "n_pos": 379,
+          "n_neg": 4105
+        }
+      }
+    },
+    {
+      "region": 43,
+      "n_test": 5074,
+      "n_normal_test": 45,
+      "n_abnormal_test": 5029,
+      "n_normal_cal": 4373,
+      "operating_points": {
+        "far_0.005": {
+          "threshold": 0.009917003102600574,
+          "detection_rate": 1.0,
+          "achieved_far": 0.0,
+          "n_pos": 5029,
+          "n_neg": 45
+        },
+        "far_0.010": {
+          "threshold": 0.00600338215008378,
+          "detection_rate": 1.0,
+          "achieved_far": 0.0,
+          "n_pos": 5029,
+          "n_neg": 45
+        },
+        "far_0.020": {
+          "threshold": 0.003137459745630622,
+          "detection_rate": 1.0,
+          "achieved_far": 0.022222222222222223,
+          "n_pos": 5029,
+          "n_neg": 45
+        },
+        "far_0.050": {
+          "threshold": 0.0014216185081750154,
+          "detection_rate": 1.0,
+          "achieved_far": 0.022222222222222223,
+          "n_pos": 5029,
+          "n_neg": 45
+        }
+      }
+    },
+    {
+      "region": 44,
+      "n_test": 1682,
+      "n_normal_test": 1151,
+      "n_abnormal_test": 531,
+      "n_normal_cal": 4136,
+      "operating_points": {
+        "far_0.005": {
+          "threshold": 0.01956278271973133,
+          "detection_rate": 1.0,
+          "achieved_far": 0.02693310165073849,
+          "n_pos": 531,
+          "n_neg": 1151
+        },
+        "far_0.010": {
+          "threshold": 0.00958520732820034,
+          "detection_rate": 1.0,
+          "achieved_far": 0.043440486533449174,
+          "n_pos": 531,
+          "n_neg": 1151
+        },
+        "far_0.020": {
+          "threshold": 0.004943418316543102,
+          "detection_rate": 1.0,
+          "achieved_far": 0.07471763683753258,
+          "n_pos": 531,
+          "n_neg": 1151
+        },
+        "far_0.050": {
+          "threshold": 0.0017238110303878784,
+          "detection_rate": 1.0,
+          "achieved_far": 0.14509122502172025,
+          "n_pos": 531,
+          "n_neg": 1151
+        }
+      }
+    },
+    {
+      "region": 45,
+      "n_test": 15052,
+      "n_normal_test": 12299,
+      "n_abnormal_test": 2753,
+      "n_normal_cal": 1981,
+      "operating_points": {
+        "far_0.005": {
+          "threshold": 0.0531679205596447,
+          "detection_rate": 1.0,
+          "achieved_far": 0.0044719082852264416,
+          "n_pos": 2753,
+          "n_neg": 12299
+        },
+        "far_0.010": {
+          "threshold": 0.019001364707946777,
+          "detection_rate": 1.0,
+          "achieved_far": 0.013171802585576063,
+          "n_pos": 2753,
+          "n_neg": 12299
+        },
+        "far_0.020": {
+          "threshold": 0.01242002286016941,
+          "detection_rate": 1.0,
+          "achieved_far": 0.02040816326530612,
+          "n_pos": 2753,
+          "n_neg": 12299
+        },
+        "far_0.050": {
+          "threshold": 0.0042607784271240234,
+          "detection_rate": 1.0,
+          "achieved_far": 0.04732092040003252,
+          "n_pos": 2753,
+          "n_neg": 12299
+        }
+      }
+    }
+  ],
+  "aggregates": {
+    "far_0.005": {
+      "far_target": 0.005,
+      "n_folds": 5,
+      "weighted_mean_detection": 1.0,
+      "weighted_mean_achieved_far": 0.009648876234711628,
+      "macro_mean_detection": 1.0,
+      "macro_mean_achieved_far": 0.014557256653494725,
+      "min_detection": 1.0,
+      "max_detection": 1.0
+    },
+    "far_0.010": {
+      "far_target": 0.01,
+      "n_folds": 5,
+      "weighted_mean_detection": 1.0,
+      "weighted_mean_achieved_far": 0.018596405558424355,
+      "macro_mean_detection": 1.0,
+      "macro_mean_achieved_far": 0.024780474846303063,
+      "min_detection": 1.0,
+      "max_detection": 1.0
+    },
+    "far_0.020": {
+      "far_target": 0.02,
+      "n_folds": 5,
+      "weighted_mean_detection": 1.0,
+      "weighted_mean_achieved_far": 0.030900205028540406,
+      "macro_mean_detection": 1.0,
+      "macro_mean_achieved_far": 0.04164184935295425,
+      "min_detection": 1.0,
+      "max_detection": 1.0
+    },
+    "far_0.050": {
+      "far_target": 0.05,
+      "n_folds": 5,
+      "weighted_mean_detection": 1.0,
+      "weighted_mean_achieved_far": 0.05870457285644801,
+      "macro_mean_detection": 1.0,
+      "macro_mean_achieved_far": 0.07591405890521756,
+      "min_detection": 1.0,
+      "max_detection": 1.0
+    }
+  },
+  "seed": 42,
+  "cal_frac": 0.2,
+  "far_targets": [
+    0.005,
+    0.01,
+    0.02,
+    0.05
+  ],
+  "time_s": 192.81658601760864
+}

@@ -1,0 +1,19 @@
+Holdout region=43
+Train rows=65310  Test rows=5074
+Test label dist: {0: 1868, 1: 719, 2: 1685, 3: 757, 4: 45}
+Model trained in 192s
+Baseline: acc=0.2978 f1_macro=0.4148
+  per-class F1: in=0.353, out=0.252, noise=0.360, other=0.109, normal=1.000
+  perm      10-19Hz (n=  2): f1_drop=-0.0033 acc_drop=-0.0059
+  perm      19-35Hz (n=  2): f1_drop=-0.0016 acc_drop=-0.0024
+  perm      35-65Hz (n=  3): f1_drop=+0.0019 acc_drop=-0.0020
+  perm     65-121Hz (n=  6): f1_drop=+0.0068 acc_drop=-0.0022
+  perm    121-226Hz (n= 10): f1_drop=+0.0138 acc_drop=+0.0106
+  perm    226-422Hz (n= 20): f1_drop=+0.0187 acc_drop=+0.0195
+  perm    422-788Hz (n= 36): f1_drop=-0.0155 acc_drop=-0.0122
+  perm   788-1470Hz (n= 69): f1_drop=-0.0173 acc_drop=-0.0191
+  perm  1470-2744Hz (n=127): f1_drop=-0.0022 acc_drop=-0.0095
+  perm  2744-5120Hz (n=237): f1_drop=+0.0008 acc_drop=+0.0039
+
+Saved results/freq_analysis.json
+Total elapsed: 196s

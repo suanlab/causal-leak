@@ -1,0 +1,82 @@
+DEVICE = cuda
+  GPU 0: NVIDIA TITAN Xp
+  GPU 1: NVIDIA TITAN Xp
+X_train=(58779, 57)  X_val=(6531, 57)  X_test=(5074, 57)  n_envs=11
+envs = [27, 29, 36, 41, 42, 44, 45, 46, 47, 48, 50]
+
+=== MLP / erm ===
+  [erm] ep=  0  loss=0.8647  pen=0.0000e+00  lam=0.0  val_f1=0.5332  test_f1=0.2106
+  [erm] ep=  5  loss=0.4077  pen=0.0000e+00  lam=0.0  val_f1=0.6828  test_f1=0.2806
+  [erm] ep= 10  loss=0.3169  pen=0.0000e+00  lam=0.0  val_f1=0.7578  test_f1=0.3028
+  [erm] ep= 15  loss=0.2712  pen=0.0000e+00  lam=0.0  val_f1=0.7806  test_f1=0.3272
+  [erm] ep= 20  loss=0.2408  pen=0.0000e+00  lam=0.0  val_f1=0.8273  test_f1=0.2904
+  [erm] ep= 25  loss=0.2198  pen=0.0000e+00  lam=0.0  val_f1=0.8340  test_f1=0.3176
+  [erm] ep= 30  loss=0.2014  pen=0.0000e+00  lam=0.0  val_f1=0.8512  test_f1=0.3135
+  [erm] ep= 35  loss=0.1919  pen=0.0000e+00  lam=0.0  val_f1=0.8614  test_f1=0.3244
+  [erm] ep= 40  loss=0.1812  pen=0.0000e+00  lam=0.0  val_f1=0.8693  test_f1=0.3327
+  [erm] ep= 45  loss=0.1756  pen=0.0000e+00  lam=0.0  val_f1=0.8763  test_f1=0.3022
+  [erm] ep= 50  loss=0.1679  pen=0.0000e+00  lam=0.0  val_f1=0.8737  test_f1=0.3452
+  [erm] ep= 55  loss=0.1631  pen=0.0000e+00  lam=0.0  val_f1=0.8765  test_f1=0.3432
+  [erm] ep= 60  loss=0.1592  pen=0.0000e+00  lam=0.0  val_f1=0.8886  test_f1=0.3328
+  [erm] ep= 65  loss=0.1543  pen=0.0000e+00  lam=0.0  val_f1=0.8759  test_f1=0.3285
+  [erm] ep= 70  loss=0.1525  pen=0.0000e+00  lam=0.0  val_f1=0.8906  test_f1=0.3823
+  [erm] ep= 75  loss=0.1496  pen=0.0000e+00  lam=0.0  val_f1=0.8973  test_f1=0.3261
+  [erm] ep= 80  loss=0.1484  pen=0.0000e+00  lam=0.0  val_f1=0.9036  test_f1=0.3540
+  [erm] ep= 85  loss=0.1465  pen=0.0000e+00  lam=0.0  val_f1=0.9038  test_f1=0.3155
+  [erm] ep= 90  loss=0.1422  pen=0.0000e+00  lam=0.0  val_f1=0.8942  test_f1=0.3388
+  [erm] ep= 95  loss=0.1385  pen=0.0000e+00  lam=0.0  val_f1=0.9010  test_f1=0.3063
+  [erm] ep=100  loss=0.1371  pen=0.0000e+00  lam=0.0  val_f1=0.8954  test_f1=0.3523
+  [erm] ep=105  loss=0.1371  pen=0.0000e+00  lam=0.0  val_f1=0.9029  test_f1=0.3501
+  [erm] ep=110  loss=0.1349  pen=0.0000e+00  lam=0.0  val_f1=0.9036  test_f1=0.3103
+  early stopping at epoch 110
+  DONE erm: test_f1=0.3155  test_acc=0.2872  per_class=[0.311, 0.199, 0.381, 0.154, 0.533]  val_f1=0.9038  (143s)
+
+=== MLP / irm ===
+  [irm] ep=  0  loss=0.7896  pen=5.5126e-02  lam=1.0  val_f1=0.5328  test_f1=0.2235
+  [irm] ep=  5  loss=0.3577  pen=1.8256e-02  lam=1.0  val_f1=0.6734  test_f1=0.2770
+  [irm] ep= 10  loss=0.2793  pen=1.1994e-02  lam=1.0  val_f1=0.7474  test_f1=0.2867
+  [irm] ep= 15  loss=0.2422  pen=1.0483e-02  lam=1.0  val_f1=0.7770  test_f1=0.3024
+  [irm] ep= 20  loss=0.2114  pen=8.6084e-03  lam=1.0  val_f1=0.8066  test_f1=0.2880
+  [irm] ep= 25  loss=0.1964  pen=7.1507e-03  lam=1.0  val_f1=0.8230  test_f1=0.2969
+  [irm] ep= 30  loss=0.1810  pen=7.0097e-03  lam=1.0  val_f1=0.8313  test_f1=0.3005
+  [irm] ep= 35  loss=0.1830  pen=6.1241e-03  lam=6.5  val_f1=0.8251  test_f1=0.2925
+  [irm] ep= 40  loss=0.2368  pen=7.6814e-03  lam=12.0  val_f1=0.7862  test_f1=0.3096
+  [irm] ep= 45  loss=0.2882  pen=7.8825e-03  lam=17.5  val_f1=0.7652  test_f1=0.3182
+  [irm] ep= 50  loss=0.3271  pen=7.4218e-03  lam=23.0  val_f1=0.7174  test_f1=0.3263
+  [irm] ep= 55  loss=0.3957  pen=7.4091e-03  lam=28.5  val_f1=0.6617  test_f1=0.3404
+  early stopping at epoch 57
+  DONE irm: test_f1=0.3122  test_acc=0.2907  per_class=[0.302, 0.143, 0.396, 0.212, 0.508]  val_f1=0.8361  (913s)
+
+=== MLP / groupdro ===
+  [groupdro] ep=  0  loss=1.0211  pen=0.0000e+00  lam=0.0  val_f1=0.5624  test_f1=0.2493
+  [groupdro] ep=  5  loss=0.7587  pen=0.0000e+00  lam=0.0  val_f1=0.6942  test_f1=0.3724
+  [groupdro] ep= 10  loss=0.6150  pen=0.0000e+00  lam=0.0  val_f1=0.7552  test_f1=0.3767
+  [groupdro] ep= 15  loss=0.5333  pen=0.0000e+00  lam=0.0  val_f1=0.7779  test_f1=0.3917
+  [groupdro] ep= 20  loss=0.4740  pen=0.0000e+00  lam=0.0  val_f1=0.8237  test_f1=0.3571
+  [groupdro] ep= 25  loss=0.4351  pen=0.0000e+00  lam=0.0  val_f1=0.8427  test_f1=0.3528
+  [groupdro] ep= 30  loss=0.3953  pen=0.0000e+00  lam=0.0  val_f1=0.8552  test_f1=0.3486
+  [groupdro] ep= 35  loss=0.3800  pen=0.0000e+00  lam=0.0  val_f1=0.8595  test_f1=0.3619
+  [groupdro] ep= 40  loss=0.3577  pen=0.0000e+00  lam=0.0  val_f1=0.8640  test_f1=0.3731
+  [groupdro] ep= 45  loss=0.3478  pen=0.0000e+00  lam=0.0  val_f1=0.8821  test_f1=0.3269
+  [groupdro] ep= 50  loss=0.3302  pen=0.0000e+00  lam=0.0  val_f1=0.8690  test_f1=0.3703
+  [groupdro] ep= 55  loss=0.3105  pen=0.0000e+00  lam=0.0  val_f1=0.8813  test_f1=0.3788
+  [groupdro] ep= 60  loss=0.3061  pen=0.0000e+00  lam=0.0  val_f1=0.8805  test_f1=0.3574
+  [groupdro] ep= 65  loss=0.3032  pen=0.0000e+00  lam=0.0  val_f1=0.8889  test_f1=0.3438
+  [groupdro] ep= 70  loss=0.2899  pen=0.0000e+00  lam=0.0  val_f1=0.8968  test_f1=0.3685
+  [groupdro] ep= 75  loss=0.2817  pen=0.0000e+00  lam=0.0  val_f1=0.8940  test_f1=0.3455
+  [groupdro] ep= 80  loss=0.2755  pen=0.0000e+00  lam=0.0  val_f1=0.9014  test_f1=0.3664
+  [groupdro] ep= 85  loss=0.2762  pen=0.0000e+00  lam=0.0  val_f1=0.9006  test_f1=0.3632
+  [groupdro] ep= 90  loss=0.2661  pen=0.0000e+00  lam=0.0  val_f1=0.8999  test_f1=0.3568
+  [groupdro] ep= 95  loss=0.2654  pen=0.0000e+00  lam=0.0  val_f1=0.8997  test_f1=0.3639
+  [groupdro] ep=100  loss=0.2562  pen=0.0000e+00  lam=0.0  val_f1=0.9032  test_f1=0.3903
+  [groupdro] ep=105  loss=0.2567  pen=0.0000e+00  lam=0.0  val_f1=0.9026  test_f1=0.3650
+  [groupdro] ep=110  loss=0.2545  pen=0.0000e+00  lam=0.0  val_f1=0.9110  test_f1=0.3510
+  [groupdro] ep=115  loss=0.2436  pen=0.0000e+00  lam=0.0  val_f1=0.9075  test_f1=0.3782
+  [groupdro] ep=119  loss=0.2488  pen=0.0000e+00  lam=0.0  val_f1=0.9128  test_f1=0.3504
+  DONE groupdro: test_f1=0.3615  test_acc=0.3210  per_class=[0.346, 0.166, 0.446, 0.177, 0.672]  val_f1=0.9144  (742s)
+
+=== MLP summary ===
+method         val_f1    test_f1   test_acc
+erm            0.9038     0.3155     0.2872
+irm            0.8361     0.3122     0.2907
+groupdro       0.9144     0.3615     0.3210

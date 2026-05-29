@@ -1,0 +1,72 @@
+claim_id,section,claim,value,uncertainty,source,verification_status
+C01,abstract,Original published row-CV 5-class XGBoost accuracy on AI Hub leak benchmark,0.9979,n/a,"Lee & Kim 2023 Sensors DOI:10.3390/s23218935",published
+C02,abstract,Four-rule identifier lookup that ignores HZ spectrum reproduces validation accuracy,0.9977,n/a,results/matrix_results.json (P2 lookup),verified
+C03,abstract,Identifier lookup is within X percentage points of published SOTA,0.0002,n/a,abstract C01-C02 difference,verified
+C04,abstract,LORO weighted accuracy of XGBoost on 5-class typing,0.5680,n/a,results/loro_results.json (region-weighted),verified
+C05,abstract,LORO macro-F1 of XGBoost on 5-class typing,0.304,n/a,results/loro_results.json (mean across folds),verified
+C06,abstract,Causal generalisable leak band lower bound (Hz),121,n/a,results/robust_bands_results.json (winning bin),verified
+C07,abstract,Causal generalisable leak band upper bound (Hz),422,n/a,results/robust_bands_results.json (winning bin),verified
+C08,abstract,Bootstrap mean Δ-macro-F1 across 4 LORO folds for 121-422 Hz band,+0.019,±0.017,results/robust_bands_results.json,verified
+C09,abstract,SHAP attribution share of 121-422 Hz on Chungbuk fold,0.404,n/a,results/robust_bands_results.json (SHAP normalised over HZ),verified
+C10,abstract,XGBoost gain share of 121-422 Hz on Chungbuk fold,0.075,n/a,results/causal_bands_results.json,verified
+C11,abstract,422-1470 Hz confounder Δ-macro-F1 (positive when permuted),+0.033,n/a,results/causal_bands_results.json (per-band perm),verified
+C12,abstract,Causal-feature XGBoost OOD macro-F1 on Chungbuk fold,0.4273,n/a,results/cross_region_results.json (region 43 row),verified
+C13,abstract,Hard 'other' class F1 on causal-feature XGBoost,0.214,n/a,results/cross_region_results.json (per-class),verified
+C14,abstract,Hard 'other' class F1 on signal_all baseline (uplift baseline),0.109,n/a,results/cross_region_results.json (signal_all per-class),verified
+C15,abstract,Pre-specified tree-only ensemble OOD macro-F1,0.4326,n/a,results/ensemble_results.json (tree-only soft-avg),verified
+C16,abstract,Hierarchical XGBoost OOD macro-F1,0.4287,n/a,results/hierarchical_results.json,verified
+C17,abstract,SpecAugment CNN OOD macro-F1,0.3544,n/a,results/augmentation_results.json (cnn_specaugment),verified
+C18,abstract,CNN baseline OOD macro-F1,0.3341,n/a,results/augmentation_results.json (cnn_baseline),verified
+C19,intro,Total recordings in benchmark,70384,n/a,DATASET_REPORT.md and results/matrix_results.json,verified
+C20,intro,Number of installation sites,49,n/a,DATASET_REPORT.md,verified
+C21,intro,Number of administrative regions,12,n/a,DATASET_REPORT.md (region_lvl1 unique),verified
+C22,intro,Class balance (normal/out/in/other/noise),"31.5/28.0/21.2/11.2/8.0",percent,results/matrix_results.json (label distribution),verified
+C23,data,Number of frequency bands,513,n/a,data.py HZ_COLS,verified
+C24,data,Number of MAX aggregates,20,n/a,data.py MAX_COLS,verified
+C25,data,Chungbuk fold rows,5074,n/a,results/cross_region_results.json (region 43),verified
+C26,data,Chungbuk fold class count,5,n/a,results/cross_region_results.json,verified
+C27,results,IRM MLP best test macro-F1 (validation-selected),0.3145,n/a,results/irm_sweep_results.json,verified
+C28,results,IRM MLP best test macro-F1 across full sweep (post-hoc),0.3372,n/a,results/irm_sweep_results.json,verified
+C29,results,GroupDRO MLP test macro-F1,0.3615,n/a,results/irm_mlp_results.json,verified
+C30,results,ERM MLP test macro-F1,0.3155,n/a,results/irm_mlp_results.json,verified
+C31,results,Best PGA configuration test macro-F1,0.3041,n/a,results/pga_results.json (lambda_c=1, U init),verified
+C32,results,Cross-region weighted-mean Δ macro-F1 (causal vs signal_all),+0.004,n/a,results/cross_region_results.json,verified
+C33,results,Cross-region unweighted mean Δ macro-F1,-0.024,±0.104,results/cross_region_results.json,verified
+C34,results,Region 27 (Daegu) Δ macro-F1 (causal-friendly fold),+0.084,n/a,results/cross_region_results.json,verified
+C35,results,Region 41 (Gyeonggi) Δ macro-F1 (degenerate fold),-0.331,n/a,results/cross_region_results.json,verified
+C36,setup,XGBoost hyperparameters n_estimators,200,n/a,src/run_matrix.py,verified
+C37,setup,XGBoost max_depth,6,n/a,src/run_matrix.py,verified
+C38,setup,XGBoost learning rate,0.1,n/a,src/run_matrix.py,verified
+C39,setup,MLP hidden layers,"256-128",n/a,src/run_irm_mlp.py,verified
+C40,setup,Optimiser learning rate,0.001,n/a,src/irm_core.py RunConfig,verified
+C41,setup,Batch size,528,n/a,src/irm_core.py RunConfig,verified
+C42,setup,Hardware GPU model,NVIDIA TITAN Xp,n/a,nvidia-smi at runtime,verified
+C43,setup,Number of GPUs,2,n/a,nvidia-smi,verified
+C44,setup,IRM warmup epochs (default),30,n/a,src/irm_core.py RunConfig,verified
+C45,setup,IRM lambda max default,100,n/a,src/irm_core.py RunConfig,verified
+C46,setup,GroupDRO eta,0.01,n/a,src/irm_core.py RunConfig,verified
+C47,strengthening,Strengthening 1 robust-bands compute time (s),1333,n/a,results/run_robust_bands.log,verified
+C48,strengthening,Strengthening 2 augmentation compute time (s),627,n/a,results/run_augmentation.log,verified
+C49,strengthening,Strengthening 3 PGA compute time (s),1116,n/a,results/run_pga.log,verified
+C50,strengthening,Strengthening 4 ensemble compute time (s),366,n/a,results/run_ensemble.log,verified
+C51a,multiseed,E1 MLP GroupDRO test macro-F1 mean (5 seeds),0.3583,±0.013,results/multiseed_summary.json,verified
+C51b,multiseed,E1 MLP ERM test macro-F1 mean (5 seeds),0.3272,±0.020,results/multiseed_summary.json,verified
+C51c,multiseed,E1 CNN ERM test macro-F1 mean (5 seeds),0.3461,±0.018,results/multiseed_summary.json,verified
+C51d,multiseed,E1 paired Wilcoxon p-value (MLP GroupDRO vs ERM),0.125,p-value,results/multiseed_summary.json,verified
+C52a,sigungu,E2 LOCO weighted Δ macro-F1 (causal vs signal_all),+0.002,n_test-weighted,results/sigungu_ood_results.json,verified
+C52b,sigungu,E2 LOCO unweighted mean Δ macro-F1,-0.013,±0.067,results/sigungu_ood_results.json,verified
+C52c,sigungu,E2 wins for causal / signal_all across 16 folds,9/7,n/a,results/sigungu_ood_results.json,verified
+C53,baselines,E3 LightGBM macro-F1 (seed 42 only),0.4341,n/a,results/extra_baselines_results.json,verified
+C54,baselines,E3 CatBoost macro-F1 (seed 42 only),0.3726,n/a,results/extra_baselines_results.json,verified
+C55,baselines,E3 TabNet macro-F1 (seed 42 only),0.3286,n/a,results/extra_baselines_results.json,verified
+C55b,baselines,E3 Random Forest macro-F1 (seed 42 only),0.3085,n/a,results/extra_baselines_results.json,verified
+C56,baselines,E4 DeepCORAL macro-F1 (seed 42 only),0.3388,n/a,results/domain_alignment_results.json,verified
+C57,baselines,E4 DANN macro-F1 (seed 42 only),0.3212,n/a,results/domain_alignment_results.json,verified
+C58,baselines,E4 MMD-DG macro-F1 (seed 42 only),0.3320,n/a,results/domain_alignment_results.json,verified
+C59a,cost,E5 flat XGB detection at cal-derived 1pct FAR (test detection),1.0000,achieved test FAR 0.0%,results/cost_metrics_results.json,verified
+C59b,cost,E5 hierarchical Stage-1 detection at cal-derived 1pct FAR,1.0000,achieved test FAR 0.0%,results/cost_metrics_results.json,verified
+C60a,cost,E6 XGBoost flat training time (s),5.0,seconds,results/compute_cost_results.json,verified
+C60b,cost,E6 XGBoost flat inference time per 1k rows (ms),3.12,ms/1k,results/compute_cost_results.json,verified
+C60c,cost,E6 Tree ensemble F1 (direct measurement),0.4304,n/a,results/compute_cost_results.json,verified
+C60d,cost,E6 Tree ensemble inference time per 1k rows (ms),6.84,ms/1k,results/compute_cost_results.json,verified
+C61,cost,E7 hierarchical Stage-1 threshold sweep miss/FAR/F1,all T miss<=0.001 FAR=0,n/a,results/cost_metrics_results.json,verified

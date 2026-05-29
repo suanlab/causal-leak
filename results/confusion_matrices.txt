@@ -1,0 +1,47 @@
+=== full / paper_split (acc=0.9402, n=7820) ===
+              in     out   noise   other  normal
+true     in    1500     114      22      23       0
+true    out      91    2064      16      21       0
+true  noise      29      30     564       6       0
+true  other      61      44      11     762       0
+true normal       0       0       0       0    2462
+
+=== signal / paper_split (acc=0.8881, n=7820) ===
+              in     out   noise   other  normal
+true     in    1339     252      39      28       1
+true    out     118    2017      25      32       0
+true  noise      44      61     511      13       0
+true  other      88     148      26     616       0
+true normal       0       0       0       0    2462
+
+=== full / random (acc=0.9449, n=70384) ===
+              in     out   noise   other  normal
+true     in   13561     988     160     223       0
+true    out     750   18682     144     155       0
+true  noise     269     187    5147      55       0
+true  other     388     418     141    6950       0
+true normal       0       0       0       0   22166
+
+=== full / group_site (acc=0.5529, n=70384) ===
+              in     out   noise   other  normal
+true     in    5213    7740     600    1379       0
+true    out    5884   11977     550    1320       0
+true  noise    1730    1874     609    1445       0
+true  other    2865    3837     537     658       0
+true normal       0       0       0       0   22166
+
+=== signal / random (acc=0.8915, n=70384) ===
+              in     out   noise   other  normal
+true     in   12003    2357     284     280       8
+true    out    1068   18159     188     310       6
+true  noise     365     418    4710     161       4
+true  other     798    1102     281    5711       5
+true normal       1       0       0       0   22165
+
+=== signal / group_site (acc=0.5537, n=70384) ===
+              in     out   noise   other  normal
+true     in    4908    8049     944    1025       6
+true    out    5890   11480     745    1607       9
+true  noise    1578    2013    1337     728       2
+true  other    2671    3874     748     594      10
+true normal       4       4       0       0   22158

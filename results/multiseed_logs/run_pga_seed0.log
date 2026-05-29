@@ -1,0 +1,53 @@
+DEVICE=cuda
+tr_main=58779 va=6531 te=5074
+  [prior] inner train=52248 inner val=13062
+  [prior] base internal-val F1=0.8803
+  [prior] rectified sum = 29.8799
+  [prior] band groups with positive Δf1: 510 / 513
+
+=== pga_lam0_initU ===
+  pga_lam0_initU: test_f1=0.2788 test_acc=0.2617 (93s)
+
+=== pga_lam0_initP ===
+  pga_lam0_initP: test_f1=0.2826 test_acc=0.2667 (90s)
+
+=== pga_lam0.1_initU ===
+  pga_lam0.1_initU: test_f1=0.3046 test_acc=0.2810 (85s)
+
+=== pga_lam0.1_initP ===
+  pga_lam0.1_initP: test_f1=0.2857 test_acc=0.2747 (84s)
+
+=== pga_lam1_initU ===
+  pga_lam1_initU: test_f1=0.2927 test_acc=0.2783 (83s)
+
+=== pga_lam1_initP ===
+  pga_lam1_initP: test_f1=0.3052 test_acc=0.2828 (93s)
+
+=== pga_lam10_initU ===
+  pga_lam10_initU: test_f1=0.2905 test_acc=0.2868 (91s)
+
+=== pga_lam10_initP ===
+  pga_lam10_initP: test_f1=0.2821 test_acc=0.2657 (91s)
+
+=== pga_lam100_initU ===
+  pga_lam100_initU: test_f1=0.2800 test_acc=0.2844 (84s)
+
+=== pga_lam100_initP ===
+  pga_lam100_initP: test_f1=0.2922 test_acc=0.2793 (84s)
+
+Saved: /home/suan/Projects/Water/causal-leak/src/../results/pga_results_seed0.json
+
+=== PGA SUMMARY ===
+                   config   test_f1  test_acc
+           pga_lam0_initU    0.2788    0.2617
+           pga_lam0_initP    0.2826    0.2667
+         pga_lam0.1_initU    0.3046    0.2810
+         pga_lam0.1_initP    0.2857    0.2747
+           pga_lam1_initU    0.2927    0.2783
+           pga_lam1_initP    0.3052    0.2828
+          pga_lam10_initU    0.2905    0.2868
+          pga_lam10_initP    0.2821    0.2657
+         pga_lam100_initU    0.2800    0.2844
+         pga_lam100_initP    0.2922    0.2793
+
+Total 1184s

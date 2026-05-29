@@ -1,0 +1,8 @@
+LORO region 43: train=65310, test=5074
+                    signal_all: n_feat= 534  acc=0.2978  f1=0.4148  per_class=[0.353, 0.252, 0.36, 0.109, 1.0]  (188s)
+               causal_65_422Hz: n_feat=  57  acc=0.3013  f1=0.4273  per_class=[0.326, 0.206, 0.391, 0.214, 1.0]  (159s)
+        anti_causal_788_5120Hz: n_feat= 455  acc=0.2958  f1=0.4031  per_class=[0.361, 0.226, 0.4, 0.05, 0.978]  (185s)
+               low_only_0_65Hz: n_feat=  28  acc=0.3059  f1=0.4251  per_class=[0.294, 0.224, 0.456, 0.173, 0.978]  (160s)
+     mid_confounder_422_1470Hz: n_feat= 125  acc=0.2858  f1=0.4066  per_class=[0.331, 0.213, 0.397, 0.103, 0.989]  (160s)
+
+Total: 859s

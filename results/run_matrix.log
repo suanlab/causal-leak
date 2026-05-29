@@ -1,0 +1,48 @@
+Loaded 70384 rows | sites=49 sensors=2710 | classes={'normal': 22166, 'out': 19731, 'in': 14932, 'other': 7897, 'noise': 5658}
+
+=== paper_split / full | train=62564 val=7820 ===
+  acc=0.9402 f1=0.9274 (172.4s)
+
+=== paper_split / signal | train=62564 val=7820 ===
+  acc=0.8881 f1=0.8610 (189.3s)
+
+=== full / random | X=(70384, 544) ===
+  fold 0: acc=0.9469 f1=0.9347 n_test_sites=45 (165.5s)
+  fold 1: acc=0.9449 f1=0.9344 n_test_sites=45 (167.1s)
+  fold 2: acc=0.9410 f1=0.9278 n_test_sites=44 (170.2s)
+  fold 3: acc=0.9452 f1=0.9329 n_test_sites=49 (166.4s)
+  fold 4: acc=0.9466 f1=0.9358 n_test_sites=44 (160.8s)
+
+=== full / group_site | X=(70384, 544) ===
+  fold 0: acc=0.7431 f1=0.4105 n_test_sites=19 (164.8s)
+  fold 1: acc=0.5333 f1=0.3791 n_test_sites=7 (165.4s)
+  fold 2: acc=0.3639 f1=0.3834 n_test_sites=8 (162.6s)
+  fold 3: acc=0.6258 f1=0.4990 n_test_sites=8 (161.5s)
+  fold 4: acc=0.4982 f1=0.4221 n_test_sites=7 (163.5s)
+
+=== signal / random | X=(70384, 534) ===
+  fold 0: acc=0.8956 f1=0.8715 n_test_sites=45 (185.8s)
+  fold 1: acc=0.8920 f1=0.8695 n_test_sites=45 (185.5s)
+  fold 2: acc=0.8885 f1=0.8639 n_test_sites=44 (185.5s)
+  fold 3: acc=0.8897 f1=0.8622 n_test_sites=49 (189.5s)
+  fold 4: acc=0.8918 f1=0.8675 n_test_sites=44 (185.0s)
+
+=== signal / group_site | X=(70384, 534) ===
+  fold 0: acc=0.7223 f1=0.4268 n_test_sites=19 (187.1s)
+  fold 1: acc=0.5476 f1=0.4194 n_test_sites=7 (187.3s)
+  fold 2: acc=0.3678 f1=0.3930 n_test_sites=8 (187.4s)
+  fold 3: acc=0.5878 f1=0.4661 n_test_sites=8 (186.6s)
+  fold 4: acc=0.5432 f1=0.4839 n_test_sites=7 (185.3s)
+
+# Shortcut Learning 2x2 Experiment Results
+
+| Feature Set | Split Protocol | # Feat | Accuracy | Macro-F1 |
+|-------------|----------------|-------:|---------:|---------:|
+| full | paper_split | 544 | 0.9402 ± 0.0000 | 0.9274 ± 0.0000 |
+| signal | paper_split | 534 | 0.8881 ± 0.0000 | 0.8610 ± 0.0000 |
+| full | random | 544 | 0.9449 ± 0.0021 | 0.9331 ± 0.0028 |
+| full | group_site | 544 | 0.5529 ± 0.1270 | 0.4188 ± 0.0432 |
+| signal | random | 534 | 0.8915 ± 0.0024 | 0.8669 ± 0.0035 |
+| signal | group_site | 534 | 0.5537 ± 0.1134 | 0.4378 ± 0.0328 |
+
+Total elapsed: 3879.4s

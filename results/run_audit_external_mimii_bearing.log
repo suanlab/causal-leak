@@ -1,0 +1,53 @@
+Loading MIMII-DG bearing from /home/suan/Projects/Water/causal-leak/src/../external_datasets/mimii_dg/bearing ...
+  found 3599 WAV files
+    extracted 200/3599  (23s)
+    extracted 400/3599  (27s)
+    extracted 600/3599  (31s)
+    extracted 800/3599  (36s)
+    extracted 1000/3599  (41s)
+    extracted 1200/3599  (45s)
+    extracted 1400/3599  (49s)
+    extracted 1600/3599  (53s)
+    extracted 1800/3599  (58s)
+    extracted 2000/3599  (61s)
+    extracted 2200/3599  (65s)
+    extracted 2400/3599  (69s)
+    extracted 2600/3599  (73s)
+    extracted 2800/3599  (77s)
+    extracted 3000/3599  (81s)
+    extracted 3200/3599  (85s)
+    extracted 3400/3599  (88s)
+  rows=3599  features=128  sections=[0, 1, 2]  domains=['source', 'target']  positive (anomaly) rate=0.0834
+
+=== 4-probe audit on MIMII-DG ===
+  P1_per_section_purity:
+    mean: 0.9166434992123066
+    median: 0.9166666666666666
+    frac_purity_1.0: 0.0
+    n_groups: 3
+  P1_per_section_domain_purity:
+    mean: 0.7490964692799555
+    median: 0.749791492910759
+    frac_purity_1.0: 0.0
+    n_groups: 6
+  P2_section_lookup:
+    coverage: 1.0
+    covered_accuracy: 0.8997214484679665
+  P3_section_overlap:
+    val_groups_in_train: 3
+    val_groups_total: 3
+    overlap_fraction: 1.0
+
+=== 3-tier evaluation ladder ===
+  Row-CV   acc=0.9800  f1=0.9265
+  GroupSection-CV  acc=0.8652  f1=0.5918
+  Source->Target  acc=0.7872  f1=0.7704
+
+=== MIMII-DG external-replication summary ===
+  P1 per-section purity mean: 0.9166
+  P2 section-lookup covered acc: 0.8997
+  Row-CV acc=0.9800  GroupSection-CV acc=0.8652  (drop=+11.5 pp)
+  Source->Target acc=0.7872
+
+Saved /home/suan/Projects/Water/causal-leak/src/../results/audit_external_mimii_bearing_results.json
+Total: 102.7s

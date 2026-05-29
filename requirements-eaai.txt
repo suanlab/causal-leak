@@ -1,0 +1,7 @@
+# Additional dependencies for the EAAI revision experiments.
+# Layered on top of the base requirements.txt.
+lightgbm>=4.6,<5
+catboost>=1.2,<2
+pytorch-tabnet>=4.1,<5
+scipy>=1.10,<2
+shap>=0.45,<1

@@ -1,0 +1,112 @@
+{
+  "datasets": [
+    {
+      "dataset": "SECOM (UCI)",
+      "domain": "semiconductor",
+      "n_rows": 1567,
+      "p1_mean": 0.9775200267022697,
+      "p2_acc": 0.9108910891089109,
+      "p3_overlap": 0.6549295774647887,
+      "row_cv_acc": 0.932992816588999,
+      "group_cv_acc": 0.9323436641500986,
+      "drop_pp": 0.06491524389004022,
+      "source_to_target_acc": null
+    },
+    {
+      "dataset": "UCI HAR",
+      "domain": "wearable accel.",
+      "n_rows": 10299,
+      "p1_mean": 0.20308277792049145,
+      "p2_acc": 0.16715257531584063,
+      "p3_overlap": 1.0,
+      "row_cv_acc": 0.9881542081413827,
+      "group_cv_acc": 0.9503169129293253,
+      "drop_pp": 3.7837295212057365,
+      "source_to_target_acc": null
+    },
+    {
+      "dataset": "MIMII-DG bearing",
+      "domain": "audio anomaly",
+      "n_rows": 3599,
+      "p1_mean": 0.9166434992123066,
+      "p2_acc": 0.8997214484679665,
+      "p3_overlap": 1.0,
+      "row_cv_acc": 0.9799953639313861,
+      "group_cv_acc": 0.8652265777036418,
+      "drop_pp": 11.476878622774434,
+      "source_to_target_acc": 0.7872340425531915
+    },
+    {
+      "dataset": "MIMII-DG fan",
+      "domain": "audio anomaly",
+      "n_rows": 3600,
+      "p1_mean": 0.9166666666666666,
+      "p2_acc": 0.8972222222222223,
+      "p3_overlap": 1.0,
+      "row_cv_acc": 0.9475,
+      "group_cv_acc": 0.8405555555555555,
+      "drop_pp": 10.69444444444445,
+      "source_to_target_acc": 0.6272727272727273
+    },
+    {
+      "dataset": "MIMII-DG gearbox",
+      "domain": "audio anomaly",
+      "n_rows": 3600,
+      "p1_mean": 0.9166666666666666,
+      "p2_acc": 0.8944444444444445,
+      "p3_overlap": 1.0,
+      "row_cv_acc": 0.9616666666666667,
+      "group_cv_acc": 0.8324999999999999,
+      "drop_pp": 12.916666666666677,
+      "source_to_target_acc": 0.6575757575757576
+    },
+    {
+      "dataset": "MIMII-DG slider",
+      "domain": "audio anomaly",
+      "n_rows": 3600,
+      "p1_mean": 0.9166666666666666,
+      "p2_acc": 0.9111111111111111,
+      "p3_overlap": 1.0,
+      "row_cv_acc": 0.9702777777777778,
+      "group_cv_acc": 0.8911111111111111,
+      "drop_pp": 7.916666666666671,
+      "source_to_target_acc": 0.7303030303030303
+    },
+    {
+      "dataset": "MIMII-DG valve",
+      "domain": "audio anomaly",
+      "n_rows": 3600,
+      "p1_mean": 0.9166666666666666,
+      "p2_acc": 0.8888888888888888,
+      "p3_overlap": 1.0,
+      "row_cv_acc": 0.9477777777777778,
+      "group_cv_acc": 0.7200000000000001,
+      "drop_pp": 22.777777777777775,
+      "source_to_target_acc": 0.5909090909090909
+    },
+    {
+      "dataset": "MIMII-DG ToyCar",
+      "domain": "audio anomaly",
+      "n_rows": 3600,
+      "p1_mean": 0.9166666666666666,
+      "p2_acc": 0.8944444444444445,
+      "p3_overlap": 1.0,
+      "row_cv_acc": 0.9480555555555557,
+      "group_cv_acc": 0.9261111111111111,
+      "drop_pp": 2.1944444444444544,
+      "source_to_target_acc": 0.5636363636363636
+    },
+    {
+      "dataset": "MIMII-DG ToyTrain",
+      "domain": "audio anomaly",
+      "n_rows": 3600,
+      "p1_mean": 0.9166666666666666,
+      "p2_acc": 0.8805555555555555,
+      "p3_overlap": 1.0,
+      "row_cv_acc": 0.9241666666666667,
+      "group_cv_acc": 0.9152777777777779,
+      "drop_pp": 0.8888888888888835,
+      "source_to_target_acc": 0.5636363636363636
+    }
+  ]
+}

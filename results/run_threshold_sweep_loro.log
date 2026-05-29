@@ -1,0 +1,23 @@
+/home/suan/Projects/Water/causal-leak/src/run_threshold_sweep_loro.py:1: SyntaxWarning: invalid escape sequence '\,'
+  """A2 / EAAI revision — calibrated detection-rate sweep across all 11 LORO folds.
+Regions: [27, 29, 36, 41, 42, 43, 44, 45, 46, 47, 48, 50]
+  region  27: n_te= 4908  normal_te=4566  cal-T@0.01=0.0104  det=1.000  achieved-FAR=0.0169
+  region  29: n_te= 4484  normal_te=4105  cal-T@0.01=0.0141  det=1.000  achieved-FAR=0.0504
+  skip region 41: no normal samples (te=0, cal=4496)
+  skip region 42: no normal samples (te=0, cal=4479)
+  region  43: n_te= 5074  normal_te=  45  cal-T@0.01=0.0060  det=1.000  achieved-FAR=0.0000
+  region  44: n_te= 1682  normal_te=1151  cal-T@0.01=0.0096  det=1.000  achieved-FAR=0.0434
+  region  45: n_te=15052  normal_te=12299  cal-T@0.01=0.0190  det=1.000  achieved-FAR=0.0132
+  skip region 46: no normal samples (te=0, cal=4462)
+  skip region 47: no normal samples (te=0, cal=4402)
+  skip region 48: no normal samples (te=0, cal=4358)
+  skip region 50: no normal samples (te=0, cal=4393)
+
+=== LORO calibrated-FAR aggregate ===
+    target   n_folds    weighted det    weighted FAR   macro det   min det
+ far_0.005         5          1.0000          0.0096      1.0000    1.0000
+ far_0.010         5          1.0000          0.0186      1.0000    1.0000
+ far_0.020         5          1.0000          0.0309      1.0000    1.0000
+ far_0.050         5          1.0000          0.0587      1.0000    1.0000
+
+Saved /home/suan/Projects/Water/causal-leak/src/../results/threshold_sweep_loro_results.json  (193s)

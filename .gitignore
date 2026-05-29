@@ -1,0 +1,52 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.ipynb_checkpoints/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Dataset — do NOT commit AI Hub data
+Dataset/
+*.csv.gz
+*.zip
+
+# External public benchmarks — large, re-downloadable from original sources
+external_datasets/
+
+# Boosting-library training artefacts
+catboost_info/
+
+# Elsevier template extracted tree (.cls/.bst kept at paper-eaai/ top level)
+paper-eaai/elsarticle/
+
+# Reference PDFs — licensing uncertain for redistribution
+paper/refs/*.pdf
+
+# MDPI template source tree (raw download, not needed for submission)
+paper/mdpi-template/
+
+# Local logs (keep one reference run in results/ only)
+*.tmp
+.DS_Store
+
+# LaTeX build artefacts
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+paper-eaai/paper.spl
+
+# ...but keep the released fold-level run logs (Data Availability)
+!results/*.log
+!results/**/*.log
+
+# Editor/backup junk
+*.bak

@@ -1,0 +1,63 @@
+{
+  "dataset": "SECOM (UCI)",
+  "n_rows": 1567,
+  "n_features": 590,
+  "positive_rate": 0.06636885768985322,
+  "n_sessions_per_hour": 905,
+  "n_days": 86,
+  "audit": {
+    "P1_per_session_purity": {
+      "mean": 0.9775200267022697,
+      "median": 1.0,
+      "frac_purity_1.0": 0.9485981308411215,
+      "n_groups": 856
+    },
+    "P1_per_day_purity": {
+      "mean": 0.9194302723303613,
+      "median": 0.9736842105263158,
+      "frac_purity_1.0": 0.47058823529411764,
+      "n_groups": 85
+    },
+    "P2_session_lookup": {
+      "coverage": 0.6474358974358975,
+      "covered_accuracy": 0.9108910891089109
+    },
+    "P2_day_lookup": {
+      "coverage": 0.9935897435897436,
+      "covered_accuracy": 0.9419354838709677
+    },
+    "P3_session_overlap": {
+      "val_groups_in_train": 93,
+      "val_groups_total": 142,
+      "overlap_fraction": 0.6549295774647887
+    },
+    "P3_day_overlap": {
+      "val_groups_in_train": 57,
+      "val_groups_total": 58,
+      "overlap_fraction": 0.9827586206896551
+    }
+  },
+  "ladder": {
+    "row_cv": {
+      "acc_mean": 0.932992816588999,
+      "acc_std": 0.002023334240209735,
+      "f1_macro_mean": 0.4826669363573127,
+      "f1_macro_std": 0.0005415843618175955
+    },
+    "group_session_cv": {
+      "acc_mean": 0.9336317942247817,
+      "acc_std": 0.0061787832150792905,
+      "f1_macro_mean": 0.4923467138333564,
+      "f1_macro_std": 0.01986398136441316
+    },
+    "group_day_cv": {
+      "acc_mean": 0.9323436641500986,
+      "acc_std": 0.02132333817065241,
+      "f1_macro_mean": 0.4895594204886159,
+      "f1_macro_std": 0.013349335713214562
+    },
+    "row_to_group_session_drop": -0.0006389776357826893,
+    "row_to_group_day_drop": 0.0006491524389004022
+  },
+  "seed": 42
+}

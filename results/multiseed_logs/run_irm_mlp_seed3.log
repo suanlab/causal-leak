@@ -1,0 +1,83 @@
+DEVICE = cuda
+  GPU 0: NVIDIA TITAN Xp
+  GPU 1: NVIDIA TITAN Xp
+X_train=(58779, 57)  X_val=(6531, 57)  X_test=(5074, 57)  n_envs=11
+envs = [27, 29, 36, 41, 42, 44, 45, 46, 47, 48, 50]
+
+=== MLP / erm ===
+  [erm] ep=  0  loss=0.8708  pen=0.0000e+00  lam=0.0  val_f1=0.5028  test_f1=0.2278
+  [erm] ep=  5  loss=0.4009  pen=0.0000e+00  lam=0.0  val_f1=0.6966  test_f1=0.2738
+  [erm] ep= 10  loss=0.3142  pen=0.0000e+00  lam=0.0  val_f1=0.7516  test_f1=0.2987
+  [erm] ep= 15  loss=0.2672  pen=0.0000e+00  lam=0.0  val_f1=0.7887  test_f1=0.3014
+  [erm] ep= 20  loss=0.2382  pen=0.0000e+00  lam=0.0  val_f1=0.8206  test_f1=0.3033
+  [erm] ep= 25  loss=0.2175  pen=0.0000e+00  lam=0.0  val_f1=0.8398  test_f1=0.3076
+  [erm] ep= 30  loss=0.2017  pen=0.0000e+00  lam=0.0  val_f1=0.8559  test_f1=0.3105
+  [erm] ep= 35  loss=0.1926  pen=0.0000e+00  lam=0.0  val_f1=0.8588  test_f1=0.3179
+  [erm] ep= 40  loss=0.1822  pen=0.0000e+00  lam=0.0  val_f1=0.8663  test_f1=0.3232
+  [erm] ep= 45  loss=0.1741  pen=0.0000e+00  lam=0.0  val_f1=0.8737  test_f1=0.3279
+  [erm] ep= 50  loss=0.1683  pen=0.0000e+00  lam=0.0  val_f1=0.8738  test_f1=0.3058
+  [erm] ep= 55  loss=0.1629  pen=0.0000e+00  lam=0.0  val_f1=0.8781  test_f1=0.3206
+  [erm] ep= 60  loss=0.1619  pen=0.0000e+00  lam=0.0  val_f1=0.8815  test_f1=0.3262
+  [erm] ep= 65  loss=0.1554  pen=0.0000e+00  lam=0.0  val_f1=0.8892  test_f1=0.3347
+  [erm] ep= 70  loss=0.1516  pen=0.0000e+00  lam=0.0  val_f1=0.8918  test_f1=0.3021
+  [erm] ep= 75  loss=0.1485  pen=0.0000e+00  lam=0.0  val_f1=0.8967  test_f1=0.3268
+  [erm] ep= 80  loss=0.1455  pen=0.0000e+00  lam=0.0  val_f1=0.8979  test_f1=0.3352
+  [erm] ep= 85  loss=0.1446  pen=0.0000e+00  lam=0.0  val_f1=0.9031  test_f1=0.3364
+  [erm] ep= 90  loss=0.1411  pen=0.0000e+00  lam=0.0  val_f1=0.8945  test_f1=0.3162
+  [erm] ep= 95  loss=0.1413  pen=0.0000e+00  lam=0.0  val_f1=0.9043  test_f1=0.3493
+  [erm] ep=100  loss=0.1380  pen=0.0000e+00  lam=0.0  val_f1=0.9007  test_f1=0.3362
+  [erm] ep=105  loss=0.1382  pen=0.0000e+00  lam=0.0  val_f1=0.9055  test_f1=0.3314
+  [erm] ep=110  loss=0.1345  pen=0.0000e+00  lam=0.0  val_f1=0.9095  test_f1=0.3396
+  [erm] ep=115  loss=0.1328  pen=0.0000e+00  lam=0.0  val_f1=0.9103  test_f1=0.3364
+  [erm] ep=119  loss=0.1345  pen=0.0000e+00  lam=0.0  val_f1=0.9037  test_f1=0.3325
+  DONE erm: test_f1=0.3473  test_acc=0.2980  per_class=[0.328, 0.141, 0.445, 0.145, 0.677]  val_f1=0.9111  (173s)
+
+=== MLP / irm ===
+  [irm] ep=  0  loss=0.8000  pen=5.5371e-02  lam=1.0  val_f1=0.5084  test_f1=0.2270
+  [irm] ep=  5  loss=0.3569  pen=1.8261e-02  lam=1.0  val_f1=0.6792  test_f1=0.2741
+  [irm] ep= 10  loss=0.2795  pen=1.2862e-02  lam=1.0  val_f1=0.7528  test_f1=0.2812
+  [irm] ep= 15  loss=0.2371  pen=9.6930e-03  lam=1.0  val_f1=0.7729  test_f1=0.2723
+  [irm] ep= 20  loss=0.2100  pen=8.0941e-03  lam=1.0  val_f1=0.8054  test_f1=0.2794
+  [irm] ep= 25  loss=0.1939  pen=7.6345e-03  lam=1.0  val_f1=0.8224  test_f1=0.3084
+  [irm] ep= 30  loss=0.1778  pen=6.6829e-03  lam=1.0  val_f1=0.8428  test_f1=0.3166
+  [irm] ep= 35  loss=0.1851  pen=6.2930e-03  lam=6.5  val_f1=0.8238  test_f1=0.3000
+  [irm] ep= 40  loss=0.2305  pen=7.0078e-03  lam=12.0  val_f1=0.7828  test_f1=0.2979
+  [irm] ep= 45  loss=0.2801  pen=7.3455e-03  lam=17.5  val_f1=0.7457  test_f1=0.3109
+  [irm] ep= 50  loss=0.3384  pen=8.2150e-03  lam=23.0  val_f1=0.6879  test_f1=0.2807
+  [irm] ep= 55  loss=0.3787  pen=7.0650e-03  lam=28.5  val_f1=0.6844  test_f1=0.3300
+  early stopping at epoch 56
+  DONE irm: test_f1=0.3228  test_acc=0.3059  per_class=[0.32, 0.139, 0.429, 0.234, 0.492]  val_f1=0.8490  (908s)
+
+=== MLP / groupdro ===
+  [groupdro] ep=  0  loss=1.0258  pen=0.0000e+00  lam=0.0  val_f1=0.5290  test_f1=0.2648
+  [groupdro] ep=  5  loss=0.7599  pen=0.0000e+00  lam=0.0  val_f1=0.6933  test_f1=0.3496
+  [groupdro] ep= 10  loss=0.6154  pen=0.0000e+00  lam=0.0  val_f1=0.7444  test_f1=0.3388
+  [groupdro] ep= 15  loss=0.5278  pen=0.0000e+00  lam=0.0  val_f1=0.7878  test_f1=0.3612
+  [groupdro] ep= 20  loss=0.4782  pen=0.0000e+00  lam=0.0  val_f1=0.8194  test_f1=0.3398
+  [groupdro] ep= 25  loss=0.4365  pen=0.0000e+00  lam=0.0  val_f1=0.8391  test_f1=0.3610
+  [groupdro] ep= 30  loss=0.4044  pen=0.0000e+00  lam=0.0  val_f1=0.8567  test_f1=0.3518
+  [groupdro] ep= 35  loss=0.3843  pen=0.0000e+00  lam=0.0  val_f1=0.8546  test_f1=0.3541
+  [groupdro] ep= 40  loss=0.3650  pen=0.0000e+00  lam=0.0  val_f1=0.8692  test_f1=0.3607
+  [groupdro] ep= 45  loss=0.3452  pen=0.0000e+00  lam=0.0  val_f1=0.8694  test_f1=0.3613
+  [groupdro] ep= 50  loss=0.3301  pen=0.0000e+00  lam=0.0  val_f1=0.8849  test_f1=0.3471
+  [groupdro] ep= 55  loss=0.3234  pen=0.0000e+00  lam=0.0  val_f1=0.8835  test_f1=0.3636
+  [groupdro] ep= 60  loss=0.3239  pen=0.0000e+00  lam=0.0  val_f1=0.8874  test_f1=0.3560
+  [groupdro] ep= 65  loss=0.3074  pen=0.0000e+00  lam=0.0  val_f1=0.8953  test_f1=0.3531
+  [groupdro] ep= 70  loss=0.2921  pen=0.0000e+00  lam=0.0  val_f1=0.8978  test_f1=0.3179
+  [groupdro] ep= 75  loss=0.2839  pen=0.0000e+00  lam=0.0  val_f1=0.9017  test_f1=0.3522
+  [groupdro] ep= 80  loss=0.2781  pen=0.0000e+00  lam=0.0  val_f1=0.9005  test_f1=0.3569
+  [groupdro] ep= 85  loss=0.2811  pen=0.0000e+00  lam=0.0  val_f1=0.9056  test_f1=0.3263
+  [groupdro] ep= 90  loss=0.2765  pen=0.0000e+00  lam=0.0  val_f1=0.8996  test_f1=0.3485
+  [groupdro] ep= 95  loss=0.2654  pen=0.0000e+00  lam=0.0  val_f1=0.9055  test_f1=0.3810
+  [groupdro] ep=100  loss=0.2599  pen=0.0000e+00  lam=0.0  val_f1=0.9004  test_f1=0.3783
+  [groupdro] ep=105  loss=0.2589  pen=0.0000e+00  lam=0.0  val_f1=0.9062  test_f1=0.3680
+  [groupdro] ep=110  loss=0.2617  pen=0.0000e+00  lam=0.0  val_f1=0.9116  test_f1=0.3644
+  [groupdro] ep=115  loss=0.2599  pen=0.0000e+00  lam=0.0  val_f1=0.9151  test_f1=0.3314
+  [groupdro] ep=119  loss=0.2580  pen=0.0000e+00  lam=0.0  val_f1=0.9088  test_f1=0.3511
+  DONE groupdro: test_f1=0.3432  test_acc=0.2990  per_class=[0.313, 0.197, 0.42, 0.157, 0.629]  val_f1=0.9155  (761s)
+
+=== MLP summary ===
+method         val_f1    test_f1   test_acc
+erm            0.9111     0.3473     0.2980
+irm            0.8490     0.3228     0.3059
+groupdro       0.9155     0.3432     0.2990

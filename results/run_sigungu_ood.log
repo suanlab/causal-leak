@@ -1,0 +1,53 @@
+Sigungu eligible for fold (>= 4 classes): 16 / 36
+            n  n_cls
+sg                  
+46_770  14527      4
+45_710  11071      4
+27_110   4908      4
+43_720   4798      5
+29_110   4484      3
+47_840   4218      4
+47_930   3256      4
+47_720   2678      4
+46_730   2585      4
+48_850   2343      4
+45_210   2218      3
+44_131   1682      5
+47_210   1574      4
+45_730   1542      4
+47_290   1529      2
+50_110   1269      2
+46_820    835      4
+48_860    795      4
+46_870    777      4
+47_280    574      4
+      46_770  n_te=14527  #cls=4  sig_F1=0.216  cau_F1=0.216  Δ=+0.000
+      45_710  n_te=11071  #cls=4  sig_F1=0.322  cau_F1=0.307  Δ=-0.015
+      27_110  n_te= 4908  #cls=4  sig_F1=0.275  cau_F1=0.359  Δ=+0.084
+      43_720  n_te= 4798  #cls=5  sig_F1=0.418  cau_F1=0.427  Δ=+0.009
+      47_840  n_te= 4218  #cls=4  sig_F1=0.276  cau_F1=0.280  Δ=+0.003
+      47_930  n_te= 3256  #cls=4  sig_F1=0.234  cau_F1=0.231  Δ=-0.003
+      47_720  n_te= 2678  #cls=4  sig_F1=0.161  cau_F1=0.155  Δ=-0.005
+      46_730  n_te= 2585  #cls=4  sig_F1=0.315  cau_F1=0.321  Δ=+0.006
+      48_850  n_te= 2343  #cls=4  sig_F1=0.095  cau_F1=0.102  Δ=+0.007
+      44_131  n_te= 1682  #cls=5  sig_F1=0.333  cau_F1=0.281  Δ=-0.051
+      47_210  n_te= 1574  #cls=4  sig_F1=0.266  cau_F1=0.292  Δ=+0.026
+      45_730  n_te= 1542  #cls=4  sig_F1=0.205  cau_F1=0.219  Δ=+0.014
+      46_820  n_te=  835  #cls=4  sig_F1=0.154  cau_F1=0.221  Δ=+0.067
+      48_860  n_te=  795  #cls=4  sig_F1=0.258  cau_F1=0.184  Δ=-0.074
+      46_870  n_te=  777  #cls=4  sig_F1=0.232  cau_F1=0.177  Δ=-0.055
+      47_280  n_te=  574  #cls=4  sig_F1=0.381  cau_F1=0.166  Δ=-0.216
+
+=== E2 sigungu LORO summary ===
+  n_folds: 16
+  mean_signal_all_f1: 0.25883714593318796
+  mean_causal_f1: 0.24618330100404964
+  unweighted_mean_delta: -0.01265384492913833
+  unweighted_std_delta: 0.06727866979852284
+  weighted_mean_signal_all_f1: 0.26618032064982167
+  weighted_mean_causal_f1: 0.2682681083659064
+  weighted_mean_delta: 0.0020877877160847547
+  wins_for_causal: 9
+  wins_for_signal_all: 7
+
+Saved /home/suan/Projects/Water/causal-leak/src/../results/sigungu_ood_results.json  (9298s)

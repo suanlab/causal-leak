@@ -1,0 +1,51 @@
+Regions (n=12): [27, 29, 36, 41, 42, 43, 44, 45, 46, 47, 48, 50]
+Region sizes:
+  27: n= 4908  sites= 1  classes={'normal': 4566, 'in': 128, 'other': 113, 'out': 101}
+  29: n= 4484  sites= 5  classes={'normal': 4105, 'out': 235, 'in': 144}
+  36: n=  476  sites= 1  classes={'out': 476}
+  41: n=  470  sites= 1  classes={'out': 385, 'in': 85}
+  42: n=  520  sites= 4  classes={'out': 457, 'in': 63}
+  43: n= 5074  sites= 3  classes={'in': 1868, 'noise': 1685, 'other': 757, 'out': 719, 'normal': 45}
+  44: n= 1682  sites= 1  classes={'normal': 1151, 'in': 232, 'other': 153, 'noise': 81, 'out': 65}
+  45: n=15052  sites= 9  classes={'normal': 12299, 'in': 945, 'out': 775, 'other': 598, 'noise': 435}
+  46: n=19322  sites=11  classes={'out': 8076, 'in': 6983, 'other': 2671, 'noise': 1592}
+  47: n=13989  sites=10  classes={'out': 7207, 'in': 3456, 'other': 1748, 'noise': 1578}
+  48: n= 3138  sites= 2  classes={'other': 1857, 'in': 719, 'noise': 287, 'out': 275}
+  50: n= 1269  sites= 1  classes={'out': 960, 'in': 309}
+
+=== full | X=(70384, 544) ===
+  region  27: n_te= 4908 cls_in_te=4  acc=0.9525 f1=0.3248 (171s)
+  region  29: n_te= 4484 cls_in_te=3  acc=0.9492 f1=0.3317 (168s)
+  region  36: n_te=  476 cls_in_te=1  acc=0.7458 f1=0.2848 (170s)
+  region  41: n_te=  470 cls_in_te=2  acc=0.7362 f1=0.4318 (173s)
+  region  42: n_te=  520 cls_in_te=2  acc=0.1462 f1=0.0978 (171s)
+  region  43: n_te= 5074 cls_in_te=5  acc=0.2868 f1=0.3817 (166s)
+  region  44: n_te= 1682 cls_in_te=5  acc=0.8044 f1=0.3500 (175s)
+  region  45: n_te=15052 cls_in_te=5  acc=0.8851 f1=0.4480 (165s)
+  region  46: n_te=19322 cls_in_te=4  acc=0.3618 f1=0.2899 (165s)
+  region  47: n_te=13989 cls_in_te=4  acc=0.3836 f1=0.2558 (166s)
+  region  48: n_te= 3138 cls_in_te=4  acc=0.1858 f1=0.1410 (169s)
+  region  50: n_te= 1269 cls_in_te=2  acc=0.6202 f1=0.2589 (174s)
+  === full macro_acc=0.5881±0.2868  weighted_acc=0.5621  macro_f1=0.2997
+
+=== signal | X=(70384, 534) ===
+  region  27: n_te= 4908 cls_in_te=4  acc=0.9374 f1=0.2753 (197s)
+  region  29: n_te= 4484 cls_in_te=3  acc=0.9405 f1=0.3202 (199s)
+  region  36: n_te=  476 cls_in_te=1  acc=0.8571 f1=0.2308 (195s)
+  region  41: n_te=  470 cls_in_te=2  acc=0.6957 f1=0.5872 (194s)
+  region  42: n_te=  520 cls_in_te=2  acc=0.3404 f1=0.1697 (192s)
+  region  43: n_te= 5074 cls_in_te=5  acc=0.2978 f1=0.4148 (191s)
+  region  44: n_te= 1682 cls_in_te=5  acc=0.7622 f1=0.3327 (196s)
+  region  45: n_te=15052 cls_in_te=5  acc=0.8666 f1=0.4056 (187s)
+  region  46: n_te=19322 cls_in_te=4  acc=0.4000 f1=0.2613 (186s)
+  region  47: n_te=13989 cls_in_te=4  acc=0.3844 f1=0.2286 (187s)
+  region  48: n_te= 3138 cls_in_te=4  acc=0.1947 f1=0.1857 (191s)
+  region  50: n_te= 1269 cls_in_te=2  acc=0.5477 f1=0.2336 (196s)
+  === signal macro_acc=0.6020±0.2605  weighted_acc=0.5680  macro_f1=0.3038
+
+=== LORO HEADLINE ===
+feat                 macro_acc      weighted_acc          macro_f1
+full      0.5881±0.2868        0.5621            0.2997
+signal    0.6020±0.2605        0.5680            0.3038
+
+Total elapsed: 4348s

@@ -1,0 +1,23 @@
+train=65310 test=5074
+
+[1/4] XGBoost causal flat ...
+  f1=0.4273 acc=0.3013 (157s)
+
+[2/4] XGBoost hierarchical ...
+  f1=0.4287 acc=0.3041 (159s)
+
+[3/4] Augmented CNN (best recipe) ...
+  using cnn_specaugment val_f1=0.7934 test_f1=0.3544
+
+[4/4] Best PGA MLP ...
+  PGA val-selected=pga_lam100_initP val_f1=0.9332 test_f1=0.2942; soft probs unavailable, skipping ensemble contribution
+
+=== ENSEMBLE SUMMARY ===
+                method        f1       acc
+            xgb_causal    0.4273    0.3013
+              xgb_hier    0.4287    0.3041
+      cnn_val_selected    0.3544    0.3384
+              soft_avg    0.3633    0.3159
+    tree_only_soft_avg    0.4326    0.3096
+
+Total 320s

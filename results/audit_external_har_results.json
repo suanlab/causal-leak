@@ -1,0 +1,40 @@
+{
+  "dataset": "UCI HAR (Human Activity Recognition)",
+  "n_rows": 10299,
+  "n_features": 561,
+  "n_classes": 6,
+  "n_subjects": 30,
+  "audit": {
+    "P1_per_subject_purity": {
+      "mean": 0.20308277792049145,
+      "median": 0.19774568777396156,
+      "frac_purity_1.0": 0.0,
+      "n_subjects": 30
+    },
+    "P2_subject_lookup": {
+      "coverage": 1.0,
+      "covered_accuracy": 0.16715257531584063
+    },
+    "P3_subject_overlap": {
+      "val_subjects_in_train": 30,
+      "val_subjects_total": 30,
+      "overlap_fraction": 1.0
+    }
+  },
+  "ladder": {
+    "row_cv": {
+      "acc_mean": 0.9881542081413827,
+      "acc_std": 0.0018572739886054208,
+      "f1_macro_mean": 0.9883853274149942,
+      "f1_macro_std": 0.0018156147959895387
+    },
+    "group_subject_cv": {
+      "acc_mean": 0.9503169129293253,
+      "acc_std": 0.0186147548084912,
+      "f1_macro_mean": 0.9489059056745457,
+      "f1_macro_std": 0.01986135514458841
+    },
+    "row_to_group_drop": 0.037837295212057365
+  },
+  "seed": 42
+}

@@ -1,0 +1,58 @@
+{
+  "dataset": "MIMII-DG (bearing)",
+  "n_rows": 3599,
+  "n_features": 128,
+  "sections": [
+    0,
+    1,
+    2
+  ],
+  "domains": [
+    "source",
+    "target"
+  ],
+  "positive_rate": 0.08335648791330925,
+  "audit": {
+    "P1_per_section_purity": {
+      "mean": 0.9166434992123066,
+      "median": 0.9166666666666666,
+      "frac_purity_1.0": 0.0,
+      "n_groups": 3
+    },
+    "P1_per_section_domain_purity": {
+      "mean": 0.7490964692799555,
+      "median": 0.749791492910759,
+      "frac_purity_1.0": 0.0,
+      "n_groups": 6
+    },
+    "P2_section_lookup": {
+      "coverage": 1.0,
+      "covered_accuracy": 0.8997214484679665
+    },
+    "P3_section_overlap": {
+      "val_groups_in_train": 3,
+      "val_groups_total": 3,
+      "overlap_fraction": 1.0
+    }
+  },
+  "ladder": {
+    "row_cv": {
+      "acc_mean": 0.9799953639313861,
+      "acc_std": 0.004855954073047638,
+      "f1_macro_mean": 0.9265082585660298,
+      "f1_macro_std": 0.019356346924159
+    },
+    "group_section_cv": {
+      "acc_mean": 0.8652265777036418,
+      "acc_std": 0.037584971594143396,
+      "f1_macro_mean": 0.5918057665819124,
+      "f1_macro_std": 0.07323760707804518
+    },
+    "source_to_target": {
+      "acc": 0.7872340425531915,
+      "f1_macro": 0.7704346092503987
+    },
+    "row_to_group_section_drop": 0.11476878622774433
+  },
+  "seed": 42
+}

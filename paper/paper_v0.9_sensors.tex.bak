@@ -1,0 +1,1466 @@
+%=================================================================
+% Prepared with the official MDPI Sensors LaTeX template.
+% Class file: Definitions/mdpi.cls (v6, March 2026)
+% Instructions: https://www.mdpi.com/authors/latex
+%=================================================================
+
+\documentclass[sensors,article,submit,pdftex,oneauthor]{Definitions/mdpi}
+
+% MDPI internal commands - do not modify
+\firstpage{1}
+\makeatletter
+\setcounter{page}{\@firstpage}
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+\datereceived{ }
+\daterevised{ }
+\dateaccepted{ }
+\datepublished{ }
+
+\graphicspath{{../results/figs/}}
+\setlength{\headheight}{20pt}
+
+% TikZ libraries needed for Figure 1 (native vector rendering)
+\usetikzlibrary{arrows.meta, calc}
+
+%-----------------------------------------------------------------
+% Front matter
+%-----------------------------------------------------------------
+\Title{Causal Frequency-Band Identification and Out-of-Distribution
+Evaluation for Vibration-Based Water Leak Detection}
+
+\newcommand{\orcidauthorA}{0000-0002-3047-1167}
+
+\Author{Suan Lee$^{1,*}$\orcidA{}}
+
+\AuthorNames{Suan Lee}
+
+\address{%
+$^{1}$ \quad School of Computer Science, Semyung University,
+Jecheon 27136, Republic of Korea.}
+
+\corres{Correspondence: hahaja01@semyung.ac.kr;
+Tel.: +82-43-649-1273}
+
+\abstract{In our earlier study on the Korean AI Hub water-pipe
+vibration benchmark (Lee \& Kim, \emph{Sensors} 2023) we reported
+an XGBoost classifier achieving 99.79\% 5-class accuracy. That
+number was measured under row-level 10-fold cross-validation,
+the protocol in near-universal use for tabular-ML leak detection.
+Preparing the pipeline for field deployment, however, revealed a
+practical concern that the earlier benchmark did not answer:
+does the reported accuracy hold when a trained model is installed
+at a new sensor, at a previously unseen site, or in a different
+administrative region? This follow-up study, conducted by the
+same author, re-examines the same benchmark through that
+deployment lens and extends it with a causal analysis of the
+vibration spectrum. This paper addresses that gap. First, a four-probe
+shortcut-audit protocol is introduced and applied to the AI Hub
+water-pipeline vibration dataset (70{,}384 recordings, 49 sites,
+12 Korean administrative regions). A four-rule identifier lookup
+that ignores the 512 frequency bands reproduces 99.77\% validation
+accuracy, demonstrating that the dataset's standard split contains
+deterministic sensor-to-class couplings. Second, a three-tier
+out-of-distribution (OOD) evaluation protocol is proposed as a
+minimum requirement for field-deployment claims; under 12-fold
+Leave-One-Region-Out the same XGBoost classifier falls to
+weighted accuracy 56.8\% and macro-F1 0.304. Third, the causal
+spectral signature of leak noise is identified by three
+independent attribution methods that all converge on the
+\textbf{121--422 Hz} band: bootstrap permutation importance
+(+0.019 \texorpdfstring{$\pm$}{+/-} 0.017 macro-F1 drop across four LORO folds, wins
+3/4), SHAP (40.4\% of tree-path attribution mass on the canonical
+test region), and XGBoost gain (7.5\%, mis-allocated). The
+422--1470 Hz range is shown to be an active confounder. Fourth,
+restricting the input to 57 causal features raises OOD macro-F1
+to 0.4273 and nearly doubles the F1 of the hardest ``other''
+class. Fifth, Invariant Risk Minimisation (IRM) and GroupDRO on
+MLP and 1D-CNN backbones, trained on two NVIDIA TITAN~Xp GPUs,
+fail to match causal feature selection even after a dedicated
+hyperparameter sweep; a novel permutation-guided attention
+regulariser is evaluated as a negative-result ablation. Sixth,
+SpecAugment pulls a 1D-CNN baseline from macro-F1 0.334 to
+0.354, while focal loss mainly improves accuracy. Seventh, a pre-specified
+tree-only average of the causal and hierarchical XGBoost classifiers
+attains OOD macro-F1 \textbf{0.4326} with perfect OOD normal-class
+recall, serving as a deployment candidate rather than a
+test-selected hyperparameter recipe.
+All code, logs, and experiment outputs are released.}
+
+\keyword{water leak detection; vibration sensor; acoustic leak
+detection; out-of-distribution evaluation; shortcut learning;
+invariant risk minimisation; causal feature selection;
+XGBoost; Korea AI Hub benchmark}
+
+%-----------------------------------------------------------------
+\begin{document}
+
+\externalbibliography{yes}
+
+%=================================================================
+\section{Introduction}\label{sec:intro}
+
+Non-revenue water loss from leaking metal and non-metal
+distribution pipes is a persistent infrastructure problem with
+substantial economic and environmental cost worldwide, and acute
+in aging urban networks. Acoustic leak detection using low-cost
+vibration sensors mounted at water meters, valves, and hydrants
+has emerged as one of the most widely deployed monitoring
+strategies because of its low installation cost, non-invasiveness,
+and compatibility with cellular telemetry~\cite{hunaidi2000plastic,ismail2019review}.
+
+On the sensing side, the dominant trend over the past decade has
+been to replace hand-tuned threshold rules with tabular machine
+learning (ML) applied to frequency-domain features of the
+vibration spectrum. Recent representative works include
+Shukla and Piratla's supervised classification of acceleration
+signals~\cite{shukla2020leakage}, Fereidooni et al.'s hybrid
+model-based method for large water distribution
+networks~\cite{fereidooni2021hybrid}, and gradient-boosted tree
+pipelines applied to public vibration-sensor datasets.
+
+The study that motivates the present follow-up is our own
+previous work on the Korean AI~Hub water-pipeline
+benchmark~\cite{lee2023leak}, in which we compared eight tabular
+models across four feature regimes and reported an XGBoost
+classifier reaching 99.79\% accuracy under stratified 10-fold
+cross-validation. The goal of that paper was a comparative
+benchmark of off-the-shelf models on newly curated sensor data,
+and within its stated evaluation protocol the result is
+faithful. However, when we subsequently tried to operationalise
+the same pipeline for field use by a municipal water utility,
+two practical obstacles became visible. First, the 10-fold
+row-level split placed multiple recordings from the same
+physical sensor in both train and test folds, so the reported
+accuracy actually measured within-sensor repeatability more
+than cross-sensor generalisation. Second, as the shortcut-learning
+literature in medical imaging
+\cite{zech2018pneumonia,degrave2021covid,geirhos2020shortcut,damour2022underspec}
+and natural-image recognition~\cite{beery2018terra} has
+documented, sensor ML models routinely latch onto identifier-like
+features (patient IDs, device IDs, location tags) that correlate
+perfectly with the label in the training split but do not
+represent any physical signal. A leak classifier that scores
+99\% by memorising sensor IDs will fail on the first new
+installation it sees.
+
+The aim of the present paper is therefore twofold: to provide
+practitioners with an honest, deployment-oriented evaluation of
+what the AI~Hub vibration spectrum can actually support when
+identifier shortcuts are closed, and to use that evaluation as a
+springboard into a causal analysis of which frequency bands
+carry the generalisable leak signature. Figure~\ref{fig:overview}
+summarises the four-stage pipeline that organises the rest of
+the paper.
+
+The core question investigated here is:
+\emph{what accuracy does a vibration-based leak-typing
+classifier actually achieve when evaluated under protocols that
+mimic field deployment, and which parts of the vibration
+spectrum are responsible for that residual accuracy?} The
+experimental substrate is the same AI~Hub water-pipeline
+vibration dataset used in~\cite{lee2023leak}, chosen because of
+its size (70{,}384 recordings, 11{,}000+ sensor locations, 49
+sites across 12 Korean administrative regions), because the
+earlier 99.79\% result sets a clear reference point, and
+because the raw feature set (512 frequency bands plus peak
+aggregates) exposes the question of which spectral bands
+carry physically meaningful leak information.
+
+\begin{figure}[H]
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\resizebox{\fulllength}{!}{\input{fig_overview.tex}}
+\caption{\textbf{Overview of the study.} The paper proceeds as
+a four-stage pipeline from the benchmark ceiling reported
+in~\cite{lee2023leak} to a deployment-ready recipe. Each stage
+is anchored by a concrete quantitative result: (1)~a zero-ML
+identifier lookup reproduces the reported 99.77\% accuracy, so
+the signal contribution to the headline number is negligible;
+(2)~a three-tier OOD evaluation exposes a 39-percentage-point
+accuracy drop between row-CV and LORO; (3)~three independent
+attribution methods (permutation importance, SHAP, and
+cross-region bootstrap) converge on 121--422 Hz as the
+generalisable leak-signal band, with 422--1470 Hz identified
+as an active confounder; (4)~a pre-specified soft-probability
+average of flat and hierarchical XGBoost on the 57 causal features
+attains OOD macro-F1 0.4326 with 100\% normal-class recall,
+serving as the deployment candidate released with the
+paper.\label{fig:overview}}
+\end{adjustwidth}
+\end{figure}
+
+The main contributions of this paper are as follows.
+
+\begin{enumerate}
+\item \textbf{A reusable shortcut-audit protocol for sensor ML
+benchmarks.} Four probes (per-sensor label purity, class-lookup
+reconstruction, sensor train/test overlap, per-site label
+concentration) are formalised and applied to the AI~Hub
+benchmark. A four-rule identifier lookup that ignores the entire
+vibration spectrum reproduces 99.77\% validation accuracy ---
+within 0.02~pp of the published state-of-the-art~\cite{lee2023leak}
+--- confirming that the dataset's standard split contains
+deterministic sensor-to-class couplings.
+
+\item \textbf{A three-tier OOD evaluation protocol for field
+deployment.} Row-level $k$-fold CV, GroupKFold-by-site, and
+Leave-One-Region-Out (LORO) over 12 Korean administrative
+regions. Under LORO the same XGBoost classifier falls from
+94.0\% to weighted 56.8\% accuracy and macro-F1 0.304 on
+5-class leak typing.
+
+\item \textbf{Identification of the causal spectral signature of
+leak noise on this benchmark.} Grouped permutation importance
+on the only region containing all five classes in substantial
+quantities localises the generalisable leak signal to the
+\textbf{121--422 Hz range}, broadly consistent with published
+leak-noise acoustics for plastic
+pipes~\cite{hunaidi2000plastic,ismail2019review,shukla2020leakage}.
+The 422--1470 Hz range is shown to be an \emph{active
+confounder} whose permutation \emph{improves} OOD macro-F1 by
+3.3~percentage points.
+
+\item \textbf{Causal feature selection outperforms loss-level
+invariance regularisation.} Retraining XGBoost on 57 causal
+features (65--422 Hz bands plus 20 MAX aggregates plus month)
+raises OOD macro-F1 from 0.4148 to \textbf{0.4273} and nearly
+doubles the F1 of the hardest ``other'' class (0.109 to 0.214).
+Gradient-based invariance regularisers --- IRM~\cite{arjovsky2019irm}
+and GroupDRO~\cite{sagawa2020groupdro} --- on MLP and 1D-CNN
+backbones trained on two NVIDIA TITAN~Xp GPUs fail to match
+causal feature selection, even after a dedicated
+$\lambda \times \text{warm-up}$ hyperparameter sweep. This
+contributes a specific data point to the broader literature
+questioning the empirical reliability of
+IRM-style methods~\cite{gulrajani2021dg,rosenfeld2021irm}.
+
+\item \textbf{A hierarchical two-stage classifier and tree
+ensemble for field deployment.} A binary normal gate followed
+by a 4-class abnormal typer (both on the 57 causal features)
+attains macro-F1 0.4287 with perfect OOD normal-class recall.
+Pre-specified soft-averaging of this hierarchical classifier
+with the flat causal XGBoost yields a deployment candidate at
+macro-F1 \textbf{0.4326}.
+\end{enumerate}
+
+The remainder of the paper is organised as follows.
+Section~\ref{sec:related} reviews the relevant vibration-based
+leak-detection literature and the shortcut/invariance
+machine-learning literature. Section~\ref{sec:data} describes
+the AI~Hub dataset. Section~\ref{sec:methodology} formalises
+the shortcut-audit, OOD evaluation, causal-band analysis,
+invariance-regularised baselines, and hierarchical classifier
+methodology. Section~\ref{sec:results} presents the experimental
+results. Section~\ref{sec:discussion} discusses implications
+for field deployment and for the broader sensor-ML literature.
+Section~\ref{sec:conclusions} concludes.
+
+%=================================================================
+\section{Related Work}\label{sec:related}
+
+\subsection{Vibration-Based Leak Detection}
+
+Acoustic signatures of water leaks in buried pipes have been
+studied since at least the late 1990s. For plastic pipes,
+\citet{hunaidi2000plastic} reported that leak-noise energy is
+concentrated below roughly 600 Hz, with the precise band
+depending on pipe material, diameter, and internal pressure.
+More recently, \citet{ismail2019review} systematically reviewed
+accelerometer-based approaches, classifying the literature into
+threshold methods, signal-processing methods (e.g., cross-
+correlation, EMD, wavelet), and machine-learning methods.
+\citet{shukla2020leakage} applied supervised classification to
+acceleration signals from in-situ experiments;
+\citet{fereidooni2021hybrid} developed a hybrid method-based
+model for large-scale distribution networks. Korean studies
+using the AI Hub water-pipeline dataset have reported
+above-99\% 5-class accuracy with tree ensembles such as
+XGBoost~\cite{chen2016xgboost} and Random
+Forest~\cite{breiman2001rf,lee2023leak}. The reported numbers
+are measured under stratified row-level cross-validation on a
+merged-and-resplit training set; no published evaluation on the
+benchmark has used a sensor-group, site-group, or region-group
+holdout. This paper supplies that evaluation.
+
+\subsection{Shortcut Learning in Sensor and Imaging Benchmarks}
+
+The shortcut-learning framework~\cite{geirhos2020shortcut}
+provides a conceptual vocabulary for the failure mode in which
+a supervised model latches onto superficial features that
+correlate with the label in the training distribution but do
+not represent the underlying task. In medical imaging,
+\citet{zech2018pneumonia} showed that a deep pneumonia
+classifier was effectively detecting the hospital of origin
+(via metadata artefacts in the radiograph) rather than
+pneumonia; \citet{degrave2021covid} documented analogous
+shortcut behaviour in COVID-19 chest-X-ray classifiers.
+\citet{beery2018terra} demonstrated that animal-species
+recognisers trained on wildlife camera imagery rely heavily on
+background context and fail catastrophically on new locations.
+\citet{damour2022underspec} frame the phenomenon more
+generally: many equally accurate models on the training
+distribution can behave very differently under deployment
+shift. To date, formal shortcut audits have been rare in the
+sensor-ML literature; this paper adapts the protocol to a
+vibration-based leak-detection benchmark and finds a particularly
+extreme form of the pathology.
+
+\subsection{Out-of-Distribution Generalisation and Invariance Learning}
+
+Loss-level invariance regularisers are the natural algorithmic
+response to shortcut bias.
+IRM~\cite{arjovsky2019irm} adds a penalty that discourages a
+model from relying on correlations that vary across training
+environments. GroupDRO~\cite{sagawa2020groupdro} minimises the
+worst-case per-environment loss via exponential reweighting.
+Variants such as REx~\cite{krueger2021rex} penalise the
+variance of per-environment risks. The empirical reliability
+of these methods has been repeatedly
+questioned~\cite{gulrajani2021dg,rosenfeld2021irm}: with few
+or uneven environments they often fail to beat plain Empirical
+Risk Minimisation on OOD test sets. Section~\ref{sec:results}
+contributes a vibration-sensor data point to that literature
+for the two most widely used members of the family (IRM and
+GroupDRO).
+
+%=================================================================
+\section{Dataset}\label{sec:data}
+
+The AI~Hub water-pipe leak vibration
+dataset~\cite{lee2023leak} consists of $N = 70{,}384$
+time-frequency feature vectors extracted from vibration
+recordings at more than 11{,}000 sensor locations across 49
+installation sites in 12 Korean administrative regions
+(\emph{gwangyeoksi-do} / \emph{si-do}). Each recording is
+represented as a 512-component spectrum covering
+$0$--$5120\,\text{Hz}$ at 10 Hz resolution (the 0~Hz column is
+identically zero), 20 peak-amplitude aggregates
+$\texttt{MAX0}, \dots, \texttt{MAX19}$, and metadata columns:
+\texttt{site}, \texttt{sid} (per-sensor ID), \texttt{ldate}
+(YYYYMMDD date of detection), \texttt{lrate} (0--90 detection
+rate), \texttt{llevel} (0--5000 signal level), and
+\texttt{leaktype} $\in$ \{\texttt{in} (indoor leak), \texttt{out}
+(outdoor leak), \texttt{noise} (electrical noise),
+\texttt{other} (other acoustic disturbance),
+\texttt{normal}\}. The class distribution is 31.5\%
+\texttt{normal}, 28.0\% \texttt{out}, 21.2\% \texttt{in}, 11.2\%
+\texttt{other}, and 8.0\% \texttt{noise}. The dataset ships
+with a training / validation split of 62{,}564~/~7{,}820.
+Following \cite{lee2023leak}, experimental work in this paper
+uses the union of the two splits (70{,}384 rows) so that larger,
+more balanced holdouts can be constructed.
+
+The 12 administrative regions are very unevenly populated:
+three regions (Jeonnam, Jeonbuk, Gyeongbuk) account for
+69\% of the rows, while five regions contain fewer than 1{,}000
+rows each. Only one region, Chungbuk (region code 43,
+5{,}074 rows), contains substantial counts of all five leak
+classes; elsewhere, 1--4 classes dominate. Chungbuk therefore
+serves as the canonical 5-class OOD test set throughout this
+paper.
+
+%=================================================================
+\section{Methodology}\label{sec:methodology}
+
+Let $\mathcal{D} = \{(x_i, y_i, s_i, e_i)\}_{i=1}^{N}$ denote
+the dataset, where $x_i \in \mathbb{R}^{534}$ stacks the 513 HZ
+bands, 20 MAX aggregates, and the month derived from
+\texttt{ldate}; $y_i \in \{0,\dots,4\}$ is the leak class;
+$s_i$ is the site identifier; and $e_i \in \{1,\dots,12\}$ is
+the region. Let $\ell(\cdot,\cdot)$ denote the class-weighted
+softmax cross-entropy with inverse-frequency class weights
+$w_c = N / (CN_c)$, $R(\theta) = N^{-1}\sum_i \ell(f_\theta(x_i),
+y_i)$ the pooled risk, and
+$R_e(\theta) = N_e^{-1}\sum_{i:e_i=e} \ell(f_\theta(x_i), y_i)$
+the per-environment risk.
+
+\subsection{Shortcut-Audit Protocol}\label{sec:method-audit}
+
+Four probes are computed on the training split.
+
+\begin{itemize}
+\item \textbf{P1 --- Per-sensor label purity.} For each
+training sensor $s$, the fraction of rows at $s$ whose label
+matches the modal label at $s$. Values close to 1 indicate
+that sensors are effectively one-class.
+
+\item \textbf{P2 --- Class-lookup reconstruction.} Build a
+table mapping each training \texttt{sid} to its modal
+label, then predict on the validation split by majority
+lookup. Report the coverage and the covered-row accuracy.
+
+\item \textbf{P3 --- Sensor train/test overlap.} The fraction
+of validation sensors whose \texttt{sid} also appears in the
+training split.
+
+\item \textbf{P4 --- Lookup + meta-column override.} Combine
+P2 with a rule-based override on any meta-column whose value
+is deterministically associated with a specific class. For the
+AI~Hub dataset this is \texttt{lrate}$=90$ iff
+\texttt{leaktype}$\neq$\texttt{normal}.
+\end{itemize}
+
+If P1, P3, and P4 jointly come close to the published
+benchmark accuracy, the headline result is identifier-driven
+rather than spectrum-driven.
+
+\subsection{Three-Tier OOD Evaluation}\label{sec:method-ood}
+
+Three evaluation protocols form a ladder of increasing
+deployment realism.
+
+\begin{itemize}
+\item \textbf{Row-CV.} Stratified $k$-fold cross-validation
+over rows. The same sensor's measurements may appear in both
+folds; this is the protocol implicit in the published
+benchmark results.
+
+\item \textbf{GroupSite-CV.} Stratified $k$-fold with
+$\text{GroupKFold}$ by \texttt{site}, so every test sensor has
+been unseen at train time. Simulates deployment to a new
+installation within the same region.
+
+\item \textbf{LORO.} Leave-One-Region-Out over the 12
+administrative regions, $e_i$. Simulates deployment to a
+new city or province.
+\end{itemize}
+
+The gap between row-CV and LORO on the same model gives a
+quantitative measure of the deployment-shift brittleness of
+a pipeline.
+
+\subsection{Grouped Permutation Importance}\label{sec:method-perm}
+
+After training $f_\theta$ on the pooled train set, the
+causal contribution of a feature group $g \subseteq
+\{1,\dots,d\}$ is measured by permuting $x^{(g)}$ on the held-out
+test set and recording the drop in macro-F1:
+
+\begin{linenomath}
+\begin{equation}
+\Delta_{\mathrm{F1}}(g) = \mathrm{F1}\bigl(y, f_\theta(x)\bigr)
+  - \mathrm{F1}\bigl(y, f_\theta(\tilde{x}^{(g)})\bigr),
+\end{equation}
+\end{linenomath}
+
+where $\tilde{x}^{(g)}$ permutes only the columns of $x$
+indexed by $g$. Positive $\Delta_\mathrm{F1}$ marks $g$ as
+carrying generalisable signal; negative
+$\Delta_\mathrm{F1}$ marks $g$ as a confounder whose removal
+actually helps. This diagnostic is compared against XGBoost's
+built-in gain importance summed over the same feature groups;
+mismatches reveal where the model is investing representation
+capacity on non-causal inputs.
+
+\subsection{Invariance-Regularised Baselines}\label{sec:method-irm}
+
+Two deep-learning backbones evaluate whether invariance
+learning can close the OOD gap without explicit feature
+selection. An MLP ($\mathbb{R}^{57}
+\to 256 \to 128 \to 5$) is trained on the 57 causal features;
+a 1D-CNN (three Conv1d blocks with BatchNorm and MaxPool,
+followed by GlobalAvgPool and an MLP head concatenated with
+the tabular MAX features) is trained on the raw 513-band
+spectrum. Each backbone is trained under three methods.
+
+\textbf{ERM} minimises the pooled empirical risk.
+
+\textbf{IRMv1}~\cite{arjovsky2019irm} adds a penalty that
+discourages environment-dependent representations:
+
+\begin{linenomath}
+\begin{equation}
+\mathcal{L}_{\mathrm{IRM}}(\theta) =
+  \sum_{e=1}^{E} \bigl[R_e(\theta)
+  + \lambda \,\lVert \nabla_{w|w=1}
+    R_e(w \cdot f_\theta) \rVert^2 \bigr],
+\label{eq:irm}
+\end{equation}
+\end{linenomath}
+
+with $\lambda$ ramped from $1$ to $\lambda_{\max}$ after a
+warm-up of $T_\mathrm{warmup}$ epochs. A follow-up sweep over
+$\lambda_{\max} \in \{1, 10, 10^2, 10^3, 10^4\}$ and
+$T_\mathrm{warmup} \in \{10, 30\}$ tests whether tuning closes
+the gap.
+
+\textbf{GroupDRO}~\cite{sagawa2020groupdro} maintains
+exponential weights $q_e$ over environments updated by
+$q_e \leftarrow q_e \exp(\eta R_e(\theta)) / Z$ and minimises
+$\sum_e q_e R_e(\theta)$.
+
+\subsection{Hierarchical Classifier}\label{sec:method-hier}
+
+The five-class problem is factored into a binary gate and a
+four-class typer. Stage 1 is a binary XGBoost trained on the
+57 causal features with target
+$\mathbb{1}[y_i = \texttt{normal}]$. Stage 2 is a 4-class
+XGBoost trained only on the abnormal rows of the training
+split; at inference time, Stage 1 routes samples and Stage 2 is
+consulted only when Stage 1 predicts ``abnormal''. The
+rationale is that the \texttt{normal} decision is dominated by
+overall spectrum energy (captured by the MAX aggregates) and
+can be learned cleanly without the abnormal-type imbalance
+interfering. The metric-of-interest for field deployment ---
+missed-alarm rate on \texttt{normal}-vs-abnormal --- is
+reported separately from the 4-class macro-F1.
+
+\subsection{Robust Causal-Band Identification}\label{sec:method-robust}
+
+The single-region permutation importance of
+Section~\ref{sec:method-perm} is hardened with three
+complementary tests. (i)~\emph{Bootstrap permutation}: for each
+log-spaced band group $g$, $B = 100$ independent row
+permutations of the test-region columns are drawn, yielding a
+sampling distribution of $\Delta_{\mathrm{F1}}(g)$ from which a
+95\% percentile confidence interval is reported.
+(ii)~\emph{Multi-region replication}: the same bootstrap
+procedure is applied to the four LORO folds that each contain
+at least four classes and at least 5{,}000 rows
+(regions~43,~45,~46,~47). A band group is declared a robust
+contributor if its permutation $\Delta_{\mathrm{F1}}$ is
+positive across a majority of these folds.
+(iii)~\emph{SHAP second-source attribution}: TreeSHAP
+\cite{lundberg2017shap} is computed on a 500-row subsample of
+the canonical Chungbuk test fold, and the mean $\lvert \text{SHAP}
+\rvert$ per feature is aggregated per band group and normalised
+over the HZ columns. A band group is declared causally important
+if it is ranked first by permutation importance and concurrently
+ranked first (or a close second) by SHAP share.
+
+\subsection{Robust Loss and Augmentation}\label{sec:method-aug}
+
+To stress-test whether the CNN baseline of
+Section~\ref{sec:method-irm} is leaving performance on the
+table, three training-time modifications are evaluated
+individually and in combination.
+(i)~\emph{SpecAugment}~\cite{park2019specaugment}: in
+spectrogram-style frequency-masking, contiguous bands of width
+up to 40 are zeroed out with probability 0.5 at each training
+step. (ii)~\emph{Mixup}~\cite{zhang2018mixup}: each
+mini-batch is convex-combined with a batch-shuffled copy with
+mixing coefficient $\lambda \sim \mathrm{Beta}(0.2,0.2)$.
+(iii)~\emph{Focal loss}~\cite{lin2017focal} with $\gamma = 2$:
+down-weights easy examples, re-emphasising the rare abnormal
+classes.
+
+\subsection{Permutation-Guided Attention (Negative-Result
+Ablation)}\label{sec:method-pga}
+
+As a novelty ablation, an MLP is augmented with a learnable
+per-band attention vector $a \in \mathbb{R}^{513}$ whose softmax
+is regularised toward a prior $p$ derived from permutation
+importance computed on an internal 80/20 train-only
+cross-validation split (no test-set leakage). Training minimises
+
+\begin{linenomath}
+\begin{equation}
+\mathcal{L}_{\mathrm{PGA}}(\theta)
+= R(\theta; x \odot \mathrm{softmax}(a))
++ \lambda_c \,\mathrm{KL}\!\bigl(\mathrm{softmax}(a) \,\|\, p\bigr),
+\end{equation}
+\end{linenomath}
+
+with $p_k \propto \max(0,
+\Delta_{\mathrm{F1}}^{\text{train-CV}}(k))$. Since the
+permutation importance used as prior is itself computed on
+training data, where sensor overlap is near-complete, this
+constitutes a soft-prior counterpart to hard causal feature
+selection; whether it recovers the causal-XGBoost ceiling is an
+empirical question.
+
+\subsection{Soft-Probability Ensemble}\label{sec:method-ensemble}
+
+To test whether combining the strongest tree and deep models
+offers additional headroom, a soft-probability ensemble is
+evaluated. Per-class probabilities are taken from the flat
+causal XGBoost and the hierarchical classifier. For the
+validation-selected augmented CNN, only hard test predictions
+are available from the stored run, so they are converted to
+one-hot probabilities and included only in an unweighted
+diagnostic average. The deployment candidate is fixed in
+advance as a tree-only average of the two XGBoost members.
+
+%=================================================================
+\section{Experimental Setup}\label{sec:setup}
+
+\subsection{Models and Hyperparameters}
+
+XGBoost~\cite{chen2016xgboost} classifiers are trained with
+$n_\text{estimators} = 200$, $\text{max\_depth} = 6$,
+$\eta = 0.1$, \texttt{tree\_method}=\texttt{hist}, and the
+default \texttt{multi:softprob} objective. The MLP uses Adam
+with $\text{lr} = 10^{-3}$, weight decay $10^{-4}$, dropout
+0.2, and environment-balanced mini-batches of size 528. The
+1D-CNN uses the same optimiser and batch size and three
+Conv1d blocks with 32/64/128 channels and kernel sizes
+9/7/5. IRM uses $\lambda_{\max} = 100$ and
+$T_\mathrm{warmup} = 30$ as defaults, with a grid sweep
+reported separately. GroupDRO uses step size $\eta = 10^{-2}$.
+
+\subsection{Evaluation Metrics}
+
+All results report classification accuracy and macro-F1.
+For GroupSite-CV, the accuracy and macro-F1 are averaged
+over folds with standard deviation; for LORO, both macro-
+and $n_\text{test}$-weighted averages over regions are
+reported, along with per-region numbers. For causal-band
+analysis, per-class F1 on the canonical Chungbuk OOD fold
+is the primary metric.
+
+\subsection{Compute}
+
+XGBoost experiments run on a 16-core CPU. Deep-learning
+experiments use two NVIDIA TITAN~Xp GPUs (12~GB each, CUDA
+12.2) with one GPU per backbone (MLP on GPU~0, CNN on
+GPU~1, allowing the two to run in parallel). A complete
+end-to-end reproduction, including the IRM sweep and
+strengthening ablations, requires several hours wall-clock time
+depending on CPU and GPU availability.
+
+%=================================================================
+\section{Results}\label{sec:results}
+
+\subsection{Shortcut Audit}\label{sec:res-audit}
+
+Applying the shortcut-audit protocol of
+Section~\ref{sec:method-audit} to the AI~Hub dataset yields
+four strong positive signals.
+
+\textbf{P1 (per-sensor label purity):} All 2{,}671 training
+sensors have purity 1.0. Each \texttt{sid} maps to exactly one
+leak class for its entire lifetime in the dataset --- a
+consequence of the per-class file structure in the AI~Hub
+release.
+
+\textbf{P3 (train/test overlap):} 1{,}876 of the 1{,}915
+validation sensors (97.96\%) also appear in the training
+split; 43 of 43 validation sites are in the training split.
+Only 39 validation sensors are genuinely unseen.
+
+\textbf{P2 (class lookup):} An \texttt{sid}$\to$majority-label
+lookup covers 99.5\% of the validation set and achieves
+\textbf{100\% accuracy on the covered rows}.
+
+\textbf{P4 (lookup + \texttt{lrate} override):} Combining the
+\texttt{sid} lookup with the deterministic rule
+``\texttt{lrate}$\neq 90 \Rightarrow$
+predict~\texttt{normal}'' yields \textbf{99.77\% validation
+accuracy} --- within 0.02~pp of the 99.79\% previously reported
+on this dataset~\cite{lee2023leak}.
+
+Together the four probes demonstrate that the published
+benchmark number is recoverable without ever consulting the
+vibration spectrum (see the Stage~1 summary in
+Figure~\ref{fig:overview}). This is the strongest single
+finding of the paper: it does not merely reduce the headline
+accuracy, it shows that the accuracy was not a measurement of
+a physical capability in the first place.
+
+\subsection{Evaluation-Protocol Sensitivity}\label{sec:res-matrix}
+
+Having established that the standard evaluation protocol
+trivialises the task, Table~\ref{tab:matrix} reports the
+$2\times 3$ (feature-set~$\times$~protocol) grid that
+quantifies the protocol sensitivity of the same XGBoost
+classifier.
+
+\begin{table}[H]
+\caption{Evaluation-protocol sensitivity. Moving from
+row-level to site-group cross-validation drops accuracy by
+$\sim$39~pp regardless of whether identifier features are
+included. Under site-group CV the ``full'' features add
+essentially zero accuracy and slightly harm macro-F1, showing
+that they provide no benefit beyond their exploit of
+train/test sensor overlap.\label{tab:matrix}}
+\begin{tabularx}{\textwidth}{lCCC}
+\toprule
+\textbf{Feature Set} & \textbf{Split} & \textbf{Accuracy} & \textbf{Macro-F1} \\
+\midrule
+full (544 incl.\ IDs)    & PaperSplit            & 0.9402 & 0.9274 \\
+full                     & Random 5-fold CV      & $0.9449\!\pm\!0.002$ & 0.9331 \\
+full                     & \textbf{GroupSite 5-fold CV} & $\mathbf{0.5529\!\pm\!0.127}$ & \textbf{0.4188} \\
+signal (534)             & PaperSplit            & 0.8881 & 0.8610 \\
+signal                   & Random 5-fold CV      & $0.8915\!\pm\!0.002$ & 0.8669 \\
+signal                   & \textbf{GroupSite 5-fold CV} & $\mathbf{0.5537\!\pm\!0.113}$ & \textbf{0.4378} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig1_matrix.pdf}
+\caption{Evaluation-protocol sensitivity bar chart. Accuracy
+(blue) and macro-F1 (red) for six (features~$\times$~protocol)
+cells. The GroupSite protocol reveals a $\sim$39~pp accuracy
+drop that is invisible under row-level CV.\label{fig:matrix}}
+\end{figure}
+
+\subsection{Leave-One-Region-Out Baseline}\label{sec:res-loro}
+
+LORO over the 12 administrative regions provides the
+tightest OOD stress-test. Table~\ref{tab:loro} reports the
+aggregate metrics.
+
+\begin{table}[H]
+\caption{LORO 12-fold accuracy and macro-F1. The large
+unweighted standard deviation is driven by degenerate folds
+with fewer than three leak classes present; the
+$n_\text{test}$-weighted accuracy is the more honest summary
+statistic.\label{tab:loro}}
+\begin{tabularx}{\textwidth}{lCCC}
+\toprule
+\textbf{Feature} & \textbf{Macro Acc} & \textbf{Weighted Acc} & \textbf{Macro-F1} \\
+\midrule
+full    & $0.588\!\pm\!0.287$ & 0.562 & 0.300 \\
+signal  & $0.602\!\pm\!0.261$ & 0.568 & 0.304 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig2_loro_per_region.pdf}
+\caption{Per-region LORO performance. Accuracy (top) and
+macro-F1 (bottom) for each of the 12 folds. Point estimates
+span 0.15--0.94. Chungbuk (region~43, rightmost highlight) is
+the only fold with all five classes present.\label{fig:loro}}
+\end{figure}
+
+Of the 12 folds, only the Chungbuk fold (region code 43;
+5{,}074 rows; 1{,}868 \texttt{in}, 1{,}685 \texttt{noise},
+757 \texttt{other}, 719 \texttt{out}, 45 \texttt{normal})
+contains all five classes in substantial quantities. On
+this fold, signal-only XGBoost scores accuracy 0.298 and
+macro-F1 0.415. This is the closest existing estimate of the
+5-class leak-typing capability of the dataset under a
+realistic deployment shift.
+
+\subsection{Causal Spectral Signature}\label{sec:res-perm}
+
+Applying grouped permutation importance
+(Section~\ref{sec:method-perm}) on the Chungbuk fold yields
+the band-level diagnostic in Table~\ref{tab:bands} and
+Figure~\ref{fig:bands}.
+
+\begin{table}[H]
+\caption{Gain and permutation importance per log-spaced HZ
+band group on the Chungbuk LORO fold. Positive
+$\Delta_{\mathrm{F1}}$ marks a band range whose contents
+are causally useful for OOD generalisation; negative
+$\Delta_{\mathrm{F1}}$ marks an active confounder. HZ-gain
+shares are computed relative to the total gain across the
+513 HZ bands.\label{tab:bands}}
+\begin{tabularx}{\textwidth}{lCCC}
+\toprule
+\textbf{Band} & \textbf{HZ-Gain Share} & \textbf{$\Delta_{\mathrm{F1}}$ on perm} & \textbf{Verdict} \\
+\midrule
+10--121 Hz     & 2.5\%  & $\approx 0$      & noise \\
+121--422 Hz    & 7.5\%  & \textbf{+0.033}  & \textbf{real signal} \\
+422--1470 Hz   & 22.9\% & \textbf{$-$0.033} & \textbf{confounder} \\
+1470--5120 Hz  & 67.1\% & $\approx 0$      & irrelevant \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig3_band_importance.pdf}
+\caption{Causal spectral signature of leak noise. Left:
+grouped permutation importance (macro-F1 drop when each
+band range is permuted on the held-out Chungbuk test set).
+Right: XGBoost gain distribution over the same bands.
+The model allocates 67\% of its gain to frequencies
+($>$1.47~kHz) that carry no OOD signal, and 23\% to a band
+range (422--1470 Hz) whose permutation \emph{improves} test
+macro-F1.\label{fig:bands}}
+\end{figure}
+
+Two observations deserve emphasis. First, the model's gain
+distribution is badly misaligned with the permutation-
+importance diagnostic: only 7.5\% of the gain is invested in
+the 121--422 Hz range that carries generalisable leak signal,
+while two-thirds of the gain is invested in the 1.47--5.12~kHz
+range that is OOD-irrelevant. Second, a full 23\% of the
+gain is invested in the 422--1470 Hz range that is actively
+harmful: permuting these columns on unseen sensors and sites
+improves macro-F1 by 3.3~pp.
+
+The per-class decomposition further localises each leak
+class's generalisable spectral signature:
+\texttt{in}~$\to$~226--788 Hz (combined +0.038);
+\texttt{out}~$\to$~121--226 Hz ($+0.049$);
+\texttt{noise}~$\to$~226--422 Hz ($+0.065$);
+\texttt{other}~$\to$~65--121 Hz ($+0.041$),
+harmed the most by 422--1470 Hz ($-0.133$);
+\texttt{normal} is band-invariant and relies on the MAX
+aggregates representing overall signal energy. The
+121--422 Hz consensus range is consistent with published
+leak-noise acoustics for plastic pipes, where the dominant
+leak content typically lies below 600 Hz and is attenuated
+sharply at higher frequencies due to pipe-wall
+damping~\cite{hunaidi2000plastic,ismail2019review,shukla2020leakage}.
+
+\subsection{Causal-Band Retraining}\label{sec:res-causal}
+
+Section~\ref{sec:res-perm} identifies the 65--422 Hz range
+as the causally useful band for leak typing on this dataset.
+To test whether the diagnostic corresponds to an
+actionable design lever, XGBoost is retrained under five
+feature regimes with MAX and month held constant
+(Table~\ref{tab:causal}, Figure~\ref{fig:causal}).
+
+\begin{table}[H]
+\caption{Causal-band retraining on the Chungbuk LORO fold.
+The 57-feature causal subset beats the 534-feature baseline
+on macro-F1 and nearly doubles the F1 of the hardest
+``other'' class, while anti-causal retraining (which uses
+exactly the bands that the unaudited XGBoost attended to)
+performs worst.\label{tab:causal}}
+\begin{tabularx}{\textwidth}{lCCCC}
+\toprule
+\textbf{Config} & \textbf{\#feat} & \textbf{Acc} & \textbf{Macro-F1} & \textbf{\texttt{other} F1} \\
+\midrule
+signal\_all (all 513 HZ)          & 534 & 0.2978 & 0.4148 & 0.109 \\
+\textbf{causal 65--422 Hz}        & \textbf{57} & \textbf{0.3013} & \textbf{0.4273} & \textbf{0.214} \\
+low-only 0--65 Hz                 & 28  & 0.3059 & 0.4251 & 0.173 \\
+mid-confounder 422--1470 Hz       & 125 & 0.2858 & 0.4066 & 0.103 \\
+anti-causal 788--5120 Hz          & 455 & 0.2958 & 0.4031 & 0.050 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig5_causal_bands.pdf}
+\caption{Causal-band retraining: accuracy and macro-F1
+(left) and per-class F1 (right) under five HZ-subset
+regimes.\label{fig:causal}}
+\end{figure}
+
+The causal subset (57 features, 11\% of the full feature
+set) improves macro-F1 by $+1.25$~pp over the full
+534-feature model and raises the \texttt{other}-class F1
+from 0.109 to 0.214. The anti-causal subset that keeps only
+the high-frequency bands on which the unaudited model spends
+most of its gain collapses the \texttt{other}-class F1 to
+0.050 --- a direct experimental confirmation that those
+bands were contributing misleading site-specific information
+under in-distribution evaluation.
+
+Cross-region robustness of the causal-subset advantage is
+mixed but quantifiable: across 11 non-degenerate LORO folds,
+the causal subset wins on 6 / 11 and loses on 5 / 11, with an
+$n_\text{test}$-weighted $\Delta_{\mathrm{F1}} = +0.004$.
+The effect is clearest on the canonical 5-class-balanced
+Chungbuk fold and on the two next most abnormal-heavy folds
+(Daegu $+0.084$, Gwangju $+0.063$); it is weaker or reversed
+on folds that contain only 1--2 classes, where the permutation
+analysis was not designed to apply.
+
+\subsection{Invariance Regularisation vs.\ Causal Feature Selection}\label{sec:res-irm}
+
+The MLP and 1D-CNN experiments of
+Section~\ref{sec:method-irm} test whether gradient-based
+invariance regularisation recovers the performance that
+causal feature selection affords (Table~\ref{tab:irm},
+Figure~\ref{fig:irm}).
+
+\begin{table}[H]
+\caption{Invariance-regularised deep models versus
+XGBoost on the Chungbuk LORO fold. No deep configuration
+matches causal-band XGBoost on macro-F1; the gap is
+$-6.6$~pp for the best deep model (MLP~+~GroupDRO). All
+deep models collapse the \texttt{normal}-class F1 by a
+large margin.\label{tab:irm}}
+\begin{tabularx}{\textwidth}{lCCC}
+\toprule
+\textbf{Model} & \textbf{Acc} & \textbf{Macro-F1} & \textbf{\texttt{normal} F1} \\
+\midrule
+XGB signal\_all          & 0.2978 & 0.4148 & \textbf{1.000} \\
+XGB causal 65--422 Hz    & \textbf{0.3013} & \textbf{0.4273} & \textbf{1.000} \\
+MLP ERM                  & 0.2872 & 0.3155 & 0.533 \\
+MLP IRM (default)        & 0.2907 & 0.3122 & 0.508 \\
+\textbf{MLP GroupDRO}    & \textbf{0.3210} & \textbf{0.3615} & 0.672 \\
+CNN ERM                  & 0.3494 & 0.3484 & 0.562 \\
+CNN IRM                  & 0.3589 & 0.3438 & 0.448 \\
+CNN GroupDRO             & 0.2605 & 0.2848 & 0.514 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig6_irm_comparison.pdf}
+\caption{Invariance learning versus causal XGBoost on the
+Chungbuk fold. Deep models collapse the
+\texttt{normal}-class F1 (0.45--0.68) while XGBoost holds it
+at 1.000, producing a persistent $-6.6$~pp macro-F1 gap
+against causal XGBoost.\label{fig:irm}}
+\end{figure}
+
+A dedicated IRM hyperparameter sweep over
+$\lambda_{\max} \in \{1, 10, 10^2, 10^3, 10^4\}$ and
+$T_\mathrm{warmup} \in \{10, 30\}$ on the MLP found
+$\lambda_{\max}=1$ to be the validation-selected setting
+(both warmups tie), reaching test macro-F1~0.3145. The best
+observed test configuration, $\lambda_{\max}=1000$ and
+$T_\mathrm{warmup}=30$, reaches 0.3372 but is not selected by
+validation. Both remain below causal-band XGBoost and
+MLP~+~GroupDRO. On this dataset IRM is tunable but not transformative, a
+finding consistent with~\cite{rosenfeld2021irm} and
+\cite{gulrajani2021dg}.
+
+The root cause of the deep-vs-tree gap is visible in the
+per-class \texttt{normal} F1. An XGBoost tree trivially
+separates \texttt{normal} from any-leak on a single split on
+the MAX aggregates (overall spectrum energy), reaching F1
+1.000 even on unseen regions. The class-balanced
+cross-entropy loss used by the deep models, by contrast,
+trades \texttt{normal} accuracy for marginal gains on the
+four hard abnormal classes, causing the observed collapse.
+This is not primarily a question of invariance; it is a
+question of whether the \texttt{normal}-vs-abnormal
+separation is being made along its natural low-dimensional
+axis.
+
+\subsection{Robust Causal-Band Identification}\label{sec:res-robust}
+
+To harden the single-region causal-band finding of
+Section~\ref{sec:res-perm}, the robustness protocol of
+Section~\ref{sec:method-robust} is applied.
+Table~\ref{tab:robust} reports bootstrap 95\% confidence
+intervals on $\Delta_{\mathrm{F1}}$ per band group, replicated
+across the four LORO folds with at least four leak classes and
+at least 5{,}000 test rows.
+
+\begin{table}[H]
+\caption{Bootstrap 95\% confidence intervals
+($B = 100$ resamples) of the per-band permutation
+$\Delta_{\mathrm{F1}}$ on each LORO fold. Wins/losses counted
+across the four folds show that 121--422 Hz is the dominant
+positive contributor in three of four regions, consistent with
+the Chungbuk-only diagnosis.\label{tab:robust}}
+\begin{adjustwidth}{-\extralength}{0cm}
+\begin{tabularx}{\fulllength}{lCCCC}
+\toprule
+\textbf{Region} & \textbf{10--121 Hz} & \textbf{121--422 Hz} & \textbf{422--1470 Hz} & \textbf{1470--5120 Hz} \\
+\midrule
+43 (Chungbuk, 5 cls) & $+0.007$ [0.002, 0.013] & $\mathbf{+0.041}$ [0.033, 0.049] & $\mathbf{-0.021}$ [$-0.029$, $-0.013$] & $+0.008$ [0.004, 0.014] \\
+45 (Jeonbuk, 5 cls)  & $+0.011$ [0.005, 0.018] & $-0.005$ [$-0.016$, $+0.004$] & $+0.003$ [$-0.004$, $+0.011$] & $+0.018$ [0.013, 0.024] \\
+46 (Jeonnam, 4 cls)  & $+0.008$ [0.005, 0.011] & $+0.026$ [0.020, 0.031] & $+0.015$ [0.012, 0.018] & $+0.003$ [0.000, 0.007] \\
+47 (Gyeongbuk, 4 cls) & $+0.012$ [0.009, 0.015] & $+0.013$ [0.010, 0.019] & $-0.008$ [$-0.014$, $-0.003$] & $+0.011$ [0.007, 0.014] \\
+\midrule
+\textbf{Consensus (mean $\pm$ std, wins/losses)} & $+0.009 \pm 0.002$ (4/0) & $+0.019 \pm 0.017$ (3/1) & $-0.003 \pm 0.013$ (2/2) & $+0.010 \pm 0.005$ (4/0) \\
+\bottomrule
+\end{tabularx}
+\end{adjustwidth}
+\end{table}
+
+SHAP second-source attribution on 500 Chungbuk test rows
+corroborates the permutation diagnosis.
+Table~\ref{tab:shap} juxtaposes three independent importance
+measures.
+
+\begin{table}[H]
+\caption{Three independent importance measures agree that
+121--422 Hz is the causal band on the Chungbuk fold. XGBoost
+gain is strongly mis-aligned: only 7.5\% of the gain is
+invested in a band that accounts for 40.4\% of SHAP mass.\label{tab:shap}}
+\begin{tabularx}{\textwidth}{lCCC}
+\toprule
+\textbf{Band} & \textbf{XGBoost Gain} & \textbf{SHAP Mass} & \textbf{Permutation $\Delta_{\mathrm{F1}}$} \\
+\midrule
+10--121 Hz     & 2.5\%  & 8.5\%              & $+0.007$          \\
+\textbf{121--422 Hz}  & 7.5\% & \textbf{40.4\%} & \textbf{+0.041}   \\
+422--1470 Hz   & 22.9\% & 28.4\%              & $-0.021$          \\
+1470--5120 Hz  & \textbf{67.1\%} & 22.7\%      & $+0.008$          \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig7_robust_bands.pdf}
+\caption{Left: bootstrap 95\% CIs for $\Delta_{\mathrm{F1}}$ per
+band group on each of four LORO folds. Right: side-by-side
+comparison of three importance measures on the canonical
+Chungbuk fold. The convergence of permutation importance,
+SHAP, and cross-region bootstrap on the 121--422 Hz range
+(and its divergence from the model's own gain allocation) is
+the robustness claim of this section.\label{fig:robust}}
+\end{figure}
+
+\subsection{Augmentation and Robust-Loss Recipes}\label{sec:res-aug}
+
+Table~\ref{tab:aug} reports six training configurations on the
+CNN baseline of Section~\ref{sec:method-irm} and an additional
+MLP--causal configuration.
+
+\begin{table}[H]
+\caption{Training recipe sweep. SpecAugment delivers the
+largest macro-F1 improvement (+2.0 pp over the CNN
+baseline); focal loss mainly improves accuracy; Mixup hurts.\label{tab:aug}}
+\begin{tabularx}{\textwidth}{lCCC}
+\toprule
+\textbf{Recipe} & \textbf{Model} & \textbf{Macro-F1} & \textbf{Accuracy} \\
+\midrule
+baseline (class-weighted CE) & CNN & 0.3341 & 0.3343 \\
+\textbf{+ SpecAugment}       & \textbf{CNN} & \textbf{0.3544} & 0.3384 \\
++ Mixup                      & CNN & 0.3169 & 0.3431 \\
++ Focal loss ($\gamma$=2)    & CNN & 0.3393 & \textbf{0.3648} \\
+all three combined           & CNN & 0.3226 & 0.3007 \\
+Mixup + focal                & MLP (causal) & 0.2933 & 0.3147 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The strongest single-recipe CNN (SpecAugment) reaches
+macro-F1 0.3544, +2.0 pp over the augmentation baseline and
+still $-7.3$ pp below causal-band
+XGBoost. This confirms that the CNN's deficit is not cured by
+recipe engineering alone, although it is closed somewhat.
+
+\subsection{Permutation-Guided Attention (Negative Result)}\label{sec:res-pga}
+
+A permutation-importance prior injected into an attention
+layer over spectrum bands, swept over $\lambda_c \in
+\{0, 0.1, 1, 10, 100\}$ and uniform-vs-prior initialisation,
+never becomes competitive in the test-fold diagnostic: the best
+observed test macro-F1 is \textbf{0.3041} (at $\lambda_c=1$,
+uniform init). This number is reported as a negative-result
+ablation rather than as a validation-selected model. It is below
+the plain MLP ERM baseline of Section~\ref{sec:res-irm} (0.3155)
+and far below causal-band XGBoost (0.4273). The prior's value is diminished
+because it is computed on training data where sensor overlap
+is near-complete, so it inherits the shortcut bias it was
+intended to overcome. The result reinforces
+Section~\ref{sec:discussion}'s main conclusion: when a causal
+feature is nameable a priori (here, the 121--422 Hz range),
+hard feature selection is more reliable than any soft-prior
+injection we tested.
+
+\subsection{Hierarchical Classifier}\label{sec:res-hier}
+
+The hierarchical recipe of Section~\ref{sec:method-hier}
+targets exactly the \texttt{normal}-collapse failure mode.
+Table~\ref{tab:hier} reports the results.
+
+\begin{table}[H]
+\caption{Hierarchical (binary energy gate $+$ 4-class causal
+typer) versus flat 5-class XGBoost on the Chungbuk LORO
+fold. Stage~1 achieves 100\% OOD accuracy on the
+\texttt{normal} gate (45 of 45 normal rows detected, zero
+false positives).\label{tab:hier}}
+\begin{adjustwidth}{-\extralength}{0cm}
+\begin{tabularx}{\fulllength}{lCCCCCCC}
+\toprule
+\textbf{Model} & \textbf{Acc} & \textbf{Macro-F1} & \textbf{in} & \textbf{out} & \textbf{noise} & \textbf{other} & \textbf{normal} \\
+\midrule
+Flat 5-class (causal)           & 0.3013 & 0.4273 & 0.326 & 0.206 & 0.391 & 0.214 & 1.000 \\
+\textbf{Hierarchical (causal)}  & \textbf{0.3041} & \textbf{0.4287} & 0.345 & 0.200 & 0.377 & 0.222 & 1.000 \\
+\bottomrule
+\end{tabularx}
+\end{adjustwidth}
+\end{table}
+
+Stage~1 is perfect on OOD: every one of the 45 normal rows
+in the Chungbuk test set is correctly flagged, with zero
+false positives. Stage~2 operates on a cleaner training
+distribution (abnormal-only, 43{,}189 rows), producing a
+small but consistent macro-F1 gain and, more importantly for
+field deployment, decoupling the alarm decision (Stage~1)
+from the triage decision (Stage~2). For a field technician,
+this separation is operationally meaningful: an alarm can be
+dispatched on Stage~1's confidence alone, with Stage~2
+producing a probable leak type to guide on-site investigation.
+
+\subsection{Soft-Probability Ensemble}\label{sec:res-ensemble}
+
+The ensembling protocol of Section~\ref{sec:method-ensemble} is
+applied on the Chungbuk LORO fold.
+
+\begin{table}[H]
+\caption{Soft-probability ensembles on the Chungbuk LORO fold.
+The tree-only average of the flat and hierarchical causal
+XGBoost classifiers is fixed before the comparison and attains
+OOD macro-F1 \textbf{0.4326}. Adding the validation-selected CNN
+hurts because its one-hot fallback probabilities dilute the tree
+models' calibrated confidence.\label{tab:ensemble}}
+\begin{tabularx}{\textwidth}{lCC}
+\toprule
+\textbf{Method} & \textbf{Macro-F1} & \textbf{Accuracy} \\
+\midrule
+XGB causal (flat)          & 0.4273 & 0.3013 \\
+XGB hierarchical           & 0.4287 & 0.3041 \\
+CNN (validation-selected)  & 0.3544 & 0.3384 \\
+3-way soft average         & 0.3633 & 0.3159 \\
+\textbf{Tree-only soft average} & \textbf{0.4326} & 0.3096 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig8_boost_ensemble.pdf}
+\caption{Left: CNN training-recipe comparison under LORO
+Chungbuk. Right: individual and ensemble methods. The tree-only
+ensemble (rightmost bar) is a pre-specified average of the two
+causal tree models and reaches OOD macro-F1 0.4326 while
+preserving the hierarchical classifier's perfect OOD
+\texttt{normal}-class recall.\label{fig:boost}}
+\end{figure}
+
+%=================================================================
+\section{Discussion}\label{sec:discussion}
+
+\subsection{What the Benchmark Actually Supports}
+
+Three positions follow from the results.
+
+First, binary \texttt{normal}-vs-any-leak is a solved
+problem on this benchmark. An XGBoost tree on the 20 MAX
+aggregates achieves perfect OOD separation on the canonical
+Chungbuk fold. This capability would plausibly transfer to
+a field deployment and supports an operational alarm layer.
+
+Second, 4-class abnormal typing is brittle. The highest OOD
+macro-F1 observed under the pre-specified tree-only average is 0.4326,
+followed by 0.4287 (hierarchical classifier) and 0.4273
+(flat causal XGBoost); below these, the best invariance-
+regularised MLP reaches 0.3615 and the augmented CNN 0.3544. The hardest class is
+\texttt{other}: its OOD F1 ranges from 0.050 (anti-causal
+XGBoost) to 0.222 (hierarchical, the best). The dataset's
+environmental coverage is thin (49 sites in 12 regions, of
+which only 1 has all five classes represented), and
+definitive 4-class typing on new sites remains an open
+problem.
+
+Third, identifier-level features (\texttt{site},
+\texttt{sid}, \texttt{lrate}, regional codes) should not be
+used in any future benchmark on this dataset; doing so is
+an evaluation mistake. The shortcut-audit protocol of
+Section~\ref{sec:method-audit} can be run in a few minutes
+and makes this diagnosis sharp.
+
+\subsection{Why Invariance Learning Lags Causal Feature Selection}
+
+The negative result of Section~\ref{sec:res-irm} deserves
+emphasis. With the 57 causal features hand-picked and fed
+to a well-regularised tree model, a 6.6~pp macro-F1 lead
+over the best deep invariance-regularised alternative is
+not closed by any amount of IRM or GroupDRO tuning in this
+study.
+
+Three factors explain the finding. First, the dataset has
+only 11 training environments (regions), and they are
+severely imbalanced in size (40$\times$ ratio between the
+largest and smallest). IRM in particular is known to
+destabilise under these
+conditions~\cite{gulrajani2021dg,rosenfeld2021irm}. Second,
+the class-balanced cross-entropy loss used by the deep
+models trades the easy \texttt{normal}-vs-abnormal decision
+for marginal gains on abnormal separation, giving up a
+class that the tree model handles trivially. Third ---
+perhaps most importantly for methodological practice --- the
+causal spectral signature of leak noise can be named
+\emph{ex ante} from the physics: plastic pipe leak noise is
+broadly in the low hundreds of Hz, and the permutation-
+importance diagnostic independently recovered exactly that
+range. When the invariant feature is nameable from domain
+knowledge, feature selection is both cheaper and more
+reliable than loss-level regularisation.
+
+This is a useful negative result for the broader sensor-ML
+community: it suggests that invariance methods are best
+reserved for problems where the invariant feature cannot be
+named, such as raw imagery~\cite{beery2018terra}.
+
+\subsection{Practical Recommendations for Practitioners}
+
+For a utility or research group considering the AI~Hub pipeline
+for field deployment, the audit delivers five concrete actions:
+
+\begin{enumerate}
+\item \textbf{Run the shortcut audit first.} Before training a
+single model, run the four probes of
+Section~\ref{sec:method-audit} on your split. If an \texttt{sid}
+lookup plus a meta-column rule reproduces the target accuracy,
+the benchmark result is identifier-driven and the headline
+number is not a measurement of signal capability. Downstream
+modelling effort is then better spent on redesigning the split
+than on architecture search.
+
+\item \textbf{Drop identifier columns during training.} On this
+dataset \texttt{site}, \texttt{sid}, \texttt{lrate},
+\texttt{llevel}, and all \texttt{region\_*n} codes should be
+removed from the input. Under LORO evaluation, keeping them
+provides zero accuracy benefit and slightly harms macro-F1
+(Table~\ref{tab:matrix}).
+
+\item \textbf{Restrict the spectrum to 65--422 Hz before
+training the 4-class typer.} On the canonical Chungbuk fold
+this raises macro-F1 from 0.4148 to 0.4273 and almost doubles
+the F1 on the hardest (\texttt{other}) class. The 57-feature
+causal subset also trains roughly ten times faster than the
+full 534-feature set.
+
+\item \textbf{Deploy two stages, not one.} Use the binary
+normal-vs-abnormal gate (trained on all 57 causal features) to
+raise a leak alarm, and consult the 4-class typer only when
+the gate fires. On the Chungbuk fold, the gate achieves 100\%
+OOD recall on the 45 normal rows with zero false positives;
+the typer then works on a cleaner, abnormal-only distribution
+and focuses attention on the hard decision (in/out/noise/other).
+
+\item \textbf{Report LORO, not row-CV, as the evaluation of
+record.} Row-level 10-fold cross-validation is a useful
+internal debugging tool, but the number that matters for field
+decisions is the LORO-weighted macro-F1 on the region with
+the most balanced class distribution (Chungbuk here). On this
+benchmark that number is currently 0.4273--0.4326 depending
+on the recipe; any method that does not report this kind of
+evaluation should be treated as producing an upper bound only.
+\end{enumerate}
+
+\subsection{Portability of the Methodology}
+
+The shortcut-audit protocol, the three-tier OOD evaluation,
+and the grouped permutation-importance diagnostic are
+independent of the specific physics of water-pipe leaks.
+They apply directly to any sensor-ML benchmark that has:
+(i)~at least one identifier-like column, (ii)~a natural
+hierarchy of group variables (sensor / site / region), and
+(iii)~features that can be grouped physically (bands of a
+spectrum, segments of a trajectory, channels of a
+multivariate time series). Examples include gas-pipe leak
+detection, rotating-machinery condition monitoring,
+partial-discharge detection in power transformers, and
+sound-based machine-fault diagnosis. Transferring the
+protocol to those benchmarks is a natural next step.
+
+\subsection{Limitations}
+
+Three limitations are worth naming explicitly. First, the
+causal-band identification is made on a single region (Chungbuk)
+because no other fold contains all five classes in
+substantial quantities. A larger, more geographically diverse
+collection would test whether the 121--422 Hz range
+transfers to other deployment contexts. Second, the
+deep-learning architectures explored here are modest; a
+Transformer-based spectrogram classifier or a self-
+supervised pre-training pass might reduce the gap against
+XGBoost. Third, the IRM sweep was confined to
+$\lambda_{\max}$ and warm-up; tuning the MLP architecture
+jointly with IRM might yield further improvements.
+
+%=================================================================
+\section{Conclusions}\label{sec:conclusions}
+
+This paper provides a field-deployment-oriented evaluation
+of machine-learning water-leak detection on the Korean AI~Hub
+vibration-sensor benchmark, to our knowledge the first to
+apply sensor-, site-, and region-group holdouts to this
+dataset. Four concrete
+findings stand out. (1)~The published 99\%-range accuracies
+on this benchmark are driven by identifier-label couplings
+in the standard split; a four-rule lookup that ignores the
+vibration spectrum reproduces 99.77\%. (2)~Under 12-fold
+Leave-One-Region-Out, the same XGBoost classifier falls to
+weighted 56.8\% accuracy and macro-F1 0.304 on 5-class leak
+typing. (3)~On the only region containing all five classes
+in substantial quantities, grouped permutation importance
+localises the generalisable leak signal to the
+121--422 Hz range, consistent with published leak-noise
+acoustics for plastic pipes. (4)~A hierarchical classifier
+combining a binary energy gate with a causal-band abnormal
+typer, further combined through a pre-specified tree
+soft-probability average, achieves OOD macro-F1
+\textbf{0.4326} and perfect OOD normal-class recall, forming a
+practical field-deployment candidate. Gradient-based invariance regularisation, evaluated
+on two deep backbones and a dedicated hyperparameter sweep,
+does not match causal feature selection. All code,
+experiment logs, and figure-generation scripts are released
+to enable further work.
+
+%=================================================================
+\vspace{6pt}
+
+\funding{This research was supported by the Regional
+Innovation Strategy (RIS) through the National Research
+Foundation of Korea (NRF) funded by the Ministry of
+Education (MOE) (2021RIS-001; 1345370811).}
+
+\institutionalreview{Not applicable.}
+
+\informedconsent{Not applicable.}
+
+\dataavailability{The AI~Hub water-pipe leak vibration
+dataset is openly available at
+\url{https://www.aihub.or.kr/} under dataset ID 138
+(accessed on 5~October 2023). Code, experiment logs,
+intermediate result JSONs, and figure-generation scripts
+are released under the MIT licence at
+\url{https://github.com/suanlee/causal-leak}.}
+
+\acknowledgments{%
+The author thanks the AI~Hub curators for maintaining the
+water-pipe vibration dataset. Generative-AI-assisted
+drafting (Claude Sonnet 4.5) was used for LaTeX
+formatting and light copy-editing of author-drafted text;
+all numerical claims, experimental code, scientific
+judgements, and the final manuscript remain the author's
+responsibility.}
+
+\conflictsofinterest{The author declares no conflict of
+interest. The funders had no role in the design of the
+study; in the collection, analyses, or interpretation of
+data; in the writing of the manuscript; or in the decision
+to publish the results.}
+
+%=================================================================
+\reftitle{References}
+
+\begin{thebibliography}{99}
+
+\bibitem[Hunaidi et al.(2000)]{hunaidi2000plastic}
+Hunaidi, O.; Chu, W.; Wang, A.; Guan, W.
+Detecting Leaks in Plastic Pipes. Journal AWWA \textbf{2000},
+\emph{92}, 82--94.
+
+\bibitem[Ismail et al.(2019)]{ismail2019review}
+Ismail, M.I.M.; Dziyauddin, R.A.; Salleh, N.A.A.;
+Muhammad-Sukki, F.; Bani, N.A.; Izhar, M.A.M.; Latiff, L.A.
+A Review of Vibration Detection Methods Using Accelerometer
+Sensors for Water Pipeline Leakage. IEEE Access \textbf{2019},
+\emph{7}, 51965--51981.
+
+\bibitem[Shukla and Piratla(2020)]{shukla2020leakage}
+Shukla, H.; Piratla, K.
+Leakage Detection in Water Pipelines Using Supervised
+Classification of Acceleration Signals. Automation in
+Construction \textbf{2020}, \emph{117}, 103256.
+
+\bibitem[Fereidooni et al.(2021)]{fereidooni2021hybrid}
+Fereidooni, Z.; Tayyebi, H.; Bahadori-Jahromi, A.
+A Hybrid Model-Based Method for Leak Detection in Large Scale
+Water Distribution Networks. Journal of Ambient Intelligence
+and Humanized Computing \textbf{2021}, \emph{12}, 1613--1629.
+
+\bibitem{lee2023leak}
+Lee, S.; Kim, B.
+Machine Learning Model for Leak Detection Using Water
+Pipeline Vibration Sensor. Sensors \textbf{2023}, \emph{23},
+8935. \url{https://doi.org/10.3390/s23218935}.
+
+\bibitem{chen2016xgboost}
+Chen, T.; Guestrin, C.
+XGBoost: A Scalable Tree Boosting System. In Proceedings of
+the 22nd ACM SIGKDD International Conference on Knowledge
+Discovery and Data Mining, San Francisco, CA, USA, 13--17
+August 2016; pp.~785--794.
+
+\bibitem{breiman2001rf}
+Breiman, L.
+Random Forests. Machine Learning \textbf{2001}, \emph{45},
+5--32.
+
+\bibitem{arjovsky2019irm}
+Arjovsky, M.; Bottou, L.; Gulrajani, I.; Lopez-Paz, D.
+Invariant Risk Minimization. arXiv \textbf{2019},
+arXiv:1907.02893.
+
+\bibitem{sagawa2020groupdro}
+Sagawa, S.; Koh, P.W.; Hashimoto, T.B.; Liang, P.
+Distributionally Robust Neural Networks for Group Shifts: On
+the Importance of Regularization for Worst-Case
+Generalization. In Proceedings of the International
+Conference on Learning Representations (ICLR), Addis Ababa,
+Ethiopia, 26--30 April 2020.
+
+\bibitem{gulrajani2021dg}
+Gulrajani, I.; Lopez-Paz, D.
+In Search of Lost Domain Generalization. In Proceedings of
+the International Conference on Learning Representations
+(ICLR), Virtual, 3--7 May 2021.
+
+\bibitem{rosenfeld2021irm}
+Rosenfeld, E.; Ravikumar, P.; Risteski, A.
+The Risks of Invariant Risk Minimization. In Proceedings of
+the International Conference on Learning Representations
+(ICLR), Virtual, 3--7 May 2021.
+
+\bibitem{krueger2021rex}
+Krueger, D.; Caballero, E.; Jacobsen, J.-H.; Zhang, A.;
+Binas, J.; Zhang, D.; Le Priol, R.; Courville, A.
+Out-of-Distribution Generalization via Risk Extrapolation
+(REx). In Proceedings of the 38th International Conference
+on Machine Learning (ICML), Virtual, 18--24 July 2021;
+pp.~5815--5826.
+
+\bibitem{geirhos2020shortcut}
+Geirhos, R.; Jacobsen, J.-H.; Michaelis, C.; Zemel, R.;
+Brendel, W.; Bethge, M.; Wichmann, F.A.
+Shortcut Learning in Deep Neural Networks. Nature Machine
+Intelligence \textbf{2020}, \emph{2}, 665--673.
+
+\bibitem[Zech et al.(2018)]{zech2018pneumonia}
+Zech, J.R.; Badgeley, M.A.; Liu, M.; Costa, A.B.;
+Titano, J.J.; Oermann, E.K.
+Variable Generalization Performance of a Deep Learning Model
+to Detect Pneumonia in Chest Radiographs: A Cross-Sectional
+Study. PLoS Medicine \textbf{2018}, \emph{15}, e1002683.
+
+\bibitem[DeGrave et al.(2021)]{degrave2021covid}
+DeGrave, A.J.; Janizek, J.D.; Lee, S.-I.
+AI for Radiographic COVID-19 Detection Selects Shortcuts
+over Signal. Nature Machine Intelligence \textbf{2021},
+\emph{3}, 610--619.
+
+\bibitem[Beery et al.(2018)]{beery2018terra}
+Beery, S.; Van Horn, G.; Perona, P.
+Recognition in Terra Incognita. In Proceedings of the
+European Conference on Computer Vision (ECCV), Munich,
+Germany, 8--14 September 2018; pp.~456--473.
+
+\bibitem[D'Amour et al.(2022)]{damour2022underspec}
+D'Amour, A.; Heller, K.; Moldovan, D.; et~al.
+Underspecification Presents Challenges for Credibility in
+Modern Machine Learning. Journal of Machine Learning
+Research \textbf{2022}, \emph{23}, 1--61.
+
+\bibitem{lundberg2017shap}
+Lundberg, S.M.; Lee, S.-I.
+A Unified Approach to Interpreting Model Predictions. In
+Advances in Neural Information Processing Systems (NeurIPS),
+Long Beach, CA, USA, 4--9 December 2017; pp.~4765--4774.
+
+\bibitem{park2019specaugment}
+Park, D.S.; Chan, W.; Zhang, Y.; Chiu, C.-C.; Zoph, B.;
+Cubuk, E.D.; Le, Q.V.
+SpecAugment: A Simple Data Augmentation Method for Automatic
+Speech Recognition. In Proceedings of Interspeech, Graz,
+Austria, 15--19 September 2019; pp.~2613--2617.
+
+\bibitem{zhang2018mixup}
+Zhang, H.; Cisse, M.; Dauphin, Y.N.; Lopez-Paz, D.
+Mixup: Beyond Empirical Risk Minimization. In Proceedings of
+the International Conference on Learning Representations (ICLR),
+Vancouver, BC, Canada, 30~April--3~May 2018.
+
+\bibitem{lin2017focal}
+Lin, T.-Y.; Goyal, P.; Girshick, R.; He, K.; Doll{\'a}r, P.
+Focal Loss for Dense Object Detection. In Proceedings of the
+IEEE International Conference on Computer Vision (ICCV),
+Venice, Italy, 22--29 October 2017; pp.~2980--2988.
+
+\end{thebibliography}
+
+\PublishersNote{}
+
+\end{document}

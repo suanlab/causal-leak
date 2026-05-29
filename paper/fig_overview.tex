@@ -1,0 +1,105 @@
+% fig_overview.tex -- Figure 1 (Overview), native TikZ.
+% Compact layout: short stage cards, tight spacing to context strip.
+
+\definecolor{ctxfill}{HTML}{FFF8DC}
+\definecolor{delvfill}{HTML}{ECF0F1}
+\definecolor{s1fill}{HTML}{E8F0FE}\definecolor{s1txt}{HTML}{C0392B}
+\definecolor{s2fill}{HTML}{FDECEA}\definecolor{s2txt}{HTML}{C0392B}
+\definecolor{s3fill}{HTML}{E9F7EF}\definecolor{s3txt}{HTML}{1E8449}
+\definecolor{s4fill}{HTML}{EFE6F7}\definecolor{s4txt}{HTML}{1A5FB4}
+\definecolor{darkborder}{HTML}{2C3E50}
+
+\begin{tikzpicture}[
+    font=\footnotesize,
+    box/.style={rounded corners=4pt, draw=darkborder!85, line width=0.7pt},
+    stage/.style={rounded corners=5pt, draw=darkborder!85, line width=0.8pt,
+                  minimum width=4.45cm, minimum height=4.2cm, anchor=north west},
+    headband/.style={rounded corners=3pt, fill=white,
+                     align=center, font=\bfseries\normalsize,
+                     minimum width=4.0cm, minimum height=0.8cm, anchor=south},
+    arr/.style={-{Stealth[length=2.5mm,width=2mm]}, line width=1pt, draw=darkborder!85},
+    downarr/.style={-{Stealth[length=3mm,width=2.5mm]}, line width=1.3pt,
+                    draw=darkborder!85},
+]
+
+% ========== Context strip ==========
+\node[box, fill=ctxfill, inner sep=8pt, anchor=north west,
+      text width=18.6cm, align=left] (ctx) at (0,0) {%
+  \textbf{\normalsize Input and motivating question}\par\vspace{3pt}
+  \textbullet~Korean AI\,Hub water-pipe vibration benchmark:
+    70{,}384 recordings, 49 sites, 12 administrative regions,
+    5 leak classes.\par
+  \textbullet~Prior reported ceiling (row-level 10-fold CV,
+    Lee \& Kim 2023): XGBoost accuracy 0.9979.\par
+  \textbullet~Practitioner's question: does that number hold on a
+    new sensor, at an unseen site, or in a different region?
+};
+
+% ========== Four stage cards (half-height, directly below context) ==========
+\def\ys{-2.25}
+
+\node[stage, fill=s1fill] (s1box) at (0.00, \ys) {};
+\node[anchor=north west, text width=4.1cm, inner sep=6pt]
+     at (s1box.north west) {%
+  {\LARGE\bfseries 1}\hspace{4pt}{\bfseries\normalsize Shortcut audit}\par
+  \vspace{5pt}
+  \textbullet~2{,}671 sensors each map to one class\par
+  \textbullet~97.96\% val sid in train
+};
+\node[headband, text=s1txt]
+     at ($(s1box.south)+(0, 0.15)$) {Zero-ML = 99.77\% val};
+
+\node[stage, fill=s2fill] (s2box) at (4.82, \ys) {};
+\node[anchor=north west, text width=4.1cm, inner sep=6pt]
+     at (s2box.north west) {%
+  {\LARGE\bfseries 2}\hspace{4pt}{\bfseries\normalsize Three-tier OOD}\par
+  \vspace{5pt}
+  \textbullet~Row 0.94 \;$\to$\; Site 0.55 \;$\to$\; LORO 0.57\par
+  \textbullet~Chungbuk (5 cls): macro-F1 0.4148
+};
+\node[headband, text=s2txt]
+     at ($(s2box.south)+(0, 0.15)$) {$-$39~pp drop};
+
+\node[stage, fill=s3fill] (s3box) at (9.64, \ys) {};
+\node[anchor=north west, text width=4.1cm, inner sep=6pt]
+     at (s3box.north west) {%
+  {\LARGE\bfseries 3}\hspace{4pt}{\bfseries\normalsize Causal spectral}\par
+  \vspace{5pt}
+  \textbullet~121--422~Hz = real leak signal\par
+  \textbullet~422--1470~Hz = active confounder\par
+  \textbullet~Confirmed 3$\times$ (perm, SHAP, 4-fold)
+};
+\node[headband, text=s3txt]
+     at ($(s3box.south)+(0, 0.15)$) {121--422~Hz (SHAP 40\%)};
+
+\node[stage, fill=s4fill] (s4box) at (14.46, \ys) {};
+\node[anchor=north west, text width=4.1cm, inner sep=6pt]
+     at (s4box.north west) {%
+  {\LARGE\bfseries 4}\hspace{4pt}{\bfseries\normalsize Deployment recipe}\par
+  \vspace{5pt}
+  \textbullet~Stage~1 normal gate: 100\% OOD recall\par
+  \textbullet~Stage~2 causal 4-class typer\par
+  \textbullet~Soft-averaged tree ensemble
+};
+\node[headband, text=s4txt]
+     at ($(s4box.south)+(0, 0.15)$) {Best macro-F1 = 0.4326};
+
+% Arrows between stages
+\draw[arr] (s1box.east) -- (s2box.west);
+\draw[arr] (s2box.east) -- (s3box.west);
+\draw[arr] (s3box.east) -- (s4box.west);
+
+% ========== Deliverable strip ==========
+\def\yd{-6.85}
+\node[box, fill=delvfill, inner sep=7pt, anchor=north west,
+      text width=18.7cm, align=left] (delv) at (0, \yd) {%
+  \textbf{\small Deliverables for practitioners}\par\vspace{2pt}
+  \small
+  $\blacktriangleright$~Open-source pipeline (MIT): 22 scripts,
+    13 raw-metric JSONs, figures, LaTeX source.\par
+  $\blacktriangleright$~Reusable shortcut-audit protocol.\par
+  $\blacktriangleright$~Hierarchical + ensemble recipe with perfect
+    OOD normal-class recall.
+};
+
+\end{tikzpicture}

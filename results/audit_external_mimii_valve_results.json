@@ -1,0 +1,58 @@
+{
+  "dataset": "MIMII-DG (valve)",
+  "n_rows": 3600,
+  "n_features": 128,
+  "sections": [
+    0,
+    1,
+    2
+  ],
+  "domains": [
+    "source",
+    "target"
+  ],
+  "positive_rate": 0.08333333333333333,
+  "audit": {
+    "P1_per_section_purity": {
+      "mean": 0.9166666666666666,
+      "median": 0.9166666666666666,
+      "frac_purity_1.0": 0.0,
+      "n_groups": 3
+    },
+    "P1_per_section_domain_purity": {
+      "mean": 0.749791492910759,
+      "median": 0.749791492910759,
+      "frac_purity_1.0": 0.0,
+      "n_groups": 6
+    },
+    "P2_section_lookup": {
+      "coverage": 1.0,
+      "covered_accuracy": 0.8888888888888888
+    },
+    "P3_section_overlap": {
+      "val_groups_in_train": 3,
+      "val_groups_total": 3,
+      "overlap_fraction": 1.0
+    }
+  },
+  "ladder": {
+    "row_cv": {
+      "acc_mean": 0.9477777777777778,
+      "acc_std": 0.005665577237325333,
+      "f1_macro_mean": 0.7592373705400977,
+      "f1_macro_std": 0.037599361233377225
+    },
+    "group_section_cv": {
+      "acc_mean": 0.7200000000000001,
+      "acc_std": 0.24878128874501323,
+      "f1_macro_mean": 0.4429651787182518,
+      "f1_macro_std": 0.08628712808391466
+    },
+    "source_to_target": {
+      "acc": 0.5909090909090909,
+      "f1_macro": 0.4545454545454546
+    },
+    "row_to_group_section_drop": 0.22777777777777775
+  },
+  "seed": 42
+}

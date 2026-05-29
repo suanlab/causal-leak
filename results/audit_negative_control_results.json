@@ -1,0 +1,59 @@
+{
+  "shortcut_preserved": {
+    "P1_per_sensor_purity": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "n_sensors": 2671,
+      "frac_purity_1.0": 1.0
+    },
+    "P2_P4_lookup": {
+      "p2_coverage": 0.9950127877237852,
+      "p2_covered_accuracy": 1.0,
+      "p4_full_accuracy": 0.9976982097186701
+    },
+    "P3_sensor_overlap": {
+      "val_sensors_in_train": 1876,
+      "val_sensors_total": 1915,
+      "overlap_fraction": 0.9796344647519583
+    }
+  },
+  "identifier_scrambled": {
+    "P1_per_sensor_purity": {
+      "mean": 0.41262395583590367,
+      "median": 0.4,
+      "p10": 0.3,
+      "n_sensors": 5000,
+      "frac_purity_1.0": 0.0002
+    },
+    "P2_P4_lookup": {
+      "p2_coverage": 1.0,
+      "p2_covered_accuracy": 0.2640664961636829,
+      "p4_full_accuracy": 0.4436061381074169
+    },
+    "P3_sensor_overlap": {
+      "val_sensors_in_train": 3936,
+      "val_sensors_total": 3936,
+      "overlap_fraction": 1.0
+    }
+  },
+  "label_permuted_globally": {
+    "P1_per_sensor_purity": {
+      "mean": 0.48415225704618403,
+      "median": 0.4,
+      "p10": 0.3,
+      "n_sensors": 2671,
+      "frac_purity_1.0": 0.13253463122426057
+    },
+    "P2_P4_lookup": {
+      "p2_coverage": 0.9950127877237852,
+      "p2_covered_accuracy": 0.28890888060660586,
+      "p4_full_accuracy": 0.43836317135549874
+    },
+    "P3_sensor_overlap": {
+      "val_sensors_in_train": 1876,
+      "val_sensors_total": 1915,
+      "overlap_fraction": 0.9796344647519583
+    }
+  }
+}
