@@ -1,0 +1,27 @@
+A. mixed installations with >= 30 per class: 5  (regions [27, 43, 44, 45])
+  region 27: trained 49s, whole-region AUC=1.0000
+    S-2711010100: n=4566/342 sensors=169/10  AUC rec=1.0000 sensor=1.0000  miss=0.0000 FA=0.0000
+  region 43: trained 50s, whole-region AUC=1.0000
+    S-4372025021: n=45/4753 sensors=5/135  AUC rec=1.0000 sensor=1.0000  miss=0.0000 FA=0.0000
+  region 44: trained 50s, whole-region AUC=1.0000
+    S-4413110100: n=1151/531 sensors=110/13  AUC rec=1.0000 sensor=1.0000  miss=0.0000 FA=0.0000
+  region 45: trained 48s, whole-region AUC=1.0000
+    S-4521010100: n=1624/594 sensors=207/19  AUC rec=1.0000 sensor=1.0000  miss=0.0000 FA=0.0000
+    S-4571025029: n=10675/396 sensors=584/8  AUC rec=1.0000 sensor=1.0000  miss=0.0025 FA=0.0001
+
+B. campaign signature: 6682 leak recordings at 8 normal-bearing installations vs 41536 at leak-only ones
+  fold 0: AUC=0.4628804999487392
+  fold 1: AUC=0.45650581364502685
+  fold 2: AUC=0.4973773500982224
+  fold 3: AUC=0.7926835576245641
+  fold 4: AUC=0.6023817217293866
+  pooled out-of-fold AUC = 0.3669
+
+C. lrate vs leak score among held-out normals: Spearman rho=0.6075 (p=0, n=18061)
+  lrate=30: n=  6094  mean score=0.00005  frac>=0.5=0.00000
+  lrate=40: n=  4087  mean score=0.00005  frac>=0.5=0.00000
+  lrate=50: n=  3053  mean score=0.00011  frac>=0.5=0.00000
+  lrate=60: n=  2493  mean score=0.00045  frac>=0.5=0.00000
+  lrate=70: n=  2334  mean score=0.00921  frac>=0.5=0.00043
+
+Saved /home/suan/Projects/Water/causal-leak/src/../results/lrate_confound_results.json  (453s)

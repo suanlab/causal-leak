@@ -1,0 +1,374 @@
+{
+  "features": [
+    "month",
+    "70HZ",
+    "80HZ",
+    "90HZ",
+    "100HZ",
+    "110HZ",
+    "120HZ",
+    "130HZ",
+    "140HZ",
+    "150HZ",
+    "160HZ",
+    "170HZ",
+    "180HZ",
+    "190HZ",
+    "200HZ",
+    "210HZ",
+    "220HZ",
+    "230HZ",
+    "240HZ",
+    "250HZ",
+    "260HZ",
+    "270HZ",
+    "280HZ",
+    "290HZ",
+    "300HZ",
+    "310HZ",
+    "320HZ",
+    "330HZ",
+    "340HZ",
+    "350HZ",
+    "360HZ",
+    "370HZ",
+    "380HZ",
+    "390HZ",
+    "400HZ",
+    "410HZ",
+    "420HZ",
+    "MAX0",
+    "MAX1",
+    "MAX2",
+    "MAX3",
+    "MAX4",
+    "MAX5",
+    "MAX6",
+    "MAX7",
+    "MAX8",
+    "MAX9",
+    "MAX10",
+    "MAX11",
+    "MAX12",
+    "MAX13",
+    "MAX14",
+    "MAX15",
+    "MAX16",
+    "MAX17",
+    "MAX18",
+    "MAX19"
+  ],
+  "holdout_region": 43,
+  "seed": 42,
+  "cal_split_fraction": 0.2,
+  "cal_n_total": 13062,
+  "cal_n_normal": 4492,
+  "cal_n_abnormal": 8570,
+  "e5_flat_xgb_detection_at_far": {
+    "far_0.01": {
+      "threshold": 0.019047724083065987,
+      "detection_rate": 1.0,
+      "achieved_far": 0.0,
+      "n_pos": 5029,
+      "n_neg": 45,
+      "far_target": 0.01,
+      "threshold_source": "calibration_split",
+      "cal_n_normal": 4492
+    },
+    "far_0.02": {
+      "threshold": 0.010903304442763329,
+      "detection_rate": 1.0,
+      "achieved_far": 0.0,
+      "n_pos": 5029,
+      "n_neg": 45,
+      "far_target": 0.02,
+      "threshold_source": "calibration_split",
+      "cal_n_normal": 4492
+    },
+    "far_0.05": {
+      "threshold": 0.004134056158363819,
+      "detection_rate": 1.0,
+      "achieved_far": 0.0,
+      "n_pos": 5029,
+      "n_neg": 45,
+      "far_target": 0.05,
+      "threshold_source": "calibration_split",
+      "cal_n_normal": 4492
+    },
+    "far_0.10": {
+      "threshold": 0.0015275597106665373,
+      "detection_rate": 1.0,
+      "achieved_far": 0.044444444444444446,
+      "n_pos": 5029,
+      "n_neg": 45,
+      "far_target": 0.1,
+      "threshold_source": "calibration_split",
+      "cal_n_normal": 4492
+    }
+  },
+  "e5_hier_stage1_detection_at_far": {
+    "far_0.01": {
+      "threshold": 0.009415521286427975,
+      "detection_rate": 1.0,
+      "achieved_far": 0.0,
+      "n_pos": 5029,
+      "n_neg": 45,
+      "far_target": 0.01,
+      "threshold_source": "calibration_split",
+      "cal_n_normal": 4492
+    },
+    "far_0.02": {
+      "threshold": 0.004606291186064482,
+      "detection_rate": 1.0,
+      "achieved_far": 0.0,
+      "n_pos": 5029,
+      "n_neg": 45,
+      "far_target": 0.02,
+      "threshold_source": "calibration_split",
+      "cal_n_normal": 4492
+    },
+    "far_0.05": {
+      "threshold": 0.001722061657346785,
+      "detection_rate": 1.0,
+      "achieved_far": 0.022222222222222223,
+      "n_pos": 5029,
+      "n_neg": 45,
+      "far_target": 0.05,
+      "threshold_source": "calibration_split",
+      "cal_n_normal": 4492
+    },
+    "far_0.10": {
+      "threshold": 0.0005391836166381836,
+      "detection_rate": 1.0,
+      "achieved_far": 0.08888888888888889,
+      "n_pos": 5029,
+      "n_neg": 45,
+      "far_target": 0.1,
+      "threshold_source": "calibration_split",
+      "cal_n_normal": 4492
+    }
+  },
+  "e7_threshold_sweep": [
+    {
+      "threshold": 0.3,
+      "missed_leak_rate": 0.0005965400676078744,
+      "false_alarm_rate": 0.0,
+      "f1_macro_4cls_on_abnormal": 0.3072922644056039,
+      "f1_macro_5cls": 0.4393821986212574,
+      "cm": [
+        [
+          592,
+          804,
+          171,
+          301,
+          0
+        ],
+        [
+          174,
+          250,
+          133,
+          162,
+          0
+        ],
+        [
+          524,
+          404,
+          558,
+          198,
+          1
+        ],
+        [
+          217,
+          203,
+          131,
+          204,
+          2
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          45
+        ]
+      ]
+    },
+    {
+      "threshold": 0.4,
+      "missed_leak_rate": 0.0005965400676078744,
+      "false_alarm_rate": 0.0,
+      "f1_macro_4cls_on_abnormal": 0.3072922644056039,
+      "f1_macro_5cls": 0.4393821986212574,
+      "cm": [
+        [
+          592,
+          804,
+          171,
+          301,
+          0
+        ],
+        [
+          174,
+          250,
+          133,
+          162,
+          0
+        ],
+        [
+          524,
+          404,
+          558,
+          198,
+          1
+        ],
+        [
+          217,
+          203,
+          131,
+          204,
+          2
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          45
+        ]
+      ]
+    },
+    {
+      "threshold": 0.5,
+      "missed_leak_rate": 0.00039769337840524953,
+      "false_alarm_rate": 0.0,
+      "f1_macro_4cls_on_abnormal": 0.3072662858203836,
+      "f1_macro_5cls": 0.44146520256935035,
+      "cm": [
+        [
+          592,
+          804,
+          171,
+          301,
+          0
+        ],
+        [
+          174,
+          250,
+          133,
+          162,
+          0
+        ],
+        [
+          524,
+          404,
+          558,
+          198,
+          1
+        ],
+        [
+          218,
+          203,
+          131,
+          204,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          45
+        ]
+      ]
+    },
+    {
+      "threshold": 0.6,
+      "missed_leak_rate": 0.00039769337840524953,
+      "false_alarm_rate": 0.0,
+      "f1_macro_4cls_on_abnormal": 0.3072662858203836,
+      "f1_macro_5cls": 0.44146520256935035,
+      "cm": [
+        [
+          592,
+          804,
+          171,
+          301,
+          0
+        ],
+        [
+          174,
+          250,
+          133,
+          162,
+          0
+        ],
+        [
+          524,
+          404,
+          558,
+          198,
+          1
+        ],
+        [
+          218,
+          203,
+          131,
+          204,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          45
+        ]
+      ]
+    },
+    {
+      "threshold": 0.7,
+      "missed_leak_rate": 0.0,
+      "false_alarm_rate": 0.0,
+      "f1_macro_4cls_on_abnormal": 0.3073880709501616,
+      "f1_macro_5cls": 0.4459104567601292,
+      "cm": [
+        [
+          592,
+          804,
+          171,
+          301,
+          0
+        ],
+        [
+          174,
+          250,
+          133,
+          162,
+          0
+        ],
+        [
+          524,
+          404,
+          559,
+          198,
+          0
+        ],
+        [
+          219,
+          203,
+          131,
+          204,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          45
+        ]
+      ]
+    }
+  ],
+  "time_s": 349.6654894351959
+}

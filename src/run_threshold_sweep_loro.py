@@ -32,6 +32,7 @@ from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
 sys.path.insert(0, os.path.dirname(__file__))
+from band_selection import nested_bands_cached  # noqa: E402
 from data import HZ_COLS, MAX_COLS, load_all  # noqa: E402
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), '..', 'results')
@@ -86,8 +87,10 @@ def evaluate_op(p_leak_te, y_te_bin, T):
 def main():
     t0 = time.time()
     df = load_all()
-    cols = ['month'] + bands_in_range(65, 422) + MAX_COLS
-    X_all = df[cols].to_numpy(dtype=np.float32, copy=False)
+    # Band selection is per fold and never sees the held-out region; the
+    # previous fixed 65-422 Hz subset was chosen on region 43 (retracted).
+    sel_cols = ['month'] + HZ_COLS + MAX_COLS
+    X_sel = df[sel_cols].to_numpy(dtype=np.float32, copy=False)
     y_all = df['label'].to_numpy(dtype=np.int64)
 
     regions = sorted(df['region_lvl1'].unique().tolist())
@@ -100,6 +103,9 @@ def main():
         te_mask = (df['region_lvl1'].values == r)
         tr_pool = np.where(~te_mask)[0]
         te = np.where(te_mask)[0]
+        nested_cols, _man = nested_bands_cached(
+            df, X_sel, y_all.astype(np.int32), sel_cols, r, kind='region')
+        X_all = df[nested_cols].to_numpy(dtype=np.float32, copy=False)
         # cal/tr split
         rng = np.random.RandomState(SEED + int(r))
         perm = rng.permutation(len(tr_pool))

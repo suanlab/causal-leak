@@ -1,0 +1,52 @@
+{
+  "description": "Multi-seed domain alignment on Chungbuk LORO fold",
+  "seeds": [
+    42,
+    0,
+    1,
+    2,
+    3
+  ],
+  "summary": {
+    "coral": {
+      "n_seeds": 1,
+      "seeds": [
+        42
+      ],
+      "f1_macro_mean": 0.3723,
+      "f1_macro_std": 0.0,
+      "f1_macro_per_seed": {
+        "42": 0.3723
+      },
+      "acc_mean": 0.3309,
+      "acc_std": 0.0
+    },
+    "mmd": {
+      "n_seeds": 1,
+      "seeds": [
+        42
+      ],
+      "f1_macro_mean": 0.3216,
+      "f1_macro_std": 0.0,
+      "f1_macro_per_seed": {
+        "42": 0.3216
+      },
+      "acc_mean": 0.2907,
+      "acc_std": 0.0
+    },
+    "dann": {
+      "n_seeds": 1,
+      "seeds": [
+        42
+      ],
+      "f1_macro_mean": 0.3152,
+      "f1_macro_std": 0.0,
+      "f1_macro_per_seed": {
+        "42": 0.3152
+      },
+      "acc_mean": 0.2848,
+      "acc_std": 0.0
+    }
+  },
+  "paired_tests": []
+}

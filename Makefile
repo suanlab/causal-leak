@@ -33,6 +33,10 @@ figures:
 	$(PYTHON) src/make_fig12_multiseed.py
 	$(PYTHON) src/make_fig13_sigungu.py
 	$(PYTHON) src/make_fig14_pareto.py
+	$(PYTHON) src/make_figB1_ladder.py
+	$(PYTHON) src/make_figB2_falsealarms.py
+	$(PYTHON) src/make_figB3_models.py
+	$(PYTHON) src/make_figB4_tradeoff.py
 
 # Manuscript build — the LaTeX source is not part of the public code
 # release, so this target is a no-op unless the source tree is present.

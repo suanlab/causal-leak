@@ -39,6 +39,7 @@ from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
 sys.path.insert(0, os.path.dirname(__file__))
+from band_selection import causal_feature_cols
 from data import HZ_COLS, MAX_COLS, load_all  # noqa: E402
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), '..', 'results')
@@ -53,7 +54,7 @@ def bands_in_range(lo, hi):
 
 def make_split():
     df = load_all()
-    cols_causal = ['month'] + bands_in_range(65, 422) + MAX_COLS
+    cols_causal = causal_feature_cols(43)
     cols_tab = ['month'] + MAX_COLS
     cols_all_hz = HZ_COLS
 

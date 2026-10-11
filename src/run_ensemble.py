@@ -25,6 +25,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, f1_score
 from xgboost import XGBClassifier
 
 sys.path.insert(0, os.path.dirname(__file__))
+from band_selection import causal_feature_cols
 from data import HZ_COLS, MAX_COLS, load_all  # noqa: E402
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), '..', 'results')
@@ -59,7 +60,7 @@ def main():
     y = df['label'].to_numpy(dtype=np.int32)
     print(f'train={len(tr)} test={len(te)}', flush=True)
 
-    causal_cols = ['month'] + bands_in_range(65, 422) + MAX_COLS
+    causal_cols = causal_feature_cols(43)
     X_causal = df[causal_cols].to_numpy(dtype=np.float32, copy=False)
 
     # ---- 1. XGB causal (flat) — get soft probs ----

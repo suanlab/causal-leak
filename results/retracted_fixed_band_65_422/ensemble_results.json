@@ -1,0 +1,37 @@
+{
+  "ensembles": {
+    "xgb_causal": {
+      "f1": 0.42726730260136875,
+      "acc": 0.30134016554986204
+    },
+    "xgb_hier": {
+      "f1": 0.4286930837183302,
+      "acc": 0.30409932991722505
+    },
+    "cnn_val_selected": {
+      "f1": 0.35435697739349664,
+      "acc": 0.33839180134016555
+    },
+    "soft_avg": {
+      "f1": 0.3633056448162342,
+      "acc": 0.3159243200630666,
+      "members": [
+        "xgb_causal",
+        "xgb_hier",
+        "cnn_val_selected"
+      ]
+    },
+    "tree_only_soft_avg": {
+      "f1": 0.4325547515723905,
+      "acc": 0.3096176586519511,
+      "members": [
+        "xgb_causal",
+        "xgb_hier"
+      ],
+      "selection": "pre-specified causal-tree average"
+    }
+  },
+  "best_individual_f1": 0.4286930837183302,
+  "pga_val_selected_test_f1": 0.29421747330865056,
+  "pga_best_recorded_test_f1": 0.30407614255630455
+}

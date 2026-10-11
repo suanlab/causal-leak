@@ -1,0 +1,117 @@
+=== Multi-seed Extra Baselines ===
+Building causal-feature split...
+  Causal: X=(70384, 503)  tr=58779  va=6531  te=5074
+Building full-feature split for TabNet...
+  Full: X=(70384, 534)
+
+  lightgbm seed=42... /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+f1=0.4577 acc=0.3613 (36s)
+
+  lightgbm seed=0... /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+f1=0.4577 acc=0.3613 (37s)
+
+  lightgbm seed=1... /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+f1=0.4577 acc=0.3613 (36s)
+
+  lightgbm seed=2... /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+f1=0.4577 acc=0.3613 (36s)
+
+  lightgbm seed=3... /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+f1=0.4577 acc=0.3613 (36s)
+
+  catboost seed=42... f1=0.3547 acc=0.3508 (42s)
+
+  catboost seed=0... f1=0.3549 acc=0.3486 (41s)
+
+  catboost seed=1... f1=0.3643 acc=0.3587 (41s)
+
+  catboost seed=2... f1=0.3500 acc=0.3490 (41s)
+
+  catboost seed=3... f1=0.3573 acc=0.3429 (41s)
+
+  random_forest seed=42... f1=0.2622 acc=0.2769 (45s)
+
+  random_forest seed=0... f1=0.2666 acc=0.2791 (45s)
+
+  random_forest seed=1... f1=0.2673 acc=0.2803 (45s)
+
+  random_forest seed=2... f1=0.2641 acc=0.2749 (45s)
+
+  random_forest seed=3... f1=0.2657 acc=0.2795 (45s)
+
+  tabnet_causal seed=42... Stop training because you reached max_epochs = 80 with best_epoch = 78 and best_val_0_accuracy = 0.87843
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+f1=0.3086 acc=0.3051 (478s)
+
+  tabnet_causal seed=0... Stop training because you reached max_epochs = 80 with best_epoch = 76 and best_val_0_accuracy = 0.86174
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+f1=0.3449 acc=0.3112 (427s)
+
+  tabnet_causal seed=1... Stop training because you reached max_epochs = 80 with best_epoch = 70 and best_val_0_accuracy = 0.87261
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+f1=0.3343 acc=0.3388 (445s)
+
+  tabnet_causal seed=2... Stop training because you reached max_epochs = 80 with best_epoch = 79 and best_val_0_accuracy = 0.86602
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+f1=0.3232 acc=0.3092 (450s)
+
+  tabnet_causal seed=3... Stop training because you reached max_epochs = 80 with best_epoch = 78 and best_val_0_accuracy = 0.84704
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+f1=0.2905 acc=0.2757 (460s)
+
+
+=== TabNet Full-Feature (534) ===
+  tabnet_full seed=42... Stop training because you reached max_epochs = 80 with best_epoch = 76 and best_val_0_accuracy = 0.93523
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+f1=0.2922 acc=0.2962 (458s)
+  tabnet_full seed=0... Stop training because you reached max_epochs = 80 with best_epoch = 72 and best_val_0_accuracy = 0.92436
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+f1=0.2772 acc=0.2680 (481s)
+  tabnet_full seed=1... 
+Early stopping occurred at epoch 47 with best_epoch = 32 and best_val_0_accuracy = 0.73618
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+f1=0.3465 acc=0.3323 (285s)
+  tabnet_full seed=2... 
+Early stopping occurred at epoch 36 with best_epoch = 21 and best_val_0_accuracy = 0.64156
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+f1=0.2459 acc=0.2816 (232s)
+  tabnet_full seed=3... Stop training because you reached max_epochs = 80 with best_epoch = 79 and best_val_0_accuracy = 0.89726
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+f1=0.2606 acc=0.2462 (468s)
+
+
+=== MULTI-SEED SUMMARY ===
+               Model    n     F1 mean    F1 std    Acc mean
+            lightgbm    5      0.4577    0.0000      0.3613
+            catboost    5      0.3562    0.0052      0.3500
+       random_forest    5      0.2652    0.0021      0.2781
+       tabnet_causal    5      0.3203    0.0214      0.3080
+         tabnet_full    5      0.2845    0.0388      0.2849
+
+=== PAIRED TESTS ===
+  lightgbm vs XGBoost_causal: diff=0.0304 p=0.0625
+  catboost vs XGBoost_causal: diff=-0.0711 p=0.0625
+  random_forest vs XGBoost_causal: diff=-0.1621 p=0.0625
+  tabnet_causal vs XGBoost_causal: diff=-0.107 p=0.0625
+  tabnet_full vs XGBoost_causal: diff=-0.1428 p=0.0625
+  lightgbm vs random_forest: diff=0.1925 p=0.0625
+  lightgbm vs tabnet_causal: diff=0.1374 p=0.0625
+  catboost vs random_forest: diff=0.091 p=0.0625
+  catboost vs tabnet_causal: diff=0.0359 p=0.0625
+
+Saved /home/suan/Projects/Water/causal-leak/src/../results/extra_baselines_multiseed.json

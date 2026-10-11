@@ -1,0 +1,117 @@
+{
+  "seed": 42,
+  "feature_set": "signal_all (534)",
+  "min_per_class": 30,
+  "A_within_installation": [
+    {
+      "installation": "S-2711010100",
+      "region": 27,
+      "n_normal": 4566,
+      "n_leak": 342,
+      "n_normal_sensors": 169,
+      "n_leak_sensors": 10,
+      "auc_recording": 1.0,
+      "auc_sensor": 1.0,
+      "miss_rate_at_0.5": 0.0,
+      "false_alarm_rate_at_0.5": 0.0,
+      "whole_region_auc": 1.0
+    },
+    {
+      "installation": "S-4372025021",
+      "region": 43,
+      "n_normal": 45,
+      "n_leak": 4753,
+      "n_normal_sensors": 5,
+      "n_leak_sensors": 135,
+      "auc_recording": 1.0,
+      "auc_sensor": 1.0,
+      "miss_rate_at_0.5": 0.0,
+      "false_alarm_rate_at_0.5": 0.0,
+      "whole_region_auc": 1.0
+    },
+    {
+      "installation": "S-4413110100",
+      "region": 44,
+      "n_normal": 1151,
+      "n_leak": 531,
+      "n_normal_sensors": 110,
+      "n_leak_sensors": 13,
+      "auc_recording": 1.0,
+      "auc_sensor": 1.0,
+      "miss_rate_at_0.5": 0.0,
+      "false_alarm_rate_at_0.5": 0.0,
+      "whole_region_auc": 1.0
+    },
+    {
+      "installation": "S-4521010100",
+      "region": 45,
+      "n_normal": 1624,
+      "n_leak": 594,
+      "n_normal_sensors": 207,
+      "n_leak_sensors": 19,
+      "auc_recording": 1.0,
+      "auc_sensor": 1.0,
+      "miss_rate_at_0.5": 0.0,
+      "false_alarm_rate_at_0.5": 0.0,
+      "whole_region_auc": 0.9999999113976498
+    },
+    {
+      "installation": "S-4571025029",
+      "region": 45,
+      "n_normal": 10675,
+      "n_leak": 396,
+      "n_normal_sensors": 584,
+      "n_leak_sensors": 8,
+      "auc_recording": 0.9999992903271592,
+      "auc_sensor": 1.0,
+      "miss_rate_at_0.5": 0.0025252525252525255,
+      "false_alarm_rate_at_0.5": 9.36768149882904e-05,
+      "whole_region_auc": 0.9999999113976498
+    }
+  ],
+  "B_campaign_signature": {
+    "n_positive_recordings": 6682,
+    "n_negative_recordings": 41536,
+    "oof_auc": 0.36688443044787433,
+    "fold_aucs": [
+      0.4628804999487392,
+      0.45650581364502685,
+      0.4973773500982224,
+      0.7926835576245641,
+      0.6023817217293866
+    ]
+  },
+  "C_lrate_dose_response": {
+    "spearman_rho": 0.6075392255071025,
+    "p_value": 0.0,
+    "n_normal_recordings": 18061,
+    "by_lrate": {
+      "30": {
+        "n": 6094,
+        "mean_leak_score": 5.01502978353302e-05,
+        "frac_score_ge_0.5": 0.0
+      },
+      "40": {
+        "n": 4087,
+        "mean_leak_score": 5.331430071894406e-05,
+        "frac_score_ge_0.5": 0.0
+      },
+      "50": {
+        "n": 3053,
+        "mean_leak_score": 0.00010681294670532685,
+        "frac_score_ge_0.5": 0.0
+      },
+      "60": {
+        "n": 2493,
+        "mean_leak_score": 0.0004509831037251695,
+        "frac_score_ge_0.5": 0.0
+      },
+      "70": {
+        "n": 2334,
+        "mean_leak_score": 0.009208124725681851,
+        "frac_score_ge_0.5": 0.0004284490145672665
+      }
+    }
+  },
+  "time_s": 452.6985127925873
+}

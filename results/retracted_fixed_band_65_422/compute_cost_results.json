@@ -1,0 +1,88 @@
+{
+  "device": "cuda",
+  "seed": 42,
+  "n_train": 58779,
+  "n_test": 5074,
+  "benchmarks": [
+    {
+      "model": "xgboost_flat",
+      "train_time_s": 5.041749000549316,
+      "inference_time_total_s": 0.015812397003173828,
+      "inference_ms_per_1k_rows": 3.1163573124110817,
+      "peak_ram_mb": 13.686616897583008,
+      "peak_gpu_mb": 0.0,
+      "test_f1_macro": 0.42788463795476134,
+      "test_acc": 0.31139140717382735
+    },
+    {
+      "model": "xgboost_hier",
+      "train_time_s": 4.1468186378479,
+      "inference_time_total_s": 0.017983675003051758,
+      "inference_ms_per_1k_rows": 3.544279661618399,
+      "peak_ram_mb": 22.085082054138184,
+      "peak_gpu_mb": 0.0,
+      "test_f1_macro": 0.42754235140620944,
+      "test_acc": 0.3064643279463934
+    },
+    {
+      "model": "tree_ensemble",
+      "train_time_s": 8.294013977050781,
+      "inference_time_total_s": 0.034713029861450195,
+      "inference_ms_per_1k_rows": 6.8413539340658645,
+      "peak_ram_mb": 22.09084987640381,
+      "peak_gpu_mb": 0.0,
+      "test_f1_macro": 0.43040724838421485,
+      "test_acc": 0.31434765471028775
+    },
+    {
+      "model": "lightgbm",
+      "train_time_s": 634.0753464698792,
+      "inference_time_total_s": 0.03928327560424805,
+      "inference_ms_per_1k_rows": 7.742072448610179,
+      "peak_ram_mb": 41.20243263244629,
+      "peak_gpu_mb": 0.0,
+      "test_f1_macro": 0.434058557322283,
+      "test_acc": 0.3318880567599527
+    },
+    {
+      "model": "catboost",
+      "train_time_s": 5.783046722412109,
+      "inference_time_total_s": 0.015921831130981445,
+      "inference_ms_per_1k_rows": 3.137924937126812,
+      "peak_ram_mb": 14.815032958984375,
+      "peak_gpu_mb": 0.0,
+      "test_f1_macro": 0.37261438120442525,
+      "test_acc": 0.351793456838786
+    },
+    {
+      "model": "random_forest",
+      "train_time_s": 12.30860948562622,
+      "inference_time_total_s": 0.5978977680206299,
+      "inference_ms_per_1k_rows": 117.83558691774337,
+      "peak_ram_mb": 118.68029499053955,
+      "peak_gpu_mb": 0.0,
+      "test_f1_macro": 0.30845446894396,
+      "test_acc": 0.2977926685061096
+    },
+    {
+      "model": "mlp_erm",
+      "train_time_s": 20.983102083206177,
+      "inference_time_total_s": 0.001438140869140625,
+      "inference_ms_per_1k_rows": 0.28343336009866477,
+      "peak_ram_mb": 65.20102024078369,
+      "peak_gpu_mb": 33.09716796875,
+      "test_f1_macro": 0.3411408763891731,
+      "test_acc": 0.306267244777296
+    },
+    {
+      "model": "cnn_erm",
+      "train_time_s": 42.70861530303955,
+      "inference_time_total_s": 0.05501365661621094,
+      "inference_ms_per_1k_rows": 10.842265789556748,
+      "peak_ram_mb": 115.25103282928467,
+      "peak_gpu_mb": 331.53369140625,
+      "test_f1_macro": 0.3125354528007621,
+      "test_acc": 0.3165155695703587
+    }
+  ]
+}

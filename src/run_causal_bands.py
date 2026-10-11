@@ -1,4 +1,17 @@
-"""Phase 2C follow-up — Causal band subset experiment.
+"""SUPERSEDED — retained only to document the retracted protocol.
+
+This script selects nothing: it evaluates a fixed 65-422 Hz subset that was
+derived from permutation importance and SHAP measured *on region 43*, and then
+reports that subset's score *on region 43*. Selection and evaluation share a
+fold, so the reported advantage is optimistically biased (AUDIT.md Blocker 1).
+
+Use src/run_nested_causal_bands.py instead; it selects bands inside the
+training regions and emits a per-fold manifest proving the evaluation region
+was excluded. Findings: results/FINDINGS_NESTED_BANDS.md.
+
+Original description follows.
+
+Phase 2C follow-up — Causal band subset experiment.
 
 Hypothesis: restricting input to the 65-422 Hz range (the bands whose
 permutation actually hurts OOD performance) should match or beat the

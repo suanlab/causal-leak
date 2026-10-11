@@ -1,115 +1,118 @@
 # causal-leak
 
-**A causal audit and out-of-distribution redesign of Lee & Kim (2023)**
+**An audit and out-of-distribution re-evaluation of Lee & Kim (2023)**
 *Machine Learning Model for Leak Detection Using Water Pipeline Vibration
 Sensor.* Sensors **23**(21), 8935. [DOI: 10.3390/s23218935](https://doi.org/10.3390/s23218935)
 
-This repository is the follow-up study to our 2023 Sensors paper. It
-quantifies how much of the reported 99.79 % XGBoost accuracy on the
-Korean AI Hub water-leak dataset is driven by identifier-label
-leakage, derives the causal frequency signature of real leak noise
-(121–422 Hz), and benchmarks invariance-regularised deep models
-against causal-band XGBoost under a strict Leave-One-Region-Out
-protocol.
+This repository is the follow-up to our 2023 Sensors paper. It measures how
+much of the reported 99.79 % accuracy on the Korean AI Hub water-leak benchmark
+comes from recognising which sensor produced a recording, evaluates leak typing
+with whole administrative regions held out, and compares models on the false
+alarms a utility would have to dispatch crews for.
 
-## Headline result
+It is the reproducibility harness for a manuscript in preparation: experiment
+code, raw result files, logs, and the scripts that render every figure.
 
-| Model | # feat | OOD Acc | OOD Macro-F1 |
-|-------|------:|-------:|------:|
-| 5-line lookup (`sid` → majority + `lrate` override) | 0 | 0.9977 | – |
-| XGBoost full (paper split) | 544 | 0.9402 | 0.9274 |
-| XGBoost signal_all (LORO Chungbuk) | 534 | 0.2978 | 0.4148 |
-| XGBoost causal 65–422 Hz (LORO Chungbuk) | 57 | 0.3013 | 0.4273 |
-| Hierarchical (normal gate + causal typer) | 57 | 0.3041 | 0.4287 |
-| **Pre-specified tree-only soft average (causal + hier)** | **57** | **0.3096** | **0.4326** |
-| MLP GroupDRO | 57 | 0.3210 | 0.3615 |
-| CNN + SpecAugment (validation-selected CNN recipe) | 534 | 0.3384 | 0.3544 |
-| MLP IRM (validation-selected sweep) | 57 | 0.2931 | 0.3145 |
-| PGA (best observed test ablation, λc=1) | 534 | 0.2897 | 0.3041 |
+> **Correction (October 2026).** An earlier version of this repository reported
+> a 121–422 Hz "causal band" as carrying the generalisable leak signal. That band
+> was selected using feature importance measured on the evaluation fold and then
+> evaluated on the same fold. Under nested selection, with the evaluation region
+> excluded from the choice, it is selected in 2 of 7 regions. Every result that
+> depended on the resulting 57-feature set has been re-run; the retracted
+> artefacts are kept in `results/retracted_fixed_band_65_422/`. See
+> `results/FINDINGS_NESTED_BANDS.md`.
 
-**The full write-up is under review at *Engineering Applications of
-Artificial Intelligence (EAAI)*. This repository is the reproducibility
-harness — the experiment code, multi-seed runner, raw result JSONs,
-fold-level logs, and figure generators behind every numeric claim.**
+## Headline results
 
-## Eight key findings
+Five-class leak typing, gradient-boosted classifier unless stated.
 
-1. **Zero-ML reproduction.** An `sid → majority-train-label` lookup
-   with an `lrate ≠ 90 → normal` override yields **99.77 %** val
-   accuracy — within 0.02 pp of our published 99.79 %. The 99.79 %
-   headline is a split-protocol artefact, not a demonstration of
-   vibration-spectrum capability.
-2. **Shortcut collapse.** Switching to stratified 5-fold GroupKFold by
-   site drops accuracy from 94 % to **55 %** (macro-F1 0.42). 12-fold
-   LORO weighted accuracy is **56.8 %** (macro-F1 0.30).
-3. **Causal frequency signature.** Grouped permutation importance on
-   the only region with a realistic 5-class balance (Chungbuk)
-   localises the generalisable leak signal to **121–422 Hz**, with
-   **422–1470 Hz an active confounder** that our original XGBoost
-   over-relied on.
-4. **Causal feature selection beats invariance learning.** Restricting
-   to 57 causal features improves OOD macro-F1 by +0.013 over full
-   spectrum. No gradient-based invariance method (IRM, GroupDRO) on
-   MLP or 1D-CNN closes the remaining gap.
-5. **Triple-source convergence for 121–422 Hz.** Bootstrap 95% CIs
-   across 4 LORO folds (wins 3/4), SHAP (40.4% attribution mass),
-   and XGBoost gain (7.5%, mis-allocated) independently converge on
-   121–422 Hz as the causal leak-noise band.
-6. **Augmentation helps but cannot close the gap.** SpecAugment improves the
-   CNN baseline from F1 0.334 to 0.354 (+2.0 pp); focal loss mainly improves
-   accuracy; Mixup hurts on this dataset.
-7. **PGA negative result.** A novel permutation-guided attention
-   regulariser cannot beat plain feature selection, reinforcing the
-   main finding.
-8. **Deployment candidate.** A pre-specified tree-only soft average of
-   causal flat + hierarchical XGBoost gives OOD macro-F1 (**0.4326**)
-   with perfect OOD `normal` recall.
+| Evaluation | Accuracy | Macro-F1 |
+|---|---:|---:|
+| Sensor-identifier lookup (no spectrum used) | 0.9977 | – |
+| Row-level cross-validation, with identifier columns | 0.945 | 0.933 |
+| Group-CV by installation | 0.553 | 0.419 |
+| Leave-one-region-out, signal only (weighted) | 0.568 | 0.304 |
+
+Canonical held-out region (Chungbuk, region 43), leakage-free features:
+
+| Model | Macro-F1 |
+|---|---:|
+| LightGBM | 0.4464 |
+| Tree-only soft average (flat + hierarchical) | 0.4388 |
+| Gradient-boosted, flat | 0.4363 |
+| Gradient-boosted, hierarchical | 0.4335 |
+| CNN, ERM (5 seeds) | 0.3455 ± 0.027 |
+| MLP, GroupDRO (5 seeds) | 0.3115 ± 0.017 |
+| DeepCORAL (1 seed) | 0.3100 |
+
+## Findings
+
+1. **Identifier shortcut.** Every training sensor carries a single label, and
+   98 % of validation sensors also appear in training. A lookup on the sensor
+   identifier plus one metadata rule reaches 99.77 % validation accuracy without
+   reading the vibration spectrum — within 0.02 points of the published 99.79 %.
+2. **Collapse under realistic evaluation.** Accuracy falls from 0.945 under
+   row-level cross-validation to 0.553 with installations held out, and to a
+   weighted 0.568 (macro-F1 0.304) with regions held out. Identifier columns are
+   worth 5.3 points at row level and nothing once sensors are unseen.
+3. **No stable "causal band".** With band selection nested inside the training
+   regions, the 121–422 Hz band is selected in 2 of 7 regions. Selecting along a
+   temporal axis instead retains it, so a band's generalisation claim depends on
+   the axis named.
+4. **Complexity does not help.** Neither invariance regularisers (IRM, GroupDRO;
+   five seeds) nor domain-alignment methods (DeepCORAL, DANN, MMD-DG; one seed)
+   outperform gradient-boosted trees on the same inputs.
+5. **False alarms, tested at the sensor.** Over 22,121 normal recordings from
+   1,239 sensors in the four regions able to measure it, the hierarchical
+   classifier — alone or averaged with the flat one — raised false alarms on 4
+   sensors against 14 for LightGBM (paired McNemar test, p = 0.021), at typing
+   accuracy that could not be told apart. The false-alarm criterion was adopted
+   after LightGBM led on the canonical fold; the evidence is concentrated in one
+   region.
+6. **Binary detection is not reading the site, as far as can be tested.** With
+   each region held out, normal and leak recordings are separated perfectly
+   inside each of the five installations holding at least 30 of both. No sensor
+   carries both labels, so a difference in how leak and normal sensors were
+   recorded cannot be excluded.
 
 ## Layout
 
 ```
 causal-leak/
-├── README.md                         this file
-├── LICENSE                           MIT
-├── REPLICATION.md                    full end-to-end recipe
-├── Dockerfile                        pinned environment
-├── requirements.txt                  base Python deps
-├── requirements-eaai.txt             EAAI revision deps
-├── Makefile                          reproduction targets
+├── README.md, LICENSE (MIT), REPLICATION.md, Dockerfile, Makefile
+├── requirements.txt, requirements-eaai.txt
 ├── scripts/
 │   ├── reproduce_all.sh              full experiment + figure pipeline
-│   └── verify.sh                     code / figure / claim consistency
+│   └── verify.sh                     code / figure / phrase consistency gate
 ├── src/
 │   ├── data.py                       loader (data root via $CAUSAL_LEAK_DATA_DIR)
+│   ├── band_selection.py             nested, leakage-free band selection
+│   │                                 + per-fold exclusion manifest and checker
 │   ├── irm_core.py                   IRM / GroupDRO infrastructure
-│   ├── run_matrix.py                 Phase 1 — shortcut matrix
-│   ├── run_loro.py                   Phase 1 — LORO baselines
-│   ├── run_freq_analysis.py          Phase 1 — band importance
-│   ├── run_causal_bands.py           Phase 1 — causal-band retraining
-│   ├── run_irm_mlp.py                Phase 1 — MLP ERM/IRM/GroupDRO
-│   ├── run_irm_cnn.py                Phase 1 — CNN ERM/IRM/GroupDRO
-│   ├── run_hierarchical.py           Phase 1 — hierarchical classifier
-│   ├── run_robust_bands.py           Phase 1 — bootstrap + SHAP
-│   ├── run_irm_sweep.py              Phase 1 — IRM lambda sweep
-│   ├── run_pga.py                    Phase 1 — Permutation-Guided Attention
-│   ├── run_augmentation.py           Phase 1 — CNN augmentation recipes
-│   ├── run_ensemble.py               Phase 1 — soft-probability ensemble
-│   ├── run_sigungu_ood.py            EAAI E2 — 시군구 LOCO
-│   ├── run_extra_baselines.py        EAAI E3 — LightGBM/CatBoost/TabNet/RF
-│   ├── run_domain_alignment.py       EAAI E4 — DeepCORAL/DANN/MMD
-│   ├── run_cost_metrics.py           EAAI E5+E7 — calibration-only FAR / sweep
-│   ├── run_compute_cost.py           EAAI E6 — train/infer/RAM/GPU benchmark
-│   ├── run_multiseed.sh              EAAI E1 — 5-seed sweep wrapper
-│   ├── aggregate_multiseed.py        EAAI E1 — mean ± std + Wilcoxon
-│   ├── analyze_results.py            summary tables
-│   └── make_fig*.py                  figure generators (1-14, vector PDF)
+│   ├── run_matrix.py, run_loro.py    shortcut matrix, leave-one-region-out
+│   ├── run_nested_causal_bands.py    nested band selection over 7 regions
+│   ├── run_causal_bands.py           SUPERSEDED — documents the retracted protocol
+│   ├── run_irm_*.py, run_pga.py,     invariance and deep baselines
+│   │   run_augmentation.py
+│   ├── run_hierarchical.py,          tree classifiers and ensemble
+│   │   run_ensemble.py
+│   ├── run_extra_baselines*.py       LightGBM / CatBoost / RF / TabNet
+│   ├── run_domain_alignment.py       DeepCORAL / DANN / MMD-DG
+│   ├── run_sigungu_ood.py            county-level holdout
+│   ├── run_temporal_split.py         temporal holdout
+│   ├── run_threshold_sweep_loro.py   calibrated detection thresholds
+│   ├── run_operational_folds.py      sensor-level false-alarm comparison
+│   ├── run_lrate_confound.py         binary-detection confound checks
+│   ├── run_cost_metrics.py, run_compute_cost.py
+│   ├── run_multiseed.sh, aggregate_multiseed.py
+│   └── make_fig*.py                  figure generators (vector PDF)
 └── results/
-    ├── FINAL_SUMMARY.md              top-line result table
-    ├── FINDINGS_EAAI_E1_E7.md        EAAI revision findings
-    ├── *.json                        raw fold-level metrics
-    ├── *.log                         training logs
-    ├── multiseed_logs/               per-seed-script logs (E1)
-    └── figs/                         manuscript figures (fig1-fig14)
+    ├── FINDINGS_NESTED_BANDS.md      band-selection correction
+    ├── FINDINGS_RQ4_RQ6_RERUN.md     re-run of every affected experiment
+    ├── FINDINGS_LRATE_CONFOUND.md    binary-detection confound checks
+    ├── retracted_fixed_band_65_422/  artefacts computed with the retracted band
+    ├── *.json, *.log                 raw fold-level metrics and logs
+    └── figs/                         figures
 ```
 
 ## Reproducing
@@ -124,34 +127,28 @@ python3 -m venv .venv
 #   (a) place under ../kcc-water/Dataset/ so the default path works, or
 #   (b) export CAUSAL_LEAK_DATA_DIR=/your/data/root before running.
 
-# Full pipeline: Phase 1 + EAAI E2-E7 experiments + all figures.
-# Hard-fails on any non-zero exit.
+# Full pipeline; hard-fails on any non-zero exit.
 scripts/reproduce_all.sh
 
-# Multi-seed sweep (E1, ~6 h on 2 GPUs):
+# Multi-seed sweep (~6 h on 2 GPUs):
 make multiseed
-
-# Explicit Python override:
-PYTHON=.venv/bin/python scripts/reproduce_all.sh
-
-# Verification only (no rebuild):
-scripts/verify.sh
 
 # Make targets:
 make all          # experiments + multiseed + figures + verify
-make experiments  # Phase 1 + EAAI E2-E7
-make multiseed    # EAAI E1 (5 seeds)
-make figures      # regenerate every figure (fig1-fig14)
-make verify       # gate-check code, figures, and claim consistency
+make experiments  # every experiment
+make multiseed    # 5-seed sweep + aggregation
+make figures      # regenerate every figure
+make verify       # gate-check code, figures, and phrase consistency
 ```
 
-See `REPLICATION.md` for the full end-to-end recipe (expected
-runtimes, troubleshooting, Docker invocation).
+`run_nested_causal_bands.py` must run before any script that reads the
+leakage-free feature set; `reproduce_all.sh` orders them accordingly. Nested
+selections are memoised in `results/nested_band_cache.json`; delete it to force
+recomputation. See `REPLICATION.md` for runtimes, troubleshooting and Docker.
 
 ## Citing this work
 
-If you build on this follow-up, please cite both the original Sensors
-paper and this repository:
+Please cite the original Sensors paper and this repository:
 
 ```bibtex
 @article{lee2023leak,
@@ -163,13 +160,12 @@ paper and this repository:
   doi     = {10.3390/s23218935}
 }
 
-@misc{lee2026causal,
+@misc{lee2026causalleak,
   author = {Suan Lee},
-  title  = {Shortcut Audit, Causal Bands, and an Out-of-Distribution
-            Evaluation Ladder for Vibration-Based Water Leak Detection},
+  title  = {causal-leak: audit and out-of-distribution re-evaluation of
+            vibration-based water leak detection},
   year   = {2026},
-  note   = {Under review at Engineering Applications of Artificial
-            Intelligence. Code: https://github.com/suanlab/causal-leak}
+  note   = {Code and results: https://github.com/suanlab/causal-leak}
 }
 ```
 

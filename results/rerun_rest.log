@@ -1,0 +1,9 @@
+=== 14:11:59  run_cross_region_causal ===
+    OK  -> results/run_cross_region_causal.log
+=== 15:49:43  run_threshold_sweep_loro ===
+    OK  -> results/run_threshold_sweep_loro.log
+=== 15:51:42  run_sigungu_ood ===
+    FAILED (exit 1) -> results/run_sigungu_ood.log
+=== 15:55:21  run_temporal_split ===
+    OK  -> results/run_temporal_split.log
+=== all done 16:12:20  rc=1 ===

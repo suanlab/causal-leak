@@ -21,6 +21,7 @@ from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
 sys.path.insert(0, os.path.dirname(__file__))
+from band_selection import nested_bands_cached
 from data import HZ_COLS, MAX_COLS, LABEL_NAMES, load_all
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), '..', 'results')
@@ -34,7 +35,6 @@ def bands_in_range(lo, hi):
 
 def make_temporal_split():
     df = load_all()
-    cols_causal = ['month'] + bands_in_range(65, 422) + MAX_COLS
     cols_signal = ['month'] + HZ_COLS + MAX_COLS
 
     df_sorted = df.sort_values('ldate_int').reset_index(drop=True)
@@ -44,6 +44,17 @@ def make_temporal_split():
 
     tr_mask = df_sorted['ldate_int'] < cutoff_date
     te_mask = df_sorted['ldate_int'] >= cutoff_date
+
+    # Bands are selected from pre-cutoff rows only, split by region for the
+    # inner loop, so nothing after the cutoff influences the feature set.
+    # The retired 65-422 Hz subset was selected on region 43 across the whole
+    # time range; see results/FINDINGS_NESTED_BANDS.md.
+    X_sig_raw = df_sorted[cols_signal].to_numpy(dtype=np.float32, copy=False)
+    y_raw = df_sorted['label'].to_numpy(dtype=np.int32)
+    era = np.where(te_mask.values, 'post', 'pre')
+    cols_causal, _tman = nested_bands_cached(
+        df_sorted, X_sig_raw, y_raw, cols_signal, 'post', kind='temporal',
+        env=era, inner_env=df_sorted['region_lvl1'].values)
     tr_idx = np.where(tr_mask)[0]
     te_idx = np.where(te_mask)[0]
 

@@ -8,30 +8,30 @@
       "n_normal_cal": 3504,
       "operating_points": {
         "far_0.005": {
-          "threshold": 0.024230841547250748,
+          "threshold": 0.022214477881789207,
           "detection_rate": 1.0,
-          "achieved_far": 0.006789312308366185,
+          "achieved_far": 0.006351292159439334,
           "n_pos": 342,
           "n_neg": 4566
         },
         "far_0.010": {
-          "threshold": 0.010368895716965199,
+          "threshold": 0.01266687735915184,
           "detection_rate": 1.0,
-          "achieved_far": 0.01686377573368375,
+          "achieved_far": 0.011826544021024968,
           "n_pos": 342,
           "n_neg": 4566
         },
         "far_0.020": {
-          "threshold": 0.005101689137518406,
+          "threshold": 0.004965866915881634,
           "detection_rate": 1.0,
-          "achieved_far": 0.026062198861147613,
+          "achieved_far": 0.026281208935611037,
           "n_pos": 342,
           "n_neg": 4566
         },
         "far_0.050": {
-          "threshold": 0.0019420624012127519,
+          "threshold": 0.002005049493163824,
           "detection_rate": 1.0,
-          "achieved_far": 0.05409548839246606,
+          "achieved_far": 0.04752518615856329,
           "n_pos": 342,
           "n_neg": 4566
         }
@@ -45,30 +45,30 @@
       "n_normal_cal": 3596,
       "operating_points": {
         "far_0.005": {
-          "threshold": 0.030677417293190956,
+          "threshold": 0.029941298067569733,
           "detection_rate": 1.0,
-          "achieved_far": 0.034591961023142506,
+          "achieved_far": 0.034348355663824603,
           "n_pos": 379,
           "n_neg": 4105
         },
         "far_0.010": {
-          "threshold": 0.014130947180092335,
+          "threshold": 0.012134348973631859,
           "detection_rate": 1.0,
-          "achieved_far": 0.050426309378806336,
+          "achieved_far": 0.05213154689403167,
           "n_pos": 379,
           "n_neg": 4105
         },
         "far_0.020": {
-          "threshold": 0.006908118724822998,
+          "threshold": 0.006190788932144642,
           "detection_rate": 1.0,
-          "achieved_far": 0.06479902557856272,
+          "achieved_far": 0.07137637028014616,
           "n_pos": 379,
           "n_neg": 4105
         },
         "far_0.050": {
-          "threshold": 0.002151578664779663,
+          "threshold": 0.0024451017379760742,
           "detection_rate": 1.0,
-          "achieved_far": 0.11084043848964677,
+          "achieved_far": 0.10304506699147381,
           "n_pos": 379,
           "n_neg": 4105
         }
@@ -82,28 +82,28 @@
       "n_normal_cal": 4373,
       "operating_points": {
         "far_0.005": {
-          "threshold": 0.009917003102600574,
+          "threshold": 0.011563385836780071,
           "detection_rate": 1.0,
           "achieved_far": 0.0,
           "n_pos": 5029,
           "n_neg": 45
         },
         "far_0.010": {
-          "threshold": 0.00600338215008378,
+          "threshold": 0.006218275986611843,
           "detection_rate": 1.0,
           "achieved_far": 0.0,
           "n_pos": 5029,
           "n_neg": 45
         },
         "far_0.020": {
-          "threshold": 0.003137459745630622,
+          "threshold": 0.00347558013163507,
           "detection_rate": 1.0,
-          "achieved_far": 0.022222222222222223,
+          "achieved_far": 0.0,
           "n_pos": 5029,
           "n_neg": 45
         },
         "far_0.050": {
-          "threshold": 0.0014216185081750154,
+          "threshold": 0.001354944659397006,
           "detection_rate": 1.0,
           "achieved_far": 0.022222222222222223,
           "n_pos": 5029,
@@ -119,30 +119,30 @@
       "n_normal_cal": 4136,
       "operating_points": {
         "far_0.005": {
-          "threshold": 0.01956278271973133,
+          "threshold": 0.015658341348171234,
           "detection_rate": 1.0,
-          "achieved_far": 0.02693310165073849,
+          "achieved_far": 0.03388357949609035,
           "n_pos": 531,
           "n_neg": 1151
         },
         "far_0.010": {
-          "threshold": 0.00958520732820034,
+          "threshold": 0.008679145947098732,
           "detection_rate": 1.0,
-          "achieved_far": 0.043440486533449174,
+          "achieved_far": 0.051259774109470024,
           "n_pos": 531,
           "n_neg": 1151
         },
         "far_0.020": {
-          "threshold": 0.004943418316543102,
+          "threshold": 0.004473048262298107,
           "detection_rate": 1.0,
-          "achieved_far": 0.07471763683753258,
+          "achieved_far": 0.08601216333622937,
           "n_pos": 531,
           "n_neg": 1151
         },
         "far_0.050": {
-          "threshold": 0.0017238110303878784,
+          "threshold": 0.0016955584287643433,
           "detection_rate": 1.0,
-          "achieved_far": 0.14509122502172025,
+          "achieved_far": 0.15117289313640314,
           "n_pos": 531,
           "n_neg": 1151
         }
@@ -156,30 +156,30 @@
       "n_normal_cal": 1981,
       "operating_points": {
         "far_0.005": {
-          "threshold": 0.0531679205596447,
+          "threshold": 0.04062863439321518,
           "detection_rate": 1.0,
-          "achieved_far": 0.0044719082852264416,
+          "achieved_far": 0.00561021221237499,
           "n_pos": 2753,
           "n_neg": 12299
         },
         "far_0.010": {
-          "threshold": 0.019001364707946777,
+          "threshold": 0.02285323105752468,
           "detection_rate": 1.0,
-          "achieved_far": 0.013171802585576063,
+          "achieved_far": 0.012521343198634035,
           "n_pos": 2753,
           "n_neg": 12299
         },
         "far_0.020": {
-          "threshold": 0.01242002286016941,
+          "threshold": 0.011972236447036266,
           "detection_rate": 1.0,
-          "achieved_far": 0.02040816326530612,
+          "achieved_far": 0.023172615659809742,
           "n_pos": 2753,
           "n_neg": 12299
         },
         "far_0.050": {
-          "threshold": 0.0042607784271240234,
+          "threshold": 0.0045702457427978516,
           "detection_rate": 1.0,
-          "achieved_far": 0.04732092040003252,
+          "achieved_far": 0.04959752825432962,
           "n_pos": 2753,
           "n_neg": 12299
         }
@@ -191,9 +191,9 @@
       "far_target": 0.005,
       "n_folds": 5,
       "weighted_mean_detection": 1.0,
-      "weighted_mean_achieved_far": 0.009648876234711628,
+      "weighted_mean_achieved_far": 0.010468822552827247,
       "macro_mean_detection": 1.0,
-      "macro_mean_achieved_far": 0.014557256653494725,
+      "macro_mean_achieved_far": 0.01603868790634586,
       "min_detection": 1.0,
       "max_detection": 1.0
     },
@@ -201,9 +201,9 @@
       "far_target": 0.01,
       "n_folds": 5,
       "weighted_mean_detection": 1.0,
-      "weighted_mean_achieved_far": 0.018596405558424355,
+      "weighted_mean_achieved_far": 0.01815681833993579,
       "macro_mean_detection": 1.0,
-      "macro_mean_achieved_far": 0.024780474846303063,
+      "macro_mean_achieved_far": 0.02554784164463214,
       "min_detection": 1.0,
       "max_detection": 1.0
     },
@@ -211,9 +211,9 @@
       "far_target": 0.02,
       "n_folds": 5,
       "weighted_mean_detection": 1.0,
-      "weighted_mean_achieved_far": 0.030900205028540406,
+      "weighted_mean_achieved_far": 0.030208541263947064,
       "macro_mean_detection": 1.0,
-      "macro_mean_achieved_far": 0.04164184935295425,
+      "macro_mean_achieved_far": 0.04136847164235926,
       "min_detection": 1.0,
       "max_detection": 1.0
     },
@@ -221,9 +221,9 @@
       "far_target": 0.05,
       "n_folds": 5,
       "weighted_mean_detection": 1.0,
-      "weighted_mean_achieved_far": 0.05870457285644801,
+      "weighted_mean_achieved_far": 0.05797686061381898,
       "macro_mean_detection": 1.0,
-      "macro_mean_achieved_far": 0.07591405890521756,
+      "macro_mean_achieved_far": 0.07471257935259842,
       "min_detection": 1.0,
       "max_detection": 1.0
     }
@@ -236,5 +236,5 @@
     0.02,
     0.05
   ],
-  "time_s": 192.81658601760864
+  "time_s": 117.3154981136322
 }

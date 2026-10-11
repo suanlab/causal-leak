@@ -28,6 +28,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.preprocessing import StandardScaler
 
 sys.path.insert(0, os.path.dirname(__file__))
+from band_selection import causal_feature_cols
 from data import HZ_COLS, MAX_COLS, load_all  # noqa: E402
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), '..', 'results')
@@ -277,7 +278,7 @@ def main():
 
     # Also run MLP with best recipe on causal bands
     print('\n=== MLP on causal 65-422Hz features ===', flush=True)
-    causal_cols = ['month'] + bands_in_range(65, 422) + MAX_COLS
+    causal_cols = causal_feature_cols(43)
     X_causal_raw = df[causal_cols].to_numpy(dtype=np.float32, copy=False)
     scaler_c = StandardScaler().fit(X_causal_raw[tr_main])
     X_causal = scaler_c.transform(X_causal_raw).astype(np.float32)

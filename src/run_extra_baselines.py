@@ -27,6 +27,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, f1_score
 from sklearn.preprocessing import StandardScaler
 
 sys.path.insert(0, os.path.dirname(__file__))
+from band_selection import causal_feature_cols
 from data import HZ_COLS, MAX_COLS, LABEL_NAMES, load_all  # noqa: E402
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), '..', 'results')
@@ -40,7 +41,7 @@ def bands_in_range(lo, hi):
 
 def make_split():
     df = load_all()
-    cols = ['month'] + bands_in_range(65, 422) + MAX_COLS
+    cols = causal_feature_cols(43)
     X = df[cols].to_numpy(dtype=np.float32, copy=False)
     y = df['label'].to_numpy(dtype=np.int64)
 

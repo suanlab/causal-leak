@@ -6,34 +6,34 @@ tr_main=58779 va=6531 te=5074
   [prior] band groups with positive Δf1: 510 / 513
 
 === pga_lam0_initU ===
-  pga_lam0_initU: test_f1=0.3012 test_acc=0.2862 (86s)
+  pga_lam0_initU: test_f1=0.3012 test_acc=0.2862 (68s)
 
 === pga_lam0_initP ===
-  pga_lam0_initP: test_f1=0.2708 test_acc=0.2824 (83s)
+  pga_lam0_initP: test_f1=0.2708 test_acc=0.2824 (63s)
 
 === pga_lam0.1_initU ===
-  pga_lam0.1_initU: test_f1=0.2648 test_acc=0.2641 (83s)
+  pga_lam0.1_initU: test_f1=0.2648 test_acc=0.2641 (62s)
 
 === pga_lam0.1_initP ===
-  pga_lam0.1_initP: test_f1=0.2917 test_acc=0.2816 (85s)
+  pga_lam0.1_initP: test_f1=0.2917 test_acc=0.2816 (61s)
 
 === pga_lam1_initU ===
-  pga_lam1_initU: test_f1=0.2946 test_acc=0.2978 (85s)
+  pga_lam1_initU: test_f1=0.2946 test_acc=0.2978 (62s)
 
 === pga_lam1_initP ===
-  pga_lam1_initP: test_f1=0.2582 test_acc=0.2367 (85s)
+  pga_lam1_initP: test_f1=0.2582 test_acc=0.2367 (61s)
 
 === pga_lam10_initU ===
-  pga_lam10_initU: test_f1=0.2933 test_acc=0.2751 (83s)
+  pga_lam10_initU: test_f1=0.2933 test_acc=0.2751 (58s)
 
 === pga_lam10_initP ===
-  pga_lam10_initP: test_f1=0.3026 test_acc=0.2885 (83s)
+  pga_lam10_initP: test_f1=0.3026 test_acc=0.2885 (61s)
 
 === pga_lam100_initU ===
-  pga_lam100_initU: test_f1=0.2634 test_acc=0.2574 (83s)
+  pga_lam100_initU: test_f1=0.2634 test_acc=0.2574 (61s)
 
 === pga_lam100_initP ===
-  pga_lam100_initP: test_f1=0.2677 test_acc=0.2682 (77s)
+  pga_lam100_initP: test_f1=0.2677 test_acc=0.2682 (55s)
 
 Saved: /home/suan/Projects/Water/causal-leak/src/../results/pga_results_seed1.json
 
@@ -50,4 +50,4 @@ Saved: /home/suan/Projects/Water/causal-leak/src/../results/pga_results_seed1.js
          pga_lam100_initU    0.2634    0.2574
          pga_lam100_initP    0.2677    0.2682
 
-Total 1168s
+Total 652s

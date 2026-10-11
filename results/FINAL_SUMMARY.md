@@ -1,5 +1,13 @@
 # causal-leak — Final Summary (Strengthened)
 
+> **Superseded (October 2026).** The 121-422 Hz "causal band" reported below was
+> selected using attribution measured on the evaluation fold and then evaluated
+> on that same fold. It does not survive nested selection (chosen in 2 of 7
+> regions). Numbers that depend on the 57-feature set are retracted; the
+> archived artefacts are in `results/retracted_fixed_band_65_422/`. See
+> `FINDINGS_NESTED_BANDS.md` and `FINDINGS_RQ4_RQ6_RERUN.md` for the corrected
+> analysis.
+
 ## Best OOD Result (LORO Chungbuk, 5-class, 5,074 rows)
 
 | Rank | Model | # feat | Macro-F1 | Acc |

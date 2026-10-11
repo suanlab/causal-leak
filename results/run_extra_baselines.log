@@ -1,32 +1,32 @@
 Building causal-feature split...
-  X=(70384, 57)  tr=58779  va=6531  te=5074 (per-class=[1868, 719, 1685, 757, 45])
+  X=(70384, 503)  tr=58779  va=6531  te=5074 (per-class=[1868, 719, 1685, 757, 45])
 
 === random_forest ===
   fitting RandomForest (n_estimators=400, max_depth=20, 4 threads)...
-  random_forest: f1_macro=0.3085 acc=0.2978 (41s)
+  random_forest: f1_macro=0.2622 acc=0.2769 (49s)
 
 === lightgbm ===
   fitting LightGBM (n_estimators=200, fixed)...
 /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
   warnings.warn(
-  lightgbm: f1_macro=0.4341 acc=0.3319 (13s)
+  lightgbm: f1_macro=0.4577 acc=0.3613 (37s)
 
 === catboost ===
   fitting CatBoost (iterations=200, fixed, 4 threads)...
-  catboost: f1_macro=0.3726 acc=0.3518 (15s)
+  catboost: f1_macro=0.3547 acc=0.3508 (41s)
 
 === tabnet ===
   fitting TabNet (max_epochs=80)...
-Stop training because you reached max_epochs = 80 with best_epoch = 75 and best_val_0_accuracy = 0.81611
+Stop training because you reached max_epochs = 80 with best_epoch = 78 and best_val_0_accuracy = 0.87843
 /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
   warnings.warn(wrn_msg)
-  tabnet: f1_macro=0.3286 acc=0.2826 (7157s)
+  tabnet: f1_macro=0.3086 acc=0.3051 (441s)
 
 === EXTRA BASELINES SUMMARY ===
            model    f1_macro       acc    time_s
-   random_forest      0.3085    0.2978      41.2
-        lightgbm      0.4341    0.3319      13.2
-        catboost      0.3726    0.3518      14.5
-          tabnet      0.3286    0.2826    7157.2
+   random_forest      0.2622    0.2769      49.1
+        lightgbm      0.4577    0.3613      36.7
+        catboost      0.3547    0.3508      41.5
+          tabnet      0.3086    0.3051     440.6
 
 Saved /home/suan/Projects/Water/causal-leak/src/../results/extra_baselines_results.json

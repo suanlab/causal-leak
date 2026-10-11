@@ -2,30 +2,30 @@ DEVICE=cuda
 tr_main=58779 va=6531 te=5074
 
 === cnn_baseline ===
-  cnn_baseline: test_f1=0.3158 test_acc=0.3106 (118s)
+  cnn_baseline: test_f1=0.3232 test_acc=0.3733 (109s)
 
 === cnn_specaugment ===
-  cnn_specaugment: test_f1=0.3656 test_acc=0.3341 (233s)
+  cnn_specaugment: test_f1=0.2970 test_acc=0.3210 (156s)
 
 === cnn_mixup ===
-  cnn_mixup: test_f1=0.2627 test_acc=0.2775 (141s)
+  cnn_mixup: test_f1=0.3165 test_acc=0.3303 (152s)
 
 === cnn_focal ===
-  cnn_focal: test_f1=0.2681 test_acc=0.3086 (180s)
+  cnn_focal: test_f1=0.3597 test_acc=0.3193 (175s)
 
 === cnn_all ===
-  cnn_all: test_f1=0.3397 test_acc=0.3634 (130s)
+  cnn_all: test_f1=0.3081 test_acc=0.3329 (125s)
 
 === MLP on causal 65-422Hz features ===
-  mlp_causal_mixup_focal: test_f1=0.2894 test_acc=0.3171 (59s)
+  mlp_causal_mixup_focal: test_f1=0.3171 test_acc=0.3084 (67s)
 
 === AUGMENTATION SUMMARY ===
                         name   test_f1  test_acc
-                cnn_baseline    0.3158    0.3106
-             cnn_specaugment    0.3656    0.3341
-                   cnn_mixup    0.2627    0.2775
-                   cnn_focal    0.2681    0.3086
-                     cnn_all    0.3397    0.3634
-      mlp_causal_mixup_focal    0.2894    0.3171
+                cnn_baseline    0.3232    0.3733
+             cnn_specaugment    0.2970    0.3210
+                   cnn_mixup    0.3165    0.3303
+                   cnn_focal    0.3597    0.3193
+                     cnn_all    0.3081    0.3329
+      mlp_causal_mixup_focal    0.3171    0.3084
 
-Total 871s
+Total 790s

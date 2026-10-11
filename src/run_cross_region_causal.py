@@ -1,13 +1,15 @@
 """Phase 2E — Cross-region robustness of the causal-band finding.
 
-Question: is the +1.25 pp macro-F1 improvement of `causal 65-422 Hz` over
-`signal_all` specific to the 충북 (region 43) holdout, or does it transfer
-to other LORO folds?
+Question: does restricting the spectrum help on every LORO fold, or only on
+the 충북 (region 43) holdout?
 
-For each of the 12 regions, we hold that region out and train two XGBoost
-models: one with all 513 HZ bands (+ MAX + month), one with only the
-65-422 Hz causal subset (+ MAX + month). We report per-region macro-F1
-and accuracy and compute the aggregate Δ.
+For each region we hold it out and train two XGBoost models: one with all 513
+HZ bands (+ MAX + month), one with the bands selected for that fold by nested
+selection (band_selection.nested_bands_cached), which never sees the held-out
+region. The previous version of this script compared against a fixed
+65-422 Hz subset that had been chosen from attribution measured on region 43,
+so its per-region deltas were only meaningful on that one fold; see
+results/FINDINGS_NESTED_BANDS.md.
 
 Skipping regions with only one class in the test set (no macro-F1
 defined there in a meaningful way).
@@ -22,6 +24,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, f1_score
 from xgboost import XGBClassifier
 
 sys.path.insert(0, os.path.dirname(__file__))
+from band_selection import nested_bands_cached  # noqa: E402
 from data import HZ_COLS, MAX_COLS, load_all  # noqa: E402
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), '..', 'results')
@@ -63,10 +66,7 @@ def main():
     print(f'Regions: {regions}', flush=True)
 
     signal_all_cols = ['month'] + HZ_COLS + MAX_COLS
-    causal_cols = ['month'] + bands_in_range(65, 422) + MAX_COLS
-
     X_all = df[signal_all_cols].to_numpy(dtype=np.float32, copy=False)
-    X_causal = df[causal_cols].to_numpy(dtype=np.float32, copy=False)
     y = df['label'].to_numpy(dtype=np.int32)
 
     out = []
@@ -80,9 +80,13 @@ def main():
                   f'in test set', flush=True)
             continue
 
+        nested_cols, manifest = nested_bands_cached(
+            df, X_all, y, signal_all_cols, region, kind='region')
+
         t0 = time.time()
         m_all = fit_eval(X_all, y, tr, te)
         t_all_fit = time.time() - t0
+        X_causal = df[nested_cols].to_numpy(dtype=np.float32, copy=False)
         t0 = time.time()
         m_caus = fit_eval(X_causal, y, tr, te)
         t_caus_fit = time.time() - t0
@@ -92,7 +96,9 @@ def main():
             'n_test': int(len(te)),
             'n_classes_in_test': n_classes_te,
             'signal_all': m_all,
-            'causal_65_422Hz': m_caus,
+            'nested_causal': m_caus,
+            'selected_groups': manifest['selected_groups'],
+            'n_nested_features': len(nested_cols),
             'delta_acc': float(m_caus['acc'] - m_all['acc']),
             'delta_f1': float(m_caus['f1_macro'] - m_all['f1_macro']),
             'time_s': float(t_all_fit + t_caus_fit),

@@ -24,7 +24,10 @@ def main():
     cnn_erm_f1 = None
     irm_path = os.path.join(RESULTS_DIR, 'irm_cnn_results.json')
     if os.path.exists(irm_path):
-        for run in json.load(open(irm_path)):
+        runs = json.load(open(irm_path))
+        # {'seed', 'runs'} from the multi-seed-aware runner, or a bare list
+        runs = runs['runs'] if isinstance(runs, dict) else runs
+        for run in runs:
             if run.get('method') == 'erm':
                 cnn_erm_f1 = run['test']['f1_macro']
                 break

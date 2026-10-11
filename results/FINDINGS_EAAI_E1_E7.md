@@ -1,5 +1,13 @@
 # EAAI Revision Findings (Phase 1, E1–E7)
 
+> **Superseded (October 2026).** The 121-422 Hz "causal band" reported below was
+> selected using attribution measured on the evaluation fold and then evaluated
+> on that same fold. It does not survive nested selection (chosen in 2 of 7
+> regions). Numbers that depend on the 57-feature set are retracted; the
+> archived artefacts are in `results/retracted_fixed_band_65_422/`. See
+> `FINDINGS_NESTED_BANDS.md` and `FINDINGS_RQ4_RQ6_RERUN.md` for the corrected
+> analysis.
+
 Run dates: 2026-05-07. Hardware: 2 × NVIDIA TITAN Xp + 16-core CPU.
 
 This document summarises the new experiments added for the

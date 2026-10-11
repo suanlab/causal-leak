@@ -1,21 +1,21 @@
-features=57  train=65310  test=5074
-Stage 1 (normal gate): acc=1.0000  f1_pos=1.0000  pred_normal=45  true_normal=45  (28s)
-Stage 2 (4-class abnormal): trained on 43189 rows  (126s)
+features=503  train=65310  test=5074
+Stage 1 (normal gate): acc=1.0000  f1_pos=1.0000  pred_normal=45  true_normal=45  (21s)
+Stage 2 (4-class abnormal): trained on 43189 rows  (93s)
 
 === HIERARCHICAL test ===
-  acc=0.3041  f1_macro=0.4287
-  F1[    in] = 0.3447
-  F1[   out] = 0.1998
-  F1[ noise] = 0.3769
-  F1[ other] = 0.2221
+  acc=0.3242  f1_macro=0.4356
+  F1[    in] = 0.3805
+  F1[   out] = 0.2197
+  F1[ noise] = 0.4465
+  F1[ other] = 0.1316
   F1[normal] = 1.0000
 
 === FLAT 5-class (baseline) ===
-  acc=0.3013  f1_macro=0.4273  (159s)
-  F1[    in] = 0.3257
-  F1[   out] = 0.2059
-  F1[ noise] = 0.3908
-  F1[ other] = 0.2138
-  F1[normal] = 1.0000
+  acc=0.3210  f1_macro=0.4363  (115s)
+  F1[    in] = 0.3989
+  F1[   out] = 0.2102
+  F1[ noise] = 0.4021
+  F1[ other] = 0.1813
+  F1[normal] = 0.9890
 
-Total: 317s
+Total: 233s

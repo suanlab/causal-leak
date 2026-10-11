@@ -8,8 +8,16 @@ For every sigungu with at least 4 classes present (16 folds), we
 train XGBoost on the remaining sigungu and evaluate the held-out one
 under two feature regimes:
 
-  - signal_all : 513 HZ + 20 MAX + month  (534 features)
-  - causal     : 65–422 Hz + 20 MAX + month (57 features)
+  - signal_all    : 513 HZ + 20 MAX + month  (534 features)
+  - nested_causal : bands from nested selection (band_selection)
+
+Band selection for a county fold excludes that county's entire
+gwangyeoksi-do region, not merely the county itself. That is stricter than
+leakage-freedom requires -- sibling counties are dropped too -- but it is
+unambiguously safe and lets the region-level selections be reused, which keeps
+the inner loop affordable. The previous fixed 65-422 Hz subset was derived
+from attribution measured on region 43 and is retracted; see
+results/FINDINGS_NESTED_BANDS.md.
 
 Outputs results/sigungu_ood_results.json with per-fold accuracy /
 macro-F1 for each regime, plus an aggregated summary.
@@ -27,6 +35,7 @@ from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from xgboost import XGBClassifier
 
 sys.path.insert(0, os.path.dirname(__file__))
+from band_selection import nested_bands_cached  # noqa: E402
 from data import HZ_COLS, MAX_COLS, LABEL_NAMES, load_all  # noqa: E402
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), '..', 'results')
@@ -38,11 +47,11 @@ def bands_in_range(lo, hi):
     return [f'{f}HZ' for f in range(0, 5130, 10) if lo <= f < hi]
 
 
-def build_features(df, mode):
-    if mode == 'signal_all':
+def build_features(df, mode, cols_override=None):
+    if cols_override is not None:
+        cols = cols_override
+    elif mode == 'signal_all':
         cols = ['month'] + HZ_COLS + MAX_COLS
-    elif mode == 'causal':
-        cols = ['month'] + bands_in_range(65, 422) + MAX_COLS
     else:
         raise ValueError(mode)
     X = df[cols].to_numpy(dtype=np.float32, copy=False)
@@ -63,15 +72,27 @@ def main():
           f'{len(eligible)} / {len(sg_summary)}', flush=True)
     print(sg_summary.head(20))
 
+    sel_cols = ['month'] + HZ_COLS + MAX_COLS
+    X_sel = df[sel_cols].to_numpy(dtype=np.float32, copy=False)
+    y_sel = df['label'].to_numpy(dtype=np.int32)
+
     fold_records = []
     for sg_id in eligible:
         te_mask = (df['sg'] == sg_id).values
         tr_mask = ~te_mask
 
+        host_region = int(str(sg_id).split('_')[0])
+        nested_cols, man = nested_bands_cached(
+            df, X_sel, y_sel, sel_cols, host_region, kind='region')
+        print(f'  {sg_id}: bands {man["selected_groups"]} '
+              f'(selected with region {host_region} excluded)', flush=True)
+
         # both feature regimes
         regime_metrics = {}
-        for regime in ['signal_all', 'causal']:
-            X, y, cols = build_features(df, regime)
+        for regime in ['signal_all', 'nested_causal']:
+            X, y, cols = build_features(
+                df, regime,
+                cols_override=nested_cols if regime == 'nested_causal' else None)
             clf = XGBClassifier(
                 n_estimators=200, max_depth=6, learning_rate=0.1,
                 objective='multi:softprob', num_class=5,
@@ -92,7 +113,7 @@ def main():
                 'n_features': len(cols),
             }
 
-        delta_f1 = (regime_metrics['causal']['f1_macro'] -
+        delta_f1 = (regime_metrics['nested_causal']['f1_macro'] -
                     regime_metrics['signal_all']['f1_macro'])
 
         rec = {
@@ -101,7 +122,7 @@ def main():
             'n_train': int(tr_mask.sum()),
             'n_classes_in_test': int(sg_summary.loc[sg_id, 'n_cls']),
             'signal_all': regime_metrics['signal_all'],
-            'causal': regime_metrics['causal'],
+            'nested_causal': regime_metrics['nested_causal'],
             'delta_f1_macro': delta_f1,
         }
         fold_records.append(rec)
@@ -109,7 +130,7 @@ def main():
             f'  {sg_id:>10s}  n_te={int(te_mask.sum()):>5d}  '
             f'#cls={int(sg_summary.loc[sg_id, "n_cls"])}  '
             f'sig_F1={regime_metrics["signal_all"]["f1_macro"]:.3f}  '
-            f'cau_F1={regime_metrics["causal"]["f1_macro"]:.3f}  '
+            f'cau_F1={regime_metrics["nested_causal"]["f1_macro"]:.3f}  '
             f'Δ={delta_f1:+.3f}',
             flush=True,
         )
@@ -118,7 +139,7 @@ def main():
     deltas = np.array([r['delta_f1_macro'] for r in fold_records])
     n_test = np.array([r['n_test'] for r in fold_records])
     sig_f1 = np.array([r['signal_all']['f1_macro'] for r in fold_records])
-    cau_f1 = np.array([r['causal']['f1_macro'] for r in fold_records])
+    cau_f1 = np.array([r['nested_causal']['f1_macro'] for r in fold_records])
     weighted_sig = float((sig_f1 * n_test).sum() / n_test.sum())
     weighted_cau = float((cau_f1 * n_test).sum() / n_test.sum())
     weighted_delta = weighted_cau - weighted_sig

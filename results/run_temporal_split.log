@@ -1,0 +1,63 @@
+=== Temporal Split Validation ===
+  selection pool: 49234 rows, inner folds: [27, 43, 44, 45, 46, 47]
+    inner r= 27 base_f1=0.3267  10-121=-0.0026  121-422=-0.0878  422-1470=-0.0322  1470-5120=-0.0232
+    inner r= 43 base_f1=0.4105  10-121=-0.0147  121-422=+0.0230  422-1470=-0.0070  1470-5120=-0.0040
+    inner r= 44 base_f1=0.3382  10-121=-0.0121  121-422=-0.0155  422-1470=+0.0081  1470-5120=+0.0502
+    inner r= 45 base_f1=0.4235  10-121=-0.0108  121-422=+0.0556  422-1470=+0.0656  1470-5120=+0.0700
+    inner r= 46 base_f1=0.2707  10-121=-0.0023  121-422=+0.0513  422-1470=+0.0360  1470-5120=-0.0085
+    inner r= 47 base_f1=0.2254  10-121=-0.0002  121-422=+0.0412  422-1470=+0.0121  1470-5120=-0.0021
+  Cutoff date: 20201104
+  Train: 44311  Val: 4923  Test: 21150
+  Train dates: (20190227, 20201103)
+  Test  dates: (20201104, 20210210)
+  Train class dist: {'in': 7609, 'out': 12500, 'noise': 2421, 'other': 3272, 'normal': 18509}
+  Test  class dist: {'in': 6446, 'out': 5860, 'noise': 2960, 'other': 4264, 'normal': 1620}
+
+--- XGBoost flat (causal 57 features) ---
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/xgboost/training.py:200: UserWarning: [16:05:49] WARNING: /__w/xgboost/xgboost/src/learner.cc:782: 
+Parameters: { "use_label_encoder" } are not used.
+
+  bst.update(dtrain, iteration=i, fobj=obj)
+  F1=0.4160  Acc=0.3897
+
+--- XGBoost flat (signal_all 534 features) ---
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/xgboost/training.py:200: UserWarning: [16:07:42] WARNING: /__w/xgboost/xgboost/src/learner.cc:782: 
+Parameters: { "use_label_encoder" } are not used.
+
+  bst.update(dtrain, iteration=i, fobj=obj)
+  F1=0.4156  Acc=0.3873
+
+--- XGBoost hierarchical (causal) ---
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/xgboost/training.py:200: UserWarning: [16:09:32] WARNING: /__w/xgboost/xgboost/src/learner.cc:782: 
+Parameters: { "use_label_encoder" } are not used.
+
+  bst.update(dtrain, iteration=i, fobj=obj)
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/xgboost/training.py:200: UserWarning: [16:09:52] WARNING: /__w/xgboost/xgboost/src/learner.cc:782: 
+Parameters: { "use_label_encoder" } are not used.
+
+  bst.update(dtrain, iteration=i, fobj=obj)
+  F1=0.4111  Acc=0.3845
+
+--- Tree-only ensemble (causal) ---
+  F1=0.4133  Acc=0.3873
+
+--- LightGBM (causal) ---
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  F1=0.4087  Acc=0.3876
+
+--- CatBoost (causal) ---
+  F1=0.4140  Acc=0.3721
+
+=== TEMPORAL SPLIT SUMMARY ===
+                    Model    F1 macro       Acc
+          xgb_flat_causal      0.4160    0.3897
+          xgb_flat_signal      0.4156    0.3873
+          xgb_hier_causal      0.4111    0.3845
+     tree_ensemble_causal      0.4133    0.3873
+          lightgbm_causal      0.4087    0.3876
+          catboost_causal      0.4140    0.3721
+
+Causal vs Signal delta F1: +0.0003
+
+Saved /home/suan/Projects/Water/causal-leak/src/../results/temporal_split_results.json

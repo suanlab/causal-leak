@@ -1,25 +1,25 @@
 Loading data...
-  X_s=(70384, 57)  tr_main=52248  cal=13062  te=5074
+  X_s=(70384, 503)  tr_main=52248  cal=13062  te=5074
   calibration split: 4492 normal / 8570 abnormal
 
 --- E5: detection rate at calibration-derived FAR ---
   training flat causal-XGBoost on tr_main...
-  flat XGB cal-T@FAR=0.01 -> T=0.0190  test detection=1.0000  test achieved FAR=0.0000
-  flat XGB cal-T@FAR=0.02 -> T=0.0109  test detection=1.0000  test achieved FAR=0.0000
-  flat XGB cal-T@FAR=0.05 -> T=0.0041  test detection=1.0000  test achieved FAR=0.0000
-  flat XGB cal-T@FAR=0.10 -> T=0.0015  test detection=1.0000  test achieved FAR=0.0444
+  flat XGB cal-T@FAR=0.01 -> T=0.0205  test detection=1.0000  test achieved FAR=0.0000
+  flat XGB cal-T@FAR=0.02 -> T=0.0116  test detection=1.0000  test achieved FAR=0.0000
+  flat XGB cal-T@FAR=0.05 -> T=0.0048  test detection=1.0000  test achieved FAR=0.0000
+  flat XGB cal-T@FAR=0.10 -> T=0.0018  test detection=1.0000  test achieved FAR=0.0222
 
   training hierarchical on tr_main...
-  hier  cal-T@FAR=0.01 -> T=0.0094  test detection=1.0000  test achieved FAR=0.0000
-  hier  cal-T@FAR=0.02 -> T=0.0046  test detection=1.0000  test achieved FAR=0.0000
-  hier  cal-T@FAR=0.05 -> T=0.0017  test detection=1.0000  test achieved FAR=0.0222
-  hier  cal-T@FAR=0.10 -> T=0.0005  test detection=1.0000  test achieved FAR=0.0889
+  hier  cal-T@FAR=0.01 -> T=0.0077  test detection=1.0000  test achieved FAR=0.0000
+  hier  cal-T@FAR=0.02 -> T=0.0045  test detection=1.0000  test achieved FAR=0.0000
+  hier  cal-T@FAR=0.05 -> T=0.0016  test detection=1.0000  test achieved FAR=0.0000
+  hier  cal-T@FAR=0.10 -> T=0.0005  test detection=1.0000  test achieved FAR=0.0444
 
 --- E7: hierarchical Stage-1 threshold sweep (diagnostic) ---
-  T=0.3  miss=0.001  FAR=0.000  4cls_F1=0.307  5cls_F1=0.439
-  T=0.4  miss=0.001  FAR=0.000  4cls_F1=0.307  5cls_F1=0.439
-  T=0.5  miss=0.000  FAR=0.000  4cls_F1=0.307  5cls_F1=0.441
-  T=0.6  miss=0.000  FAR=0.000  4cls_F1=0.307  5cls_F1=0.441
-  T=0.7  miss=0.000  FAR=0.000  4cls_F1=0.307  5cls_F1=0.446
+  T=0.3  miss=0.001  FAR=0.000  4cls_F1=0.303  5cls_F1=0.436
+  T=0.4  miss=0.000  FAR=0.000  4cls_F1=0.303  5cls_F1=0.438
+  T=0.5  miss=0.000  FAR=0.000  4cls_F1=0.303  5cls_F1=0.438
+  T=0.6  miss=0.000  FAR=0.000  4cls_F1=0.303  5cls_F1=0.438
+  T=0.7  miss=0.000  FAR=0.000  4cls_F1=0.304  5cls_F1=0.443
 
-Saved /home/suan/Projects/Water/causal-leak/src/../results/cost_metrics_results.json  (350s)
+Saved /home/suan/Projects/Water/causal-leak/src/../results/cost_metrics_results.json  (215s)

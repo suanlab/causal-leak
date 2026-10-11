@@ -39,3 +39,11 @@ PRESUBMISSION_FINAL.md
 *.tmp
 *.bak
 .DS_Store
+
+# --- Manuscripts and venue planning (kept local while in preparation) ---
+paper-a/
+paper-b/
+VENUE_SHORTLIST.md
+
+# --- Local backup of a superseded operational run (fold-count bug) ---
+results/operational_folds_results.pre_sensor.json

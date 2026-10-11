@@ -35,6 +35,7 @@ from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
 sys.path.insert(0, os.path.dirname(__file__))
+from band_selection import causal_feature_cols
 from data import HZ_COLS, LABEL_NAMES, MAX_COLS, load_all  # noqa: E402
 
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), '..', 'results')
@@ -55,7 +56,7 @@ def make_split():
     held-out fold is never touched during calibration.
     """
     df = load_all()
-    cols = ['month'] + bands_in_range(65, 422) + MAX_COLS
+    cols = causal_feature_cols(43)
     X = df[cols].to_numpy(dtype=np.float32, copy=False)
     y = df['label'].to_numpy(dtype=np.int64)
     te_mask = df['region_lvl1'].values == HOLDOUT_REGION

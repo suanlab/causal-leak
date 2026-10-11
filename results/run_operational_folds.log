@@ -1,0 +1,64 @@
+=== region 27: n_test=4908 n_normal=4566 ===
+  [cache hit] region:27:seed42: groups ['10-121', '121-422', '1470-5120']
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  model                   macroF1      FAR     miss
+  xgb_flat                 0.3121   0.0000   0.0000
+  xgb_hier                 0.3341   0.0000   0.0000
+  tree_only_soft_avg       0.3340   0.0000   0.0000
+  lightgbm                 0.3327   0.0002   0.0000
+  (684s)
+
+=== region 29: n_test=4484 n_normal=4105 ===
+  [cache hit] region:29:seed42: groups ['10-121', '422-1470', '1470-5120']
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  model                   macroF1      FAR     miss
+  xgb_flat                 0.3458   0.0027   0.0000
+  xgb_hier                 0.3628   0.0010   0.0000
+  tree_only_soft_avg       0.3547   0.0012   0.0000
+  lightgbm                 0.3586   0.0027   0.0000
+  (696s)
+
+=== region 43: n_test=5074 n_normal=45 ===
+  [cache hit] region:43:seed42: groups ['10-121', '422-1470', '1470-5120']
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  model                   macroF1      FAR     miss
+  xgb_flat                 0.4363   0.0000   0.0002
+  xgb_hier                 0.4335   0.0000   0.0002
+  tree_only_soft_avg       0.4388   0.0000   0.0000
+  lightgbm                 0.4464   0.0000   0.0002
+  (498s)
+
+=== region 44: n_test=1682 n_normal=1151 ===
+  [cache hit] region:44:seed42: groups ['10-121', '422-1470', '1470-5120']
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  model                   macroF1      FAR     miss
+  xgb_flat                 0.3661   0.0000   0.0000
+  xgb_hier                 0.3610   0.0000   0.0000
+  tree_only_soft_avg       0.3634   0.0000   0.0000
+  lightgbm                 0.3318   0.0009   0.0000
+  (488s)
+
+=== region 45: n_test=15052 n_normal=12299 ===
+  [cache hit] region:45:seed42: groups ['10-121', '422-1470', '1470-5120']
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  model                   macroF1      FAR     miss
+  xgb_flat                 0.4002   0.0000   0.0004
+  xgb_hier                 0.3830   0.0000   0.0004
+  tree_only_soft_avg       0.3889   0.0000   0.0004
+  lightgbm                 0.4038   0.0002   0.0004
+  (546s)
+
+=== SUMMARY over folds with >= 100 normals (n=4) ===
+  model                     FAR(w)   FAR max   miss(w)   macroF1
+  xgb_flat                  0.0005    0.0027    0.0002    0.3560
+  xgb_hier                  0.0002    0.0010    0.0002    0.3602
+  tree_only_soft_avg        0.0002    0.0012    0.0002    0.3602
+  lightgbm                  0.0007    0.0027    0.0002    0.3567
+
+Saved /home/suan/Projects/Water/causal-leak/src/../results/operational_folds_results.json
+Total 2919s

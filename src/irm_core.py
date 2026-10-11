@@ -5,7 +5,8 @@ Data setup (consistent with Phase 2C for direct comparison):
   - Test:       region 43 (only region with substantial counts of all 5 classes).
   - Val:        random 10 % of training rows across all envs (early stopping).
   - Features:
-      'causal' : 65-422 Hz bands + MAX0-19 + month  (57 features, MLP input)
+      'causal' : bands selected without seeing the holdout region
+                 (band_selection.causal_feature_cols; MAX0-19 + month)
       'raw'    : all 513 HZ bands (reshaped to [N,1,513] for CNN) + tabular
                  extras (20 MAX + month) fed to the classifier head.
   - Standardisation: global StandardScaler fit on training rows only.
@@ -32,6 +33,7 @@ from sklearn.metrics import (accuracy_score, confusion_matrix, f1_score)
 from sklearn.preprocessing import StandardScaler
 
 sys.path.insert(0, os.path.dirname(__file__))
+from band_selection import causal_feature_cols
 from data import HZ_COLS, LABEL_NAMES, MAX_COLS, load_all  # noqa: E402
 
 HOLDOUT_REGION = 43
@@ -74,7 +76,7 @@ class Splits:
 def make_splits(mode: str = 'causal', val_frac: float = 0.10) -> Splits:
     """Build train/val/test splits for Phase 2B.
 
-    mode='causal' -> 57 features (MLP).
+    mode='causal' -> leakage-free band subset for HOLDOUT_REGION (MLP).
     mode='raw'    -> 534 features plus a separate `raw_HZ_*` ndarray that is
                      the standardised 513-band spectrum reshaped ready for a
                      Conv1d input.
@@ -84,7 +86,7 @@ def make_splits(mode: str = 'causal', val_frac: float = 0.10) -> Splits:
     set_seed(SPLIT_SEED)
 
     if mode == 'causal':
-        cols = ['month'] + bands_in_range(65, 422) + MAX_COLS
+        cols = causal_feature_cols(HOLDOUT_REGION)
     else:
         cols = ['month'] + HZ_COLS + MAX_COLS
 

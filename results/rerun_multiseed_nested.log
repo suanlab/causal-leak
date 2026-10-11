@@ -1,0 +1,30 @@
+=== Multi-seed sweep launched at Wed Aug 26 04:02:18 PM KST 2026 ===
+PYBIN=../.venv/bin/python  SKIP_EXISTING=1  FORCE=1
+--- seed 42 ---
+[16:02:18] seed=42  run_irm_mlp  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_irm_mlp_seed42.log
+[16:33:04] seed=42  run_augmentation  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_augmentation_seed42.log
+[16:45:57] seed=42  run_pga  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_pga_seed42.log
+[16:56:59] seed=42  run_irm_cnn  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_irm_cnn_seed42.log
+--- seed 0 ---
+[17:29:29] seed=0  run_irm_mlp  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_irm_mlp_seed0.log
+[17:58:19] seed=0  run_augmentation  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_augmentation_seed0.log
+[18:11:02] seed=0  run_pga  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_pga_seed0.log
+[18:22:46] seed=0  run_irm_cnn  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_irm_cnn_seed0.log
+--- seed 1 ---
+[18:54:40] seed=1  run_irm_mlp  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_irm_mlp_seed1.log
+[19:26:02] seed=1  run_augmentation  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_augmentation_seed1.log
+[19:40:09] seed=1  run_pga  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_pga_seed1.log
+[19:51:09] seed=1  run_irm_cnn  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_irm_cnn_seed1.log
+--- seed 2 ---
+[20:22:53] seed=2  run_irm_mlp  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_irm_mlp_seed2.log
+[20:53:09] seed=2  run_augmentation  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_augmentation_seed2.log
+[21:06:27] seed=2  run_pga  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_pga_seed2.log
+[21:18:18] seed=2  run_irm_cnn  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_irm_cnn_seed2.log
+--- seed 3 ---
+[21:49:41] seed=3  run_irm_mlp  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_irm_mlp_seed3.log
+[22:19:49] seed=3  run_augmentation  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_augmentation_seed3.log
+[22:32:48] seed=3  run_pga  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_pga_seed3.log
+[22:43:43] seed=3  run_irm_cnn  ->  /home/suan/Projects/Water/causal-leak/results/multiseed_logs/run_irm_cnn_seed3.log
+=== Multi-seed sweep finished in 26083 s ===
+=== Aggregating multi-seed summary ===
+=== Done ===

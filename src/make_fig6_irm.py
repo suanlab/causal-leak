@@ -24,10 +24,14 @@ def main():
     xgb_sig = cb_lookup['signal_all']
     xgb_causal = cb_lookup['causal_65_422Hz']
 
+    # The multi-seed-aware runners wrap their run list as {'seed', 'runs'};
+    # artefacts written before that change are bare lists. Accept both.
     with open(os.path.join(RESULTS_DIR, 'irm_mlp_results.json')) as f:
         mlp = json.load(f)
     with open(os.path.join(RESULTS_DIR, 'irm_cnn_results.json')) as f:
         cnn = json.load(f)
+    mlp = mlp['runs'] if isinstance(mlp, dict) else mlp
+    cnn = cnn['runs'] if isinstance(cnn, dict) else cnn
 
     rows = [
         ('XGB\nsignal_all', xgb_sig['acc'], xgb_sig['f1_macro'],

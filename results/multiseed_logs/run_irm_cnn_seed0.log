@@ -4,50 +4,50 @@ DEVICE = cuda
 tab_feat=21  raw_HZ=513
 
 === CNN / erm ===
-  [erm] ep=  0  loss=0.9957  pen=0.0000e+00  lam=0.0  val_f1=0.4212  test_f1=0.2294
-  [erm] ep=  5  loss=0.5142  pen=0.0000e+00  lam=0.0  val_f1=0.4678  test_f1=0.2512
-  [erm] ep= 10  loss=0.3770  pen=0.0000e+00  lam=0.0  val_f1=0.5996  test_f1=0.2712
-  [erm] ep= 15  loss=0.3111  pen=0.0000e+00  lam=0.0  val_f1=0.6405  test_f1=0.3356
-  [erm] ep= 20  loss=0.2697  pen=0.0000e+00  lam=0.0  val_f1=0.7179  test_f1=0.3242
-  [erm] ep= 25  loss=0.2412  pen=0.0000e+00  lam=0.0  val_f1=0.6386  test_f1=0.2836
-  [erm] ep= 30  loss=0.2073  pen=0.0000e+00  lam=0.0  val_f1=0.6758  test_f1=0.3365
-  [erm] ep= 35  loss=0.1934  pen=0.0000e+00  lam=0.0  val_f1=0.7358  test_f1=0.3223
-  [erm] ep= 40  loss=0.1709  pen=0.0000e+00  lam=0.0  val_f1=0.6692  test_f1=0.3512
-  [erm] ep= 45  loss=0.1579  pen=0.0000e+00  lam=0.0  val_f1=0.8142  test_f1=0.3219
-  [erm] ep= 50  loss=0.1520  pen=0.0000e+00  lam=0.0  val_f1=0.7412  test_f1=0.3323
-  [erm] ep= 55  loss=0.1365  pen=0.0000e+00  lam=0.0  val_f1=0.7716  test_f1=0.2914
-  [erm] ep= 59  loss=0.1291  pen=0.0000e+00  lam=0.0  val_f1=0.7627  test_f1=0.3222
-  DONE erm: test_f1=0.3261  test_acc=0.2923  per_class=[0.366, 0.204, 0.36, 0.141, 0.559]  val_f1=0.8395  (548s)
+  [erm] ep=  0  loss=0.9960  pen=0.0000e+00  lam=0.0  val_f1=0.4225  test_f1=0.2319
+  [erm] ep=  5  loss=0.5161  pen=0.0000e+00  lam=0.0  val_f1=0.5193  test_f1=0.2718
+  [erm] ep= 10  loss=0.3783  pen=0.0000e+00  lam=0.0  val_f1=0.6651  test_f1=0.3099
+  [erm] ep= 15  loss=0.3124  pen=0.0000e+00  lam=0.0  val_f1=0.6621  test_f1=0.3479
+  [erm] ep= 20  loss=0.2665  pen=0.0000e+00  lam=0.0  val_f1=0.7452  test_f1=0.3113
+  [erm] ep= 25  loss=0.2363  pen=0.0000e+00  lam=0.0  val_f1=0.6782  test_f1=0.3004
+  [erm] ep= 30  loss=0.2014  pen=0.0000e+00  lam=0.0  val_f1=0.6241  test_f1=0.2625
+  [erm] ep= 35  loss=0.1902  pen=0.0000e+00  lam=0.0  val_f1=0.7218  test_f1=0.2987
+  [erm] ep= 40  loss=0.1721  pen=0.0000e+00  lam=0.0  val_f1=0.5613  test_f1=0.3224
+  [erm] ep= 45  loss=0.1596  pen=0.0000e+00  lam=0.0  val_f1=0.8213  test_f1=0.3921
+  [erm] ep= 50  loss=0.1470  pen=0.0000e+00  lam=0.0  val_f1=0.7346  test_f1=0.3440
+  [erm] ep= 55  loss=0.1357  pen=0.0000e+00  lam=0.0  val_f1=0.8108  test_f1=0.3256
+  [erm] ep= 59  loss=0.1287  pen=0.0000e+00  lam=0.0  val_f1=0.8085  test_f1=0.3326
+  DONE erm: test_f1=0.3921  test_acc=0.3429  per_class=[0.412, 0.211, 0.444, 0.143, 0.75]  val_f1=0.8213  (511s)
 
 === CNN / irm ===
-  [irm] ep=  0  loss=0.9250  pen=6.4563e-02  lam=1.0  val_f1=0.4260  test_f1=0.2358
-  [irm] ep=  5  loss=0.4769  pen=2.9463e-02  lam=1.0  val_f1=0.5929  test_f1=0.2945
-  [irm] ep= 10  loss=0.3450  pen=1.8560e-02  lam=1.0  val_f1=0.6439  test_f1=0.3121
-  [irm] ep= 15  loss=0.2798  pen=1.3298e-02  lam=1.0  val_f1=0.5165  test_f1=0.2830
-  [irm] ep= 20  loss=0.3641  pen=1.3838e-02  lam=12.0  val_f1=0.6004  test_f1=0.3437
-  [irm] ep= 25  loss=0.7291  pen=9.7473e-03  lam=23.0  val_f1=0.5228  test_f1=0.2982
-  [irm] ep= 30  loss=0.5747  pen=7.6051e-03  lam=34.0  val_f1=0.5692  test_f1=0.2995
+  [irm] ep=  0  loss=0.9246  pen=6.4670e-02  lam=1.0  val_f1=0.4615  test_f1=0.2362
+  [irm] ep=  5  loss=0.4754  pen=2.8776e-02  lam=1.0  val_f1=0.5669  test_f1=0.2769
+  [irm] ep= 10  loss=0.3535  pen=1.8972e-02  lam=1.0  val_f1=0.6225  test_f1=0.2833
+  [irm] ep= 15  loss=0.2783  pen=1.3485e-02  lam=1.0  val_f1=0.7036  test_f1=0.3307
+  [irm] ep= 20  loss=0.3782  pen=1.2618e-02  lam=12.0  val_f1=0.6249  test_f1=0.3160
+  [irm] ep= 25  loss=0.7604  pen=7.0946e-03  lam=23.0  val_f1=0.5339  test_f1=0.3069
+  [irm] ep= 30  loss=0.6857  pen=6.8222e-03  lam=34.0  val_f1=0.5112  test_f1=0.2800
   early stopping at epoch 31
-  DONE irm: test_f1=0.3417  test_acc=0.3898  per_class=[0.449, 0.21, 0.5, 0.129, 0.421]  val_f1=0.6984  (601s)
+  DONE irm: test_f1=0.3162  test_acc=0.3451  per_class=[0.422, 0.181, 0.42, 0.18, 0.378]  val_f1=0.7246  (698s)
 
 === CNN / groupdro ===
-  [groupdro] ep=  0  loss=1.1414  pen=0.0000e+00  lam=0.0  val_f1=0.4143  test_f1=0.2871
-  [groupdro] ep=  5  loss=1.0029  pen=0.0000e+00  lam=0.0  val_f1=0.5447  test_f1=0.3782
-  [groupdro] ep= 10  loss=0.7872  pen=0.0000e+00  lam=0.0  val_f1=0.6324  test_f1=0.3966
-  [groupdro] ep= 15  loss=0.6281  pen=0.0000e+00  lam=0.0  val_f1=0.5469  test_f1=0.3343
-  [groupdro] ep= 20  loss=0.5364  pen=0.0000e+00  lam=0.0  val_f1=0.5521  test_f1=0.3344
-  [groupdro] ep= 25  loss=0.4848  pen=0.0000e+00  lam=0.0  val_f1=0.7747  test_f1=0.3187
-  [groupdro] ep= 30  loss=0.4043  pen=0.0000e+00  lam=0.0  val_f1=0.7512  test_f1=0.3662
-  [groupdro] ep= 35  loss=0.3670  pen=0.0000e+00  lam=0.0  val_f1=0.8256  test_f1=0.3119
-  [groupdro] ep= 40  loss=0.3391  pen=0.0000e+00  lam=0.0  val_f1=0.6646  test_f1=0.3797
-  [groupdro] ep= 45  loss=0.2994  pen=0.0000e+00  lam=0.0  val_f1=0.7745  test_f1=0.2770
-  [groupdro] ep= 50  loss=0.2670  pen=0.0000e+00  lam=0.0  val_f1=0.8524  test_f1=0.3150
-  [groupdro] ep= 55  loss=0.2381  pen=0.0000e+00  lam=0.0  val_f1=0.7057  test_f1=0.3124
-  [groupdro] ep= 59  loss=0.2268  pen=0.0000e+00  lam=0.0  val_f1=0.6714  test_f1=0.3246
-  DONE groupdro: test_f1=0.3150  test_acc=0.3207  per_class=[0.442, 0.176, 0.36, 0.107, 0.489]  val_f1=0.8524  (751s)
+  [groupdro] ep=  0  loss=1.1409  pen=0.0000e+00  lam=0.0  val_f1=0.4095  test_f1=0.2810
+  [groupdro] ep=  5  loss=1.0098  pen=0.0000e+00  lam=0.0  val_f1=0.5323  test_f1=0.3589
+  [groupdro] ep= 10  loss=0.7777  pen=0.0000e+00  lam=0.0  val_f1=0.5641  test_f1=0.3868
+  [groupdro] ep= 15  loss=0.6265  pen=0.0000e+00  lam=0.0  val_f1=0.4591  test_f1=0.3378
+  [groupdro] ep= 20  loss=0.5396  pen=0.0000e+00  lam=0.0  val_f1=0.5831  test_f1=0.3555
+  [groupdro] ep= 25  loss=0.4865  pen=0.0000e+00  lam=0.0  val_f1=0.7275  test_f1=0.3672
+  [groupdro] ep= 30  loss=0.4139  pen=0.0000e+00  lam=0.0  val_f1=0.7062  test_f1=0.3740
+  [groupdro] ep= 35  loss=0.3710  pen=0.0000e+00  lam=0.0  val_f1=0.7342  test_f1=0.3473
+  [groupdro] ep= 40  loss=0.3383  pen=0.0000e+00  lam=0.0  val_f1=0.7500  test_f1=0.3897
+  [groupdro] ep= 45  loss=0.3107  pen=0.0000e+00  lam=0.0  val_f1=0.8219  test_f1=0.3693
+  [groupdro] ep= 50  loss=0.2707  pen=0.0000e+00  lam=0.0  val_f1=0.8278  test_f1=0.3015
+  [groupdro] ep= 55  loss=0.2423  pen=0.0000e+00  lam=0.0  val_f1=0.7697  test_f1=0.3288
+  [groupdro] ep= 59  loss=0.2394  pen=0.0000e+00  lam=0.0  val_f1=0.7447  test_f1=0.3655
+  DONE groupdro: test_f1=0.3484  test_acc=0.3345  per_class=[0.394, 0.215, 0.431, 0.136, 0.566]  val_f1=0.8576  (693s)
 
 === CNN summary ===
 method         val_f1    test_f1   test_acc
-erm            0.8395     0.3261     0.2923
-irm            0.6984     0.3417     0.3898
-groupdro       0.8524     0.3150     0.3207
+erm            0.8213     0.3921     0.3429
+irm            0.7246     0.3162     0.3451
+groupdro       0.8576     0.3484     0.3345

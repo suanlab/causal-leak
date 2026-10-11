@@ -9,6 +9,10 @@
 #   sigungu OOD (E2) / extra tabular baselines (E3) / domain alignment (E4)
 #   / cost metrics (E5+E7) / compute cost benchmark (E6)
 #
+# Correction (October 2026): nested band selection, multi-seed tabular
+#   baselines, temporal split, calibrated-threshold sweep, sensor-level
+#   operational comparison, and the binary-detection confound check.
+#
 # Multi-seed sweep (E1) is run via the dedicated `make multiseed` target.
 #
 # Failure behaviour: hard-fail on the first non-zero exit so missing artifacts
@@ -52,6 +56,9 @@ echo "Started: $(date -Is)"
 # ---------- Phase 1 ----------
 run_py run_matrix         src/run_matrix.py
 run_py run_loro           src/run_loro.py
+# Leakage-free band selection must precede every script that reads
+# band_selection.causal_feature_cols() (irm_core, hierarchical, ensemble, ...).
+run_py run_nested_causal_bands src/run_nested_causal_bands.py
 run_py run_freq           src/run_freq_analysis.py
 run_py run_causal_bands   src/run_causal_bands.py
 run_py run_irm_mlp        src/run_irm_mlp.py
@@ -70,6 +77,11 @@ run_py run_extra_baselines   src/run_extra_baselines.py
 run_py run_domain_alignment  src/run_domain_alignment.py
 run_py run_cost_metrics      src/run_cost_metrics.py
 run_py run_compute_cost      src/run_compute_cost.py
+run_py run_extra_baselines_multiseed src/run_extra_baselines_multiseed.py
+run_py run_temporal_split    src/run_temporal_split.py
+run_py run_threshold_sweep_loro src/run_threshold_sweep_loro.py
+run_py run_operational_folds src/run_operational_folds.py
+run_py run_lrate_confound    src/run_lrate_confound.py
 
 # ---------- analysis + figures ----------
 run_py analyze_results       src/analyze_results.py
@@ -84,6 +96,10 @@ run_py make_fig11_cost       src/make_fig11_cost.py
 run_py make_fig12_multiseed  src/make_fig12_multiseed.py
 run_py make_fig13_sigungu    src/make_fig13_sigungu.py
 run_py make_fig14_pareto     src/make_fig14_pareto.py
+run_py make_figB1_ladder      src/make_figB1_ladder.py
+run_py make_figB2_falsealarms src/make_figB2_falsealarms.py
+run_py make_figB3_models      src/make_figB3_models.py
+run_py make_figB4_tradeoff    src/make_figB4_tradeoff.py
 
 # ---------- manuscript (optional) ----------
 # The LaTeX manuscript is not part of the public code release; this step

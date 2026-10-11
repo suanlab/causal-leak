@@ -1,0 +1,18 @@
+=== stale-script reruns started 21:15:26 ===
+=== 21:15:26  run_hierarchical ===
+    OK  -> results/run_hierarchical.log
+=== 21:19:21  run_ensemble ===
+    OK  -> results/run_ensemble.log
+=== 21:23:20  run_cost_metrics ===
+    OK  -> results/run_cost_metrics.log
+=== 21:26:57  run_compute_cost ===
+    OK  -> results/run_compute_cost.log
+=== 21:32:03  run_extra_baselines ===
+    OK  -> results/run_extra_baselines.log
+=== 21:41:40  run_irm_sweep ===
+    OK  -> results/run_irm_sweep.log
+=== 00:26:11  run_domain_alignment ===
+    OK  -> results/run_domain_alignment.log
+=== 03:29:44  run_extra_baselines_multiseed ===
+    OK  -> results/run_extra_baselines_multiseed.log
+=== stale reruns done 04:49:53  rc=0 ===
