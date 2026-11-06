@@ -9,7 +9,7 @@ reference (dashed).
 
 Reads results/matrix_results.json, results/loro_results.json and
 results/leak_f1_results.json.
-Writes results/figs/figB1_ladder.pdf.
+Writes results/figs/figB1_ladder.pdf (or figB1_ladder_alarm.pdf with FIG_TERM=alarm).
 """
 import json
 import os
@@ -20,6 +20,11 @@ import numpy as np
 HERE = os.path.dirname(__file__)
 R = os.path.join(HERE, '..', 'results')
 FIGS = os.path.join(HERE, '..', 'results', 'figs')
+# The four non-normal classes are the recordings on which the device alarmed.
+# FIG_TERM=alarm names them 'alarm classes' (data-mining manuscript, where
+# 'leak' would collide with data leakage) and writes <name>_alarm.pdf.
+TERM = os.environ.get('FIG_TERM', 'leak')
+SUFFIX = '' if TERM == 'leak' else f'_{TERM}'
 os.makedirs(FIGS, exist_ok=True)
 
 TIERS = ['Row-CV', 'Group-CV\n(by installation)', 'LORO\n(by region)']
@@ -57,7 +62,7 @@ def main():
 
     for ax, metric, title in zip(axes, ['acc', 'f1', 'leak'],
                                  ['Accuracy', 'Macro-F1, five classes',
-                                  'Macro-F1, leak classes']):
+                                  f'Macro-F1, {TERM} classes']):
         for j, (label, d) in enumerate(series.items()):
             ax.bar(x + (j - 0.5) * w, d[metric], w, label=label,
                    color=colours[j], edgecolor='black', linewidth=0.5)
@@ -80,7 +85,7 @@ def main():
     axes[0].set_ylabel('score', fontsize=9)
     axes[0].legend(fontsize=7.5, frameon=False, loc='upper right')
     fig.tight_layout()
-    out = os.path.join(FIGS, 'figB1_ladder.pdf')
+    out = os.path.join(FIGS, 'figB1_ladder' + SUFFIX + '.pdf')
     fig.savefig(out, bbox_inches='tight')
     print(f'wrote {out}')
     for label, d in series.items():

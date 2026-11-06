@@ -9,7 +9,7 @@ five-class score is padded by the normal class, which the device's own
 trigger count separates (run_device_rule.py), so it is not plotted.
 
 Reads results/leak_f1_results.json (summarize_leak_f1.py).
-Writes results/figs/figB3_models.pdf.
+Writes results/figs/figB3_models.pdf (or figB3_models_alarm.pdf with FIG_TERM=alarm).
 """
 import json
 import os
@@ -20,6 +20,11 @@ import numpy as np
 HERE = os.path.dirname(__file__)
 R = os.path.join(HERE, '..', 'results')
 FIGS = os.path.join(HERE, '..', 'results', 'figs')
+# The four non-normal classes are the recordings on which the device alarmed.
+# FIG_TERM=alarm names them 'alarm classes' (data-mining manuscript, where
+# 'leak' would collide with data leakage) and writes <name>_alarm.pdf.
+TERM = os.environ.get('FIG_TERM', 'leak')
+SUFFIX = '' if TERM == 'leak' else f'_{TERM}'
 os.makedirs(FIGS, exist_ok=True)
 
 FAMILY_COLOUR = {'Trees': '#2166ac', 'Tabular DL': '#92c5de',
@@ -81,7 +86,7 @@ def main():
 
     ax.set_yticks(y)
     ax.set_yticklabels([r[0] for r in rows], fontsize=8)
-    ax.set_xlabel('leak-class macro-F1 on the held-out region', fontsize=9)
+    ax.set_xlabel(f'{TERM}-class macro-F1 on the held-out region', fontsize=9)
     ax.set_xlim(0, max(np.array(vals) + np.array(errs)) * 1.16)
     ax.tick_params(axis='x', labelsize=8)
     ax.grid(axis='x', linestyle=':', linewidth=0.5, alpha=0.6)
@@ -98,7 +103,7 @@ def main():
               title_fontsize=7.5)
 
     fig.tight_layout()
-    out = os.path.join(FIGS, 'figB3_models.pdf')
+    out = os.path.join(FIGS, 'figB3_models' + SUFFIX + '.pdf')
     fig.savefig(out, bbox_inches='tight')
     print(f'wrote {out}  ({len(rows)} models)')
     print(f'  best: {rows[-1][0]} = {rows[-1][1]:.4f}')

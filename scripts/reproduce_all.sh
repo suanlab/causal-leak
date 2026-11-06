@@ -121,6 +121,8 @@ run_py make_figB1_ladder      src/make_figB1_ladder.py
 run_py make_figB2_falsealarms src/make_figB2_falsealarms.py
 run_py make_figB2_dispatch   src/make_figB2_dispatch.py
 run_py make_figB3_models      src/make_figB3_models.py
+FIG_TERM=alarm run_py make_figB1_ladder_alarm src/make_figB1_ladder.py
+FIG_TERM=alarm run_py make_figB3_models_alarm src/make_figB3_models.py
 run_py make_figB4_tradeoff    src/make_figB4_tradeoff.py
 
 # ---------- manuscript (optional) ----------
