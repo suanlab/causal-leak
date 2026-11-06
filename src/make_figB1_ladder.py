@@ -1,10 +1,14 @@
 """Paper B, Figure 1 — evaluation ladder (vector PDF).
 
-Grouped bars of accuracy and macro-F1 across row-CV, group-CV and LORO, for
-the identifier-rich and signal-only feature sets. The point is the collapse,
-and that identifiers buy 5.3 points at row level and nothing afterwards.
+Grouped bars of accuracy, five-class macro-F1 and leak-class macro-F1 across
+row-CV, group-CV and LORO (region-weighted), for the identifier-rich and
+signal-only feature sets. The point is the collapse, that identifiers buy 5.3
+points at row level and nothing afterwards, and that leak typing under LORO
+(regions weighted by leak recordings) sits a few points above the class-share
+reference (dashed).
 
-Reads results/matrix_results.json and results/loro_results.json.
+Reads results/matrix_results.json, results/loro_results.json and
+results/leak_f1_results.json.
 Writes results/figs/figB1_ladder.pdf.
 """
 import json
@@ -26,6 +30,7 @@ def main():
     loro = json.load(open(os.path.join(R, 'loro_results.json')))
     m = {(r['feat_mode'], r['split_mode']): r for r in mat}
     lo = {s['feat_mode']: s for s in loro}
+    lf = json.load(open(os.path.join(R, 'leak_f1_results.json')))['ladder']
 
     series = {}
     for feat, label in [('full', 'with identifiers (544)'),
@@ -36,16 +41,23 @@ def main():
                     lo[feat]['weighted_acc']],
             'f1': [m[(feat, 'random')]['f1_mean'],
                    m[(feat, 'group_site')]['f1_mean'],
-                   lo[feat]['macro_f1']],
+                   lo[feat]['weighted_f1']],
+            'leak': [lf[f'{feat}_random']['f1_macro_leak'],
+                     lf[f'{feat}_group_site']['f1_macro_leak'],
+                     lf[f'{feat}_loro']['leak_rows_weighted']['k2']['leak_weighted']],
         }
+    # LORO leak-F1 weights regions by leak recordings over the regions with at
+    # least two leak classes; its class-share reference is weighted the same way.
+    ref = lf['signal_loro']['leak_rows_weighted']['k2']['leak_weighted_chance']
 
-    fig, axes = plt.subplots(1, 2, figsize=(9.0, 3.4), sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(11.5, 3.4), sharey=True)
     x = np.arange(len(TIERS))
     w = 0.36
     colours = ['#b2182b', '#4393c3']
 
-    for ax, metric, title in zip(axes, ['acc', 'f1'],
-                                 ['Accuracy', 'Macro-F1']):
+    for ax, metric, title in zip(axes, ['acc', 'f1', 'leak'],
+                                 ['Accuracy', 'Macro-F1, five classes',
+                                  'Macro-F1, leak classes']):
         for j, (label, d) in enumerate(series.items()):
             ax.bar(x + (j - 0.5) * w, d[metric], w, label=label,
                    color=colours[j], edgecolor='black', linewidth=0.5)
@@ -61,6 +73,10 @@ def main():
         for sp in ('top', 'right'):
             ax.spines[sp].set_visible(False)
 
+    axes[2].plot([1.55, 2.45], [ref, ref], ls='--', lw=1, color='black')
+    axes[2].annotate(f'class-share reference {ref:.3f}', xy=(2.3, ref),
+                     xytext=(2.45, ref + 0.22), fontsize=6.5, ha='right',
+                     arrowprops=dict(arrowstyle='-', lw=0.6))
     axes[0].set_ylabel('score', fontsize=9)
     axes[0].legend(fontsize=7.5, frameon=False, loc='upper right')
     fig.tight_layout()

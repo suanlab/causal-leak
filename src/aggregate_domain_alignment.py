@@ -75,8 +75,12 @@ def main():
                              if len(d['acc']) > 1 else 0.0, 4),
         }
 
-    # Paired Wilcoxon against XGBoost causal reference (0.4273, deterministic)
-    xgb_ref = 0.4273
+    # Paired Wilcoxon against the deterministic flat XGBoost on the same fold
+    # and features (operational_folds_results, region 43). The old constant
+    # 0.4273 came from the retracted fixed-band feature set.
+    op = json.load(open(os.path.join(RESULTS_DIR, 'operational_folds_results.json')))
+    xgb_ref = next(f for f in op['folds']
+                   if f['region'] == 43)['models']['xgb_flat']['f1_macro']
     tests = []
     for method, s in summary.items():
         if 'f1_macro_per_seed' not in s or s['n_seeds'] < 5:
@@ -111,7 +115,7 @@ def main():
                   f'{s["f1_macro_mean"]:10.4f}  {s["f1_macro_std"]:8.4f}  '
                   f'{s["acc_mean"]:10.4f}')
 
-    print('\n=== Paired vs XGBoost causal (0.4273) ===')
+    print(f'\n=== Paired vs XGBoost flat ({xgb_ref:.4f}) ===')
     for t in tests:
         print(f'  {t["comparison"]}: diff={t["mean_diff"]:+.4f}  '
               f'p={t["wilcoxon_p"]}')

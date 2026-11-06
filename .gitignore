@@ -47,3 +47,5 @@ VENUE_SHORTLIST.md
 
 # --- Local backup of a superseded operational run (fold-count bug) ---
 results/operational_folds_results.pre_sensor.json
+results/dispatch_op/batch_status.txt
+results/regionval_logs/status.txt

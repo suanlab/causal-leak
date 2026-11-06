@@ -1,0 +1,40 @@
+{
+  "region": 27,
+  "seed": 42,
+  "n_test": 4908,
+  "n_train": 65476,
+  "n_inner": 3,
+  "selected_groups": [
+    "10-121",
+    "121-422",
+    "1470-5120"
+  ],
+  "n_features": 429,
+  "inner_split_rule": "groupkfold",
+  "inner_heldout_regions": [
+    [
+      36,
+      44,
+      46
+    ],
+    [
+      29,
+      41,
+      42,
+      45,
+      50
+    ],
+    [
+      43,
+      47,
+      48
+    ]
+  ],
+  "models": [
+    "xgb_flat",
+    "xgb_hier",
+    "tree_only_soft_avg",
+    "lightgbm"
+  ],
+  "time_s": 4791.302197217941
+}

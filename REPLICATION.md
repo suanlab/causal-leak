@@ -107,6 +107,10 @@ All output is in `results/figs/*.pdf` (vector format, no PNG dependencies).
 | Domain alignment (E4) | 1 GPU | ~30 min |
 | Cost metrics (E5+E7) | CPU | ~20 min |
 | Compute cost (E6) | CPU + 1 GPU | ~10 min |
+| Device trigger rule, identifier audit | CPU | ~2 min |
+| Dispatch run (8 regions × outer + 3 inner folds, 3 in parallel) | CPU | ~4 h |
+| `analyze_dispatch.py` (incl. 2,000-replicate cluster bootstraps) | CPU | ~10 min |
+| Networks with held-out-region early stopping (`CAUSAL_VAL_MODE=region`, 5 seeds + alignment) | 2 GPU | ~3 h |
 | Figures | CPU | <1 min |
 
 ## Troubleshooting

@@ -1,0 +1,66 @@
+DEVICE = cuda
+  GPU 0: NVIDIA TITAN Xp
+  region validation: regions [36, 41, 42, 44, 48, 50], 7555 rows (11.6% of pool)
+X_train=(57755, 503)  X_val=(7555, 503)  X_test=(5074, 503)  n_envs=5
+envs = [27, 29, 45, 46, 47]
+
+=== MLP / erm ===
+  [erm] ep=  0  loss=0.9813  pen=0.0000e+00  lam=0.0  val_f1=0.3774  test_f1=0.2219
+  [erm] ep=  5  loss=0.5676  pen=0.0000e+00  lam=0.0  val_f1=0.3905  test_f1=0.2688
+  [erm] ep= 10  loss=0.4590  pen=0.0000e+00  lam=0.0  val_f1=0.4122  test_f1=0.2690
+  [erm] ep= 15  loss=0.3788  pen=0.0000e+00  lam=0.0  val_f1=0.4021  test_f1=0.2802
+  [erm] ep= 20  loss=0.3449  pen=0.0000e+00  lam=0.0  val_f1=0.3993  test_f1=0.2708
+  [erm] ep= 25  loss=0.3046  pen=0.0000e+00  lam=0.0  val_f1=0.3791  test_f1=0.2909
+  [erm] ep= 30  loss=0.2900  pen=0.0000e+00  lam=0.0  val_f1=0.3999  test_f1=0.2756
+  [erm] ep= 35  loss=0.2627  pen=0.0000e+00  lam=0.0  val_f1=0.3914  test_f1=0.2964
+  early stopping at epoch 35
+  DONE erm: test_f1=0.2690  test_acc=0.2838  per_class=[0.311, 0.149, 0.432, 0.137, 0.315]  val_f1=0.4122  (25s)
+
+=== MLP / irm ===
+  [irm] ep=  0  loss=0.8446  pen=2.6440e-02  lam=1.0  val_f1=0.3713  test_f1=0.2089
+  [irm] ep=  5  loss=0.4789  pen=8.7571e-03  lam=1.0  val_f1=0.3965  test_f1=0.2414
+  [irm] ep= 10  loss=0.3982  pen=7.3752e-03  lam=1.0  val_f1=0.4064  test_f1=0.2556
+  [irm] ep= 15  loss=0.3212  pen=4.4736e-03  lam=1.0  val_f1=0.4060  test_f1=0.2583
+  [irm] ep= 20  loss=0.2857  pen=3.9853e-03  lam=1.0  val_f1=0.3942  test_f1=0.2733
+  [irm] ep= 25  loss=0.2555  pen=3.6998e-03  lam=1.0  val_f1=0.3851  test_f1=0.2545
+  [irm] ep= 30  loss=0.2455  pen=3.7562e-03  lam=1.0  val_f1=0.4152  test_f1=0.2878
+  [irm] ep= 35  loss=0.1975  pen=2.7641e-03  lam=6.5  val_f1=0.3949  test_f1=0.2749
+  [irm] ep= 40  loss=0.2263  pen=3.0267e-03  lam=12.0  val_f1=0.4052  test_f1=0.2926
+  [irm] ep= 45  loss=0.2965  pen=4.1006e-03  lam=17.5  val_f1=0.3985  test_f1=0.2555
+  [irm] ep= 50  loss=0.3822  pen=4.8626e-03  lam=23.0  val_f1=0.3960  test_f1=0.2641
+  [irm] ep= 55  loss=0.4870  pen=6.3257e-03  lam=28.5  val_f1=0.3995  test_f1=0.2577
+  early stopping at epoch 55
+  DONE irm: test_f1=0.2878  test_acc=0.2757  per_class=[0.36, 0.143, 0.346, 0.154, 0.436]  val_f1=0.4152  (254s)
+
+=== MLP / groupdro ===
+  [groupdro] ep=  0  loss=1.0000  pen=0.0000e+00  lam=0.0  val_f1=0.3733  test_f1=0.2303
+  [groupdro] ep=  5  loss=0.7386  pen=0.0000e+00  lam=0.0  val_f1=0.3653  test_f1=0.2853
+  [groupdro] ep= 10  loss=0.5977  pen=0.0000e+00  lam=0.0  val_f1=0.3623  test_f1=0.3004
+  [groupdro] ep= 15  loss=0.5105  pen=0.0000e+00  lam=0.0  val_f1=0.3584  test_f1=0.3174
+  [groupdro] ep= 20  loss=0.4552  pen=0.0000e+00  lam=0.0  val_f1=0.3761  test_f1=0.3292
+  [groupdro] ep= 25  loss=0.4021  pen=0.0000e+00  lam=0.0  val_f1=0.3741  test_f1=0.3244
+  [groupdro] ep= 30  loss=0.3754  pen=0.0000e+00  lam=0.0  val_f1=0.3815  test_f1=0.2923
+  [groupdro] ep= 35  loss=0.3421  pen=0.0000e+00  lam=0.0  val_f1=0.3731  test_f1=0.3033
+  [groupdro] ep= 40  loss=0.3354  pen=0.0000e+00  lam=0.0  val_f1=0.3741  test_f1=0.3482
+  [groupdro] ep= 45  loss=0.3147  pen=0.0000e+00  lam=0.0  val_f1=0.3817  test_f1=0.3149
+  [groupdro] ep= 50  loss=0.2937  pen=0.0000e+00  lam=0.0  val_f1=0.3826  test_f1=0.3109
+  [groupdro] ep= 55  loss=0.2840  pen=0.0000e+00  lam=0.0  val_f1=0.3796  test_f1=0.3227
+  [groupdro] ep= 60  loss=0.2818  pen=0.0000e+00  lam=0.0  val_f1=0.3797  test_f1=0.3334
+  [groupdro] ep= 65  loss=0.2566  pen=0.0000e+00  lam=0.0  val_f1=0.3845  test_f1=0.3239
+  [groupdro] ep= 70  loss=0.2548  pen=0.0000e+00  lam=0.0  val_f1=0.3768  test_f1=0.3053
+  [groupdro] ep= 75  loss=0.2454  pen=0.0000e+00  lam=0.0  val_f1=0.3749  test_f1=0.2959
+  [groupdro] ep= 80  loss=0.2323  pen=0.0000e+00  lam=0.0  val_f1=0.3853  test_f1=0.3065
+  [groupdro] ep= 85  loss=0.2203  pen=0.0000e+00  lam=0.0  val_f1=0.3935  test_f1=0.3009
+  [groupdro] ep= 90  loss=0.2284  pen=0.0000e+00  lam=0.0  val_f1=0.3780  test_f1=0.2888
+  [groupdro] ep= 95  loss=0.2091  pen=0.0000e+00  lam=0.0  val_f1=0.3910  test_f1=0.3099
+  [groupdro] ep=100  loss=0.2052  pen=0.0000e+00  lam=0.0  val_f1=0.3938  test_f1=0.3007
+  [groupdro] ep=105  loss=0.2045  pen=0.0000e+00  lam=0.0  val_f1=0.3788  test_f1=0.2889
+  [groupdro] ep=110  loss=0.2053  pen=0.0000e+00  lam=0.0  val_f1=0.3964  test_f1=0.3170
+  early stopping at epoch 112
+  DONE groupdro: test_f1=0.3207  test_acc=0.3151  per_class=[0.391, 0.173, 0.417, 0.128, 0.494]  val_f1=0.4039  (234s)
+
+=== MLP summary ===
+method         val_f1    test_f1   test_acc
+erm            0.4122     0.2690     0.2838
+irm            0.4152     0.2878     0.2757
+groupdro       0.4039     0.3207     0.3151

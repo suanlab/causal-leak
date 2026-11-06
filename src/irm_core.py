@@ -39,6 +39,13 @@ from data import HZ_COLS, LABEL_NAMES, MAX_COLS, load_all  # noqa: E402
 HOLDOUT_REGION = 43
 SEED = int(os.environ.get('CAUSAL_SEED', '42'))   # model-init seed (variable for multi-seed runs)
 SPLIT_SEED = 42                                    # val-split seed (fixed for reproducibility)
+# Early-stopping validation set. 'random' (default, as published): a random
+# 10 % of the training pool's recordings, which shares sensors with training.
+# 'region': whole training regions, so validation sensors are unseen, as at
+# test time. Region-mode results carry RESULT_TAG in their file names.
+VAL_MODE = os.environ.get('CAUSAL_VAL_MODE', 'random')
+assert VAL_MODE in ('random', 'region'), VAL_MODE
+RESULT_TAG = '_regionval' if VAL_MODE == 'region' else ''
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
@@ -73,6 +80,29 @@ class Splits:
     raw_HZ_test: np.ndarray | None = None
 
 
+def region_val_split(df, train_pool, val_frac):
+    """Hold out whole training regions for early stopping.
+
+    Training regions are added smallest first until the validation set holds
+    every class present in the pool and at least `val_frac` of its rows. Only
+    training labels and region sizes are used, never the test region.
+    """
+    reg = df['region_lvl1'].values[train_pool]
+    y = df['label'].values[train_pool]
+    sizes = sorted((int((reg == r).sum()), int(r)) for r in np.unique(reg))
+    need = set(np.unique(y).tolist())
+    chosen = []
+    for _, r in sizes:
+        chosen.append(r)
+        m = np.isin(reg, chosen)
+        if set(np.unique(y[m]).tolist()) == need and m.mean() >= val_frac:
+            break
+    m = np.isin(reg, chosen)
+    print(f'  region validation: regions {sorted(chosen)}, {m.sum()} rows '
+          f'({m.mean():.1%} of pool)', flush=True)
+    return train_pool[m], train_pool[~m]
+
+
 def make_splits(mode: str = 'causal', val_frac: float = 0.10) -> Splits:
     """Build train/val/test splits for Phase 2B.
 
@@ -94,11 +124,14 @@ def make_splits(mode: str = 'causal', val_frac: float = 0.10) -> Splits:
     train_pool = np.where(~mask_test)[0]
     test_idx = np.where(mask_test)[0]
 
-    rng = np.random.RandomState(SPLIT_SEED)
-    perm = rng.permutation(len(train_pool))
-    n_val = int(len(train_pool) * val_frac)
-    val_pool = train_pool[perm[:n_val]]
-    tr_pool = train_pool[perm[n_val:]]
+    if VAL_MODE == 'region':
+        val_pool, tr_pool = region_val_split(df, train_pool, val_frac)
+    else:
+        rng = np.random.RandomState(SPLIT_SEED)
+        perm = rng.permutation(len(train_pool))
+        n_val = int(len(train_pool) * val_frac)
+        val_pool = train_pool[perm[:n_val]]
+        tr_pool = train_pool[perm[n_val:]]
 
     X_all = df[cols].to_numpy(dtype=np.float32, copy=False)
     y_all = df['label'].to_numpy(dtype=np.int64)
@@ -111,7 +144,8 @@ def make_splits(mode: str = 'causal', val_frac: float = 0.10) -> Splits:
     env_map = {e: i for i, e in enumerate(env_ids)}
     env_train = np.array([env_map[e] for e in df.loc[tr_pool, 'region_lvl1']],
                          dtype=np.int64)
-    env_val = np.array([env_map[e] for e in df.loc[val_pool, 'region_lvl1']],
+    # Region-mode validation regions are not training environments: -1.
+    env_val = np.array([env_map.get(e, -1) for e in df.loc[val_pool, 'region_lvl1']],
                        dtype=np.int64)
     env_test = np.full(len(test_idx), -1, dtype=np.int64)
 

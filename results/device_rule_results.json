@@ -1,0 +1,196 @@
+{
+  "rule": "non-normal iff #(per-check peak amplitude >= T) >= k",
+  "amp_cols": [
+    "MAX1",
+    "MAX3",
+    "MAX5",
+    "MAX7",
+    "MAX9",
+    "MAX11",
+    "MAX13",
+    "MAX15",
+    "MAX17",
+    "MAX19"
+  ],
+  "folds": [
+    {
+      "region": 27,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9991540646670566,
+      "n_normal": 4566,
+      "n_rest": 342,
+      "false_flags": 0,
+      "missed": 3,
+      "normal_sensors": 169,
+      "false_flag_sensors": 0,
+      "acc": 0.9993887530562348
+    },
+    {
+      "region": 29,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9991325069503961,
+      "n_normal": 4105,
+      "n_rest": 379,
+      "false_flags": 0,
+      "missed": 1,
+      "normal_sensors": 169,
+      "false_flag_sensors": 0,
+      "acc": 0.9997769848349688
+    },
+    {
+      "region": 36,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9991202714590925,
+      "n_normal": 0,
+      "n_rest": 476,
+      "false_flags": 0,
+      "missed": 0,
+      "normal_sensors": 0,
+      "false_flag_sensors": 0,
+      "acc": 1.0
+    },
+    {
+      "region": 41,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.999120382005529,
+      "n_normal": 0,
+      "n_rest": 470,
+      "false_flags": 0,
+      "missed": 0,
+      "normal_sensors": 0,
+      "false_flag_sensors": 0,
+      "acc": 1.0
+    },
+    {
+      "region": 42,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9991194599354271,
+      "n_normal": 0,
+      "n_rest": 520,
+      "false_flags": 0,
+      "missed": 0,
+      "normal_sensors": 0,
+      "false_flag_sensors": 0,
+      "acc": 1.0
+    },
+    {
+      "region": 43,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9991433003774108,
+      "n_normal": 45,
+      "n_rest": 5029,
+      "false_flags": 0,
+      "missed": 10,
+      "normal_sensors": 5,
+      "false_flag_sensors": 0,
+      "acc": 0.9980291683090264
+    },
+    {
+      "region": 44,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9991192568205172,
+      "n_normal": 1151,
+      "n_rest": 531,
+      "false_flags": 0,
+      "missed": 0,
+      "normal_sensors": 110,
+      "false_flag_sensors": 0,
+      "acc": 1.0
+    },
+    {
+      "region": 45,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9991202023534587,
+      "n_normal": 12299,
+      "n_rest": 2753,
+      "false_flags": 0,
+      "missed": 4,
+      "normal_sensors": 791,
+      "false_flag_sensors": 0,
+      "acc": 0.9997342545841085
+    },
+    {
+      "region": 46,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9992905592469545,
+      "n_normal": 0,
+      "n_rest": 19322,
+      "false_flags": 0,
+      "missed": 43,
+      "normal_sensors": 0,
+      "false_flag_sensors": 0,
+      "acc": 0.9977745574992237
+    },
+    {
+      "region": 47,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9990651202196967,
+      "n_normal": 0,
+      "n_rest": 13989,
+      "false_flags": 0,
+      "missed": 20,
+      "normal_sensors": 0,
+      "false_flag_sensors": 0,
+      "acc": 0.9985703052398313
+    },
+    {
+      "region": 48,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9990683229813664,
+      "n_normal": 0,
+      "n_rest": 3138,
+      "false_flags": 0,
+      "missed": 0,
+      "normal_sensors": 0,
+      "false_flag_sensors": 0,
+      "acc": 1.0
+    },
+    {
+      "region": 50,
+      "T": 130,
+      "k": 8,
+      "train_balanced_acc": 0.9991373618181432,
+      "n_normal": 0,
+      "n_rest": 1269,
+      "false_flags": 0,
+      "missed": 3,
+      "normal_sensors": 0,
+      "false_flag_sensors": 0,
+      "acc": 0.9976359338061466
+    }
+  ],
+  "pooled_loro": {
+    "n_normal": 22166,
+    "n_rest": 48218,
+    "false_flags": 0,
+    "missed": 84
+  },
+  "far_regions_loro": {
+    "n_normal": 22121,
+    "n_rest": 4005,
+    "false_flags": 0,
+    "missed": 8,
+    "normal_sensors": 1239,
+    "false_flag_sensors": 0
+  },
+  "pooled_fit": {
+    "T": 130,
+    "k": 8,
+    "balanced_acc": 0.9991289559915384
+  },
+  "lrate_recovery_at_pooled_T": {
+    "normal_hits_le_lrate": 1.0,
+    "normal_hits_eq_lrate": 0.7826851935396554
+  }
+}

@@ -12,6 +12,8 @@
 # Correction (October 2026): nested band selection, multi-seed tabular
 #   baselines, temporal split, calibrated-threshold sweep, sensor-level
 #   operational comparison, and the binary-detection confound check.
+# November 2026: the device trigger-count rule, and the dispatch-rule
+#   comparison at training-calibrated operating points.
 #
 # Multi-seed sweep (E1) is run via the dedicated `make multiseed` target.
 #
@@ -82,6 +84,25 @@ run_py run_temporal_split    src/run_temporal_split.py
 run_py run_threshold_sweep_loro src/run_threshold_sweep_loro.py
 run_py run_operational_folds src/run_operational_folds.py
 run_py run_lrate_confound    src/run_lrate_confound.py
+run_py run_identifier_audit  src/run_identifier_audit.py
+run_py run_device_rule       src/run_device_rule.py
+# Dispatch rule at training-calibrated thresholds: one region per run (each
+# fits the four candidates on the outer fold plus three inner folds).
+for r in 27 29 43 44 45 46 47 48; do
+  run_py "run_dispatch_operating_points_${r}" \
+    src/run_dispatch_operating_points.py "${r}"
+done
+# Networks early-stopped on whole held-out training regions (five seeds;
+# alignment one seed). Outputs carry the _regionval tag.
+for seed in 42 0 1 2 3; do
+  CAUSAL_VAL_MODE=region CAUSAL_SEED="${seed}" \
+    run_py "run_irm_mlp_regionval_seed${seed}" src/run_irm_mlp.py
+  CAUSAL_VAL_MODE=region CAUSAL_SEED="${seed}" \
+    run_py "run_irm_cnn_regionval_seed${seed}" src/run_irm_cnn.py
+done
+CAUSAL_VAL_MODE=region run_py run_domain_alignment_regionval src/run_domain_alignment.py
+run_py analyze_dispatch      src/analyze_dispatch.py
+run_py summarize_leak_f1     src/summarize_leak_f1.py
 
 # ---------- analysis + figures ----------
 run_py analyze_results       src/analyze_results.py
@@ -98,6 +119,7 @@ run_py make_fig13_sigungu    src/make_fig13_sigungu.py
 run_py make_fig14_pareto     src/make_fig14_pareto.py
 run_py make_figB1_ladder      src/make_figB1_ladder.py
 run_py make_figB2_falsealarms src/make_figB2_falsealarms.py
+run_py make_figB2_dispatch   src/make_figB2_dispatch.py
 run_py make_figB3_models      src/make_figB3_models.py
 run_py make_figB4_tradeoff    src/make_figB4_tradeoff.py
 

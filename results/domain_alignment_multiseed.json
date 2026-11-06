@@ -13,12 +13,12 @@
       "seeds": [
         42
       ],
-      "f1_macro_mean": 0.3723,
+      "f1_macro_mean": 0.31,
       "f1_macro_std": 0.0,
       "f1_macro_per_seed": {
-        "42": 0.3723
+        "42": 0.31
       },
-      "acc_mean": 0.3309,
+      "acc_mean": 0.2856,
       "acc_std": 0.0
     },
     "mmd": {
@@ -26,12 +26,12 @@
       "seeds": [
         42
       ],
-      "f1_macro_mean": 0.3216,
+      "f1_macro_mean": 0.3068,
       "f1_macro_std": 0.0,
       "f1_macro_per_seed": {
-        "42": 0.3216
+        "42": 0.3068
       },
-      "acc_mean": 0.2907,
+      "acc_mean": 0.2793,
       "acc_std": 0.0
     },
     "dann": {
@@ -39,12 +39,12 @@
       "seeds": [
         42
       ],
-      "f1_macro_mean": 0.3152,
+      "f1_macro_mean": 0.2761,
       "f1_macro_std": 0.0,
       "f1_macro_per_seed": {
-        "42": 0.3152
+        "42": 0.2761
       },
-      "acc_mean": 0.2848,
+      "acc_mean": 0.2698,
       "acc_std": 0.0
     }
   },

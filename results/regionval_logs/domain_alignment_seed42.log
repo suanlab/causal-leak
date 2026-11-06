@@ -1,0 +1,63 @@
+DEVICE = cuda
+  region validation: regions [36, 41, 42, 44, 48, 50], 7555 rows (11.6% of pool)
+X_train=(57755, 503)  X_val=(7555, 503)  X_test=(5074, 503)  n_envs=5
+
+=== coral (lambda=1.0) ===
+  [coral] ep=  0  ce=0.9711  align=0.0032  val_f1=0.3824  test_f1=0.2018
+  [coral] ep=  5  ce=0.5618  align=0.0032  val_f1=0.3875  test_f1=0.2746
+  [coral] ep= 10  ce=0.4449  align=0.0033  val_f1=0.3872  test_f1=0.2774
+  [coral] ep= 15  ce=0.3761  align=0.0030  val_f1=0.3781  test_f1=0.3077
+  [coral] ep= 20  ce=0.3338  align=0.0033  val_f1=0.3813  test_f1=0.2707
+  [coral] ep= 25  ce=0.3012  align=0.0031  val_f1=0.3840  test_f1=0.2688
+  [coral] ep= 30  ce=0.2805  align=0.0030  val_f1=0.4037  test_f1=0.2944
+  [coral] ep= 35  ce=0.2574  align=0.0030  val_f1=0.3811  test_f1=0.2731
+  [coral] ep= 40  ce=0.2372  align=0.0031  val_f1=0.3836  test_f1=0.2798
+  [coral] ep= 45  ce=0.2278  align=0.0034  val_f1=0.3805  test_f1=0.2893
+  [coral] ep= 50  ce=0.2142  align=0.0028  val_f1=0.3855  test_f1=0.2993
+  [coral] ep= 55  ce=0.2120  align=0.0027  val_f1=0.3732  test_f1=0.3074
+  early stopping at epoch 55
+  DONE coral: test_f1=0.2944  test_acc=0.2980  (258s)
+
+=== mmd (lambda=1.0) ===
+  [mmd] ep=  0  ce=0.9938  align=0.0445  val_f1=0.3875  test_f1=0.2103
+  [mmd] ep=  5  ce=0.5867  align=0.0232  val_f1=0.3850  test_f1=0.2588
+  [mmd] ep= 10  ce=0.4683  align=0.0221  val_f1=0.3817  test_f1=0.2609
+  [mmd] ep= 15  ce=0.4054  align=0.0220  val_f1=0.3909  test_f1=0.2837
+  [mmd] ep= 20  ce=0.3584  align=0.0219  val_f1=0.3981  test_f1=0.2727
+  [mmd] ep= 25  ce=0.3208  align=0.0218  val_f1=0.3929  test_f1=0.2645
+  [mmd] ep= 30  ce=0.3080  align=0.0220  val_f1=0.3921  test_f1=0.2982
+  [mmd] ep= 35  ce=0.2761  align=0.0218  val_f1=0.3850  test_f1=0.2772
+  [mmd] ep= 40  ce=0.2722  align=0.0222  val_f1=0.3981  test_f1=0.2983
+  [mmd] ep= 45  ce=0.2521  align=0.0217  val_f1=0.3945  test_f1=0.2863
+  [mmd] ep= 50  ce=0.2395  align=0.0217  val_f1=0.3891  test_f1=0.2895
+  [mmd] ep= 55  ce=0.2302  align=0.0215  val_f1=0.3906  test_f1=0.2703
+  [mmd] ep= 60  ce=0.2145  align=0.0215  val_f1=0.4093  test_f1=0.2659
+  [mmd] ep= 65  ce=0.2160  align=0.0216  val_f1=0.3999  test_f1=0.3009
+  [mmd] ep= 70  ce=0.1996  align=0.0215  val_f1=0.3928  test_f1=0.2742
+  [mmd] ep= 75  ce=0.1978  align=0.0215  val_f1=0.3959  test_f1=0.2912
+  [mmd] ep= 80  ce=0.1949  align=0.0215  val_f1=0.3909  test_f1=0.2827
+  [mmd] ep= 85  ce=0.1996  align=0.0216  val_f1=0.3943  test_f1=0.2799
+  [mmd] ep= 90  ce=0.1858  align=0.0216  val_f1=0.3923  test_f1=0.2789
+  [mmd] ep= 95  ce=0.1808  align=0.0216  val_f1=0.3858  test_f1=0.2868
+  early stopping at epoch 96
+  DONE mmd: test_f1=0.2699  test_acc=0.2598  (1011s)
+
+=== dann (lambda=0.5) ===
+  [dann] ep=  0  ce=0.9740  align=1.2388  val_f1=0.3860  test_f1=0.2064
+  [dann] ep=  5  ce=0.5673  align=1.0951  val_f1=0.3847  test_f1=0.2839
+  [dann] ep= 10  ce=0.4602  align=1.0982  val_f1=0.3880  test_f1=0.2911
+  [dann] ep= 15  ce=0.3987  align=1.1000  val_f1=0.3820  test_f1=0.2939
+  [dann] ep= 20  ce=0.3569  align=1.1073  val_f1=0.3910  test_f1=0.2730
+  [dann] ep= 25  ce=0.3250  align=1.1054  val_f1=0.3950  test_f1=0.2697
+  [dann] ep= 30  ce=0.3099  align=1.1086  val_f1=0.3809  test_f1=0.2791
+  [dann] ep= 35  ce=0.2799  align=1.1082  val_f1=0.3762  test_f1=0.2645
+  early stopping at epoch 37
+  DONE dann: test_f1=0.3017  test_acc=0.3110  (44s)
+
+Saved /home/suan/Projects/Water/causal-leak/src/../results/domain_alignment_results_regionval.json
+
+=== DOMAIN-ALIGNMENT SUMMARY ===
+    method    val_f1   test_f1  test_acc
+     coral    0.4037    0.2944    0.2980
+       mmd    0.4198    0.2699    0.2598
+      dann    0.4262    0.3017    0.3110

@@ -1,9 +1,15 @@
 """Operational comparison of the deployment candidates on folds that can
 actually measure a false-alarm rate.
 
+SUPERSEDED (November 2026) by run_dispatch_operating_points.py and
+analyze_dispatch.py (results/FINDINGS_DISPATCH.md). This script counts a normal
+recording typed as noise/other as a false alarm and compares models only at
+the argmax decision; its outer-fold fits are kept because the dispatch run
+reproduces them exactly.
+
 The canonical region-43 fold carries 45 normal recordings out of 5,074, so its
 false-alarm estimate rests on 45 negatives: an observed FAR of 0/45 has a 95%
-upper bound near 6.5% by the rule of three. Every model tested reaches normal
+upper bound near 6.7% by the rule of three. Every model tested reaches normal
 recall 1.000 there, so the fold cannot separate them on the operational axis at
 all.
 

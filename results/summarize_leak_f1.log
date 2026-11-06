@@ -1,0 +1,38 @@
+ladder full_random        leak-F1 0.9164
+ladder full_group_site    leak-F1 0.2735
+ladder signal_random      leak-F1 0.8338
+ladder signal_group_site  leak-F1 0.2984
+ladder full_loro          leak-F1 0.3141 (weighted 0.2761; chance 0.403 / weighted 0.285)
+ladder signal_loro        leak-F1 0.3527 (weighted 0.2820; chance 0.403 / weighted 0.285)
+region 43 lightgbm             leak-F1 0.3108
+region 43 cnn_erm_regionval    leak-F1 0.3026 ± 0.023
+region 43 tree_only_soft_avg   leak-F1 0.2984
+region 43 xgb_flat             leak-F1 0.2981
+region 43 xgb_hier             leak-F1 0.2946
+region 43 cnn_irm_regionval    leak-F1 0.2917 ± 0.020
+region 43 cnn_irm              leak-F1 0.2915 ± 0.026
+region 43 catboost             leak-F1 0.2814 ± 0.005
+region 43 tabnet_causal        leak-F1 0.2773 ± 0.013
+region 43 mlp_irm              leak-F1 0.2762 ± 0.011
+region 43 cnn_erm              leak-F1 0.2748 ± 0.017
+region 43 coral_regionval      leak-F1 0.2744
+region 43 cnn_groupdro_regionval leak-F1 0.2727 ± 0.025
+region 43 dann_regionval       leak-F1 0.2718
+region 43 coral                leak-F1 0.2678
+region 43 cnn_groupdro         leak-F1 0.2659 ± 0.015
+region 43 mmd                  leak-F1 0.2639
+region 43 mlp_groupdro         leak-F1 0.2636 ± 0.014
+region 43 random_forest        leak-F1 0.2580 ± 0.001
+region 43 mlp_groupdro_regionval leak-F1 0.2572 ± 0.019
+region 43 mlp_erm_regionval    leak-F1 0.2552 ± 0.014
+region 43 mlp_erm              leak-F1 0.2520 ± 0.005
+region 43 mmd_regionval        leak-F1 0.2477
+region 43 dann                 leak-F1 0.2433
+region 43 mlp_irm_regionval    leak-F1 0.2375 ± 0.016
+county: 16 folds, mean 0.2336 (weighted 0.2252, range 0.103-0.381; chance 0.260; above chance in 7)
+temporal xgb_flat_causal        leak-F1 0.2699
+temporal xgb_flat_signal        leak-F1 0.2696
+temporal xgb_hier_causal        leak-F1 0.2642
+temporal tree_ensemble_causal   leak-F1 0.2668
+temporal lightgbm_causal        leak-F1 0.2610
+temporal catboost_causal        leak-F1 0.2757

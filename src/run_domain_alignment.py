@@ -305,7 +305,8 @@ def main():
               f'({out["time_s"]:.0f}s)', flush=True)
         runs.append(out)
 
-    suffix = f'_seed{SEED}' if SEED != 42 else ''
+    from irm_core import RESULT_TAG
+    suffix = RESULT_TAG + (f'_seed{SEED}' if SEED != 42 else '')
     out_path = os.path.join(RESULTS_DIR,
                             f'domain_alignment_results{suffix}.json')
     with open(out_path, 'w') as f:

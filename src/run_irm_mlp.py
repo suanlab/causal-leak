@@ -68,7 +68,8 @@ def main():
         )
         runs.append(out)
 
-    suffix = f'_seed{_SEED}' if _SEED != 42 else ''
+    from irm_core import RESULT_TAG
+    suffix = RESULT_TAG + (f'_seed{_SEED}' if _SEED != 42 else '')
     with open(os.path.join(RESULTS_DIR, f'irm_mlp_results{suffix}.json'),
               'w') as f:
         json.dump({'seed': _SEED, 'runs': runs}, f, indent=2)

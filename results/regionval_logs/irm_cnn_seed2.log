@@ -1,0 +1,37 @@
+DEVICE = cuda
+  GPU 0: NVIDIA TITAN Xp
+  region validation: regions [36, 41, 42, 44, 48, 50], 7555 rows (11.6% of pool)
+tab_feat=21  raw_HZ=513
+
+=== CNN / erm ===
+  [erm] ep=  0  loss=1.0917  pen=0.0000e+00  lam=0.0  val_f1=0.3948  test_f1=0.2596
+  [erm] ep=  5  loss=0.8025  pen=0.0000e+00  lam=0.0  val_f1=0.4038  test_f1=0.2140
+  [erm] ep= 10  loss=0.6708  pen=0.0000e+00  lam=0.0  val_f1=0.3986  test_f1=0.3208
+  [erm] ep= 15  loss=0.5667  pen=0.0000e+00  lam=0.0  val_f1=0.3992  test_f1=0.3240
+  [erm] ep= 20  loss=0.4656  pen=0.0000e+00  lam=0.0  val_f1=0.4333  test_f1=0.3333
+  early stopping at epoch 22
+  DONE erm: test_f1=0.3366  test_acc=0.3565  per_class=[0.465, 0.145, 0.421, 0.262, 0.39]  val_f1=0.4564  (98s)
+
+=== CNN / irm ===
+  [irm] ep=  0  loss=0.9347  pen=4.0558e-02  lam=1.0  val_f1=0.3801  test_f1=0.2408
+  [irm] ep=  5  loss=0.6863  pen=9.9963e-03  lam=1.0  val_f1=0.4350  test_f1=0.2342
+  [irm] ep= 10  loss=0.5725  pen=7.9326e-03  lam=1.0  val_f1=0.3922  test_f1=0.2603
+  [irm] ep= 15  loss=0.4801  pen=8.3732e-03  lam=1.0  val_f1=0.3921  test_f1=0.3044
+  [irm] ep= 20  loss=0.4539  pen=5.4676e-03  lam=12.0  val_f1=0.3864  test_f1=0.3195
+  early stopping at epoch 21
+  DONE irm: test_f1=0.2806  test_acc=0.3130  per_class=[0.329, 0.168, 0.412, 0.27, 0.224]  val_f1=0.4615  (153s)
+
+=== CNN / groupdro ===
+  [groupdro] ep=  0  loss=1.1324  pen=0.0000e+00  lam=0.0  val_f1=0.3886  test_f1=0.2816
+  [groupdro] ep=  5  loss=1.0707  pen=0.0000e+00  lam=0.0  val_f1=0.3715  test_f1=0.2950
+  [groupdro] ep= 10  loss=0.9068  pen=0.0000e+00  lam=0.0  val_f1=0.3754  test_f1=0.4071
+  [groupdro] ep= 15  loss=0.7449  pen=0.0000e+00  lam=0.0  val_f1=0.4048  test_f1=0.3564
+  [groupdro] ep= 20  loss=0.6217  pen=0.0000e+00  lam=0.0  val_f1=0.3725  test_f1=0.3609
+  early stopping at epoch 21
+  DONE groupdro: test_f1=0.3404  test_acc=0.3542  per_class=[0.235, 0.205, 0.521, 0.203, 0.538]  val_f1=0.4213  (114s)
+
+=== CNN summary ===
+method         val_f1    test_f1   test_acc
+erm            0.4564     0.3366     0.3565
+irm            0.4615     0.2806     0.3130
+groupdro       0.4213     0.3404     0.3542

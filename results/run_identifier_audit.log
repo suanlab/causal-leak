@@ -1,0 +1,14 @@
+n_sensors                    2710
+sensors_with_two_labels      0
+train_sensors                2671
+train_sensors_single_label   2671
+val_sensors                  1915
+val_sensors_in_train         1876
+val_rows                     7820
+lookup_coverage              0.9950127877237852
+lookup_accuracy_on_covered   1.0
+uncovered_rows               39
+uncovered_lrate_below_90     21
+lookup_plus_lrate_accuracy_conservative 0.9976982097186701
+lookup_plus_lrate_accuracy_filled 0.99846547314578
+fallback_label               1

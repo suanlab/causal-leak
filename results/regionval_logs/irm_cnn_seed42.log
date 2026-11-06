@@ -1,0 +1,40 @@
+DEVICE = cuda
+  GPU 0: NVIDIA TITAN Xp
+  region validation: regions [36, 41, 42, 44, 48, 50], 7555 rows (11.6% of pool)
+tab_feat=21  raw_HZ=513
+
+=== CNN / erm ===
+  [erm] ep=  0  loss=1.0944  pen=0.0000e+00  lam=0.0  val_f1=0.3730  test_f1=0.2425
+  [erm] ep=  5  loss=0.8059  pen=0.0000e+00  lam=0.0  val_f1=0.4024  test_f1=0.2827
+  [erm] ep= 10  loss=0.6865  pen=0.0000e+00  lam=0.0  val_f1=0.3657  test_f1=0.3145
+  [erm] ep= 15  loss=0.5886  pen=0.0000e+00  lam=0.0  val_f1=0.3853  test_f1=0.2853
+  [erm] ep= 20  loss=0.5074  pen=0.0000e+00  lam=0.0  val_f1=0.4191  test_f1=0.2929
+  early stopping at epoch 22
+  DONE erm: test_f1=0.3206  test_acc=0.3526  per_class=[0.428, 0.228, 0.416, 0.267, 0.263]  val_f1=0.4254  (99s)
+
+=== CNN / irm ===
+  [irm] ep=  0  loss=0.9414  pen=3.9364e-02  lam=1.0  val_f1=0.3904  test_f1=0.2306
+  [irm] ep=  5  loss=0.6855  pen=8.9851e-03  lam=1.0  val_f1=0.3621  test_f1=0.2709
+  [irm] ep= 10  loss=0.5654  pen=7.9651e-03  lam=1.0  val_f1=0.3804  test_f1=0.3829
+  [irm] ep= 15  loss=0.4746  pen=7.7108e-03  lam=1.0  val_f1=0.3794  test_f1=0.2258
+  [irm] ep= 20  loss=0.4522  pen=6.4376e-03  lam=12.0  val_f1=0.4004  test_f1=0.2995
+  [irm] ep= 25  loss=0.5032  pen=5.7432e-03  lam=23.0  val_f1=0.4070  test_f1=0.3627
+  [irm] ep= 30  loss=0.5782  pen=5.5006e-03  lam=34.0  val_f1=0.4074  test_f1=0.3059
+  [irm] ep= 35  loss=0.6226  pen=4.9099e-03  lam=45.0  val_f1=0.3780  test_f1=0.3422
+  [irm] ep= 40  loss=0.6726  pen=3.8926e-03  lam=56.0  val_f1=0.4113  test_f1=0.3330
+  early stopping at epoch 43
+  DONE irm: test_f1=0.3139  test_acc=0.3402  per_class=[0.444, 0.134, 0.405, 0.267, 0.319]  val_f1=0.4616  (312s)
+
+=== CNN / groupdro ===
+  [groupdro] ep=  0  loss=1.1271  pen=0.0000e+00  lam=0.0  val_f1=0.3844  test_f1=0.2442
+  [groupdro] ep=  5  loss=1.0797  pen=0.0000e+00  lam=0.0  val_f1=0.3087  test_f1=0.3195
+  [groupdro] ep= 10  loss=0.9296  pen=0.0000e+00  lam=0.0  val_f1=0.2584  test_f1=0.3261
+  [groupdro] ep= 15  loss=0.7841  pen=0.0000e+00  lam=0.0  val_f1=0.3933  test_f1=0.3743
+  early stopping at epoch 17
+  DONE groupdro: test_f1=0.2998  test_acc=0.3240  per_class=[0.234, 0.151, 0.514, 0.149, 0.45]  val_f1=0.4058  (92s)
+
+=== CNN summary ===
+method         val_f1    test_f1   test_acc
+erm            0.4254     0.3206     0.3526
+irm            0.4616     0.3139     0.3402
+groupdro       0.4058     0.2998     0.3240
