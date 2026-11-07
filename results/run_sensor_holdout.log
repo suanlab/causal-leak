@@ -1,0 +1,97 @@
+=== full / group_sensor  X=(70384, 544) ===
+  full/sensor fold 0: alarm-F1 0.429 acc 0.644 test groups 542
+  full/sensor fold 1: alarm-F1 0.475 acc 0.664 test groups 542
+  full/sensor fold 2: alarm-F1 0.443 acc 0.651 test groups 542
+  full/sensor fold 3: alarm-F1 0.439 acc 0.644 test groups 541
+  full/sensor fold 4: alarm-F1 0.435 acc 0.637 test groups 543
+=== signal / group_sensor  X=(70384, 534) ===
+  signal/sensor fold 0: alarm-F1 0.324 acc 0.581 test groups 542
+  signal/sensor fold 1: alarm-F1 0.345 acc 0.602 test groups 542
+  signal/sensor fold 2: alarm-F1 0.352 acc 0.605 test groups 542
+  signal/sensor fold 3: alarm-F1 0.360 acc 0.600 test groups 541
+  signal/sensor fold 4: alarm-F1 0.330 acc 0.583 test groups 543
+=== region 43 / group by sensor ===
+  r43/sensor fold 0: alarm-F1 0.240 acc 0.349 test groups 33
+  r43/sensor fold 1: alarm-F1 0.546 acc 0.575 test groups 31
+  r43/sensor fold 2: alarm-F1 0.448 acc 0.514 test groups 26
+  r43/sensor fold 3: alarm-F1 0.361 acc 0.458 test groups 30
+  r43/sensor fold 4: alarm-F1 0.325 acc 0.484 test groups 27
+=== region 43 / group by site ===
+  r43/site fold 0: alarm-F1 0.125 acc 0.332 test groups 1
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r43/site fold 1: alarm-F1 0.712 acc 0.553 test groups 1
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r43/site fold 2: alarm-F1 0.044 acc 0.023 test groups 1
+=== region 46 / group by sensor ===
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r46/sensor fold 0: alarm-F1 0.354 acc 0.405 test groups 121
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r46/sensor fold 1: alarm-F1 0.318 acc 0.404 test groups 119
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r46/sensor fold 2: alarm-F1 0.360 acc 0.447 test groups 120
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r46/sensor fold 3: alarm-F1 0.381 acc 0.427 test groups 118
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r46/sensor fold 4: alarm-F1 0.335 acc 0.352 test groups 119
+=== region 46 / group by site ===
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r46/site fold 0: alarm-F1 0.280 acc 0.464 test groups 1
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r46/site fold 1: alarm-F1 0.213 acc 0.370 test groups 3
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r46/site fold 2: alarm-F1 0.244 acc 0.403 test groups 1
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r46/site fold 3: alarm-F1 0.157 acc 0.174 test groups 3
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r46/site fold 4: alarm-F1 0.188 acc 0.287 test groups 3
+=== region 47 / group by sensor ===
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r47/sensor fold 0: alarm-F1 0.402 acc 0.534 test groups 80
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r47/sensor fold 1: alarm-F1 0.345 acc 0.512 test groups 79
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r47/sensor fold 2: alarm-F1 0.326 acc 0.473 test groups 78
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r47/sensor fold 3: alarm-F1 0.359 acc 0.470 test groups 75
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r47/sensor fold 4: alarm-F1 0.389 acc 0.467 test groups 79
+=== region 47 / group by site ===
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r47/site fold 0: alarm-F1 0.189 acc 0.528 test groups 1
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r47/site fold 1: alarm-F1 0.351 acc 0.643 test groups 4
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r47/site fold 2: alarm-F1 0.179 acc 0.288 test groups 1
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r47/site fold 3: alarm-F1 0.273 acc 0.439 test groups 2
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1833: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no true nor predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+  r47/site fold 4: alarm-F1 0.244 acc 0.321 test groups 2
+full group_sensor: alarm-F1 0.444 (chance 0.250)
+signal group_sensor: alarm-F1 0.342 (chance 0.250)
+region 43: sensor 0.384  site 0.294  (3 sites)
+region 46: sensor 0.350  site 0.216  (11 sites)
+region 47: sensor 0.364  site 0.247  (10 sites)

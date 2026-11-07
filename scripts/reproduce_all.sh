@@ -103,6 +103,10 @@ done
 CAUSAL_VAL_MODE=region run_py run_domain_alignment_regionval src/run_domain_alignment.py
 run_py analyze_dispatch      src/analyze_dispatch.py
 run_py summarize_leak_f1     src/summarize_leak_f1.py
+# DMKD round-1 checks: new-sensor rung, region-level inference, A1 lift,
+# A2 sufficiency, A4 dispersion (reads dispatch_op/ and leak_f1_results.json)
+run_py run_sensor_holdout    src/run_sensor_holdout.py
+run_py run_audit_inference   src/run_audit_inference.py
 
 # ---------- analysis + figures ----------
 run_py analyze_results       src/analyze_results.py

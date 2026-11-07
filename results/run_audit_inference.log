@@ -1,0 +1,69 @@
+region level done
+canonical CI done
+calibration dispersion done
+variance done
+margin done
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+sufficiency done
+signal k4: alarm-F1 excess -0.002 [-0.047, +0.042] 4/6 above, MDE 0.087; BA excess +0.033 5/6 above
+signal k2: alarm-F1 excess -0.048 [-0.107, +0.010] 5/11 above, MDE 0.099; BA excess -0.012 7/11 above
+full k4: alarm-F1 excess -0.015 [-0.062, +0.030] 3/6 above, MDE 0.091; BA excess +0.030 6/6 above
+full k2: alarm-F1 excess -0.083 [-0.154, -0.024] 3/11 above, MDE 0.108; BA excess -0.009 8/11 above
+county: 0.234 vs 0.260, 7/16 above
+region 43 xgb_flat: 0.298 sensor CI [0.236, 0.356]
+region 43 xgb_hier: 0.295 sensor CI [0.237, 0.349]
+region 43 tree_only_soft_avg: 0.298 sensor CI [0.236, 0.355]
+region 43 lightgbm: 0.311 sensor CI [0.256, 0.364]
+variance (weighted over top-10 PCs): {'site': 0.12683279449174825, 'class': 0.023946962133383334, 'class_within_site': 0.051722070449183255}
+margin Q1: n 11345  soft avg F1 0.300 AUC 0.644
+margin Q2: n 11369  soft avg F1 0.313 AUC 0.620
+margin Q3: n 11377  soft avg F1 0.313 AUC 0.581
+margin Q4: n 11392  soft avg F1 0.289 AUC 0.533
+sufficiency: {"signal": {"errors": 95, "false_normal": 29, "false_alarm": 66, "errors_on_rule_misses": 6, "auc_regions_with_both": 0.9999985667746483}, "signal_plus_count": {"errors": 134, "false_normal": 6, "false_alarm": 128, "errors_on_rule_misses": 6, "auc_regions_with_both": 1.0}, "count_rule": {"errors": 6, "auc_regions_with_both": 1.0}}
