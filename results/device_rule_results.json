@@ -1,5 +1,6 @@
 {
   "rule": "non-normal iff #(per-check peak amplitude >= T) >= k",
+  "identification": "T: unique solution of lrate == 10*count on training rows with lrate < 90; k: gap between the largest such count and the counts of lrate = 90 rows",
   "amp_cols": [
     "MAX1",
     "MAX3",
@@ -15,35 +16,47 @@
   "folds": [
     {
       "region": 27,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9991540646670566,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 4566,
       "n_rest": 342,
       "false_flags": 0,
-      "missed": 3,
+      "missed": 0,
       "normal_sensors": 169,
       "false_flag_sensors": 0,
-      "acc": 0.9993887530562348
+      "acc": 1.0
     },
     {
       "region": 29,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9991325069503961,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 4105,
       "n_rest": 379,
       "false_flags": 0,
-      "missed": 1,
+      "missed": 0,
       "normal_sensors": 169,
       "false_flag_sensors": 0,
-      "acc": 0.9997769848349688
+      "acc": 1.0
     },
     {
       "region": 36,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9991202714590925,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 0,
       "n_rest": 476,
       "false_flags": 0,
@@ -54,9 +67,13 @@
     },
     {
       "region": 41,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.999120382005529,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 0,
       "n_rest": 470,
       "false_flags": 0,
@@ -67,9 +84,13 @@
     },
     {
       "region": 42,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9991194599354271,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 0,
       "n_rest": 520,
       "false_flags": 0,
@@ -80,22 +101,30 @@
     },
     {
       "region": 43,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9991433003774108,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 45,
       "n_rest": 5029,
       "false_flags": 0,
-      "missed": 10,
+      "missed": 0,
       "normal_sensors": 5,
       "false_flag_sensors": 0,
-      "acc": 0.9980291683090264
+      "acc": 1.0
     },
     {
       "region": 44,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9991192568205172,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 1151,
       "n_rest": 531,
       "false_flags": 0,
@@ -106,48 +135,64 @@
     },
     {
       "region": 45,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9991202023534587,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 12299,
       "n_rest": 2753,
       "false_flags": 0,
-      "missed": 4,
+      "missed": 0,
       "normal_sensors": 791,
       "false_flag_sensors": 0,
-      "acc": 0.9997342545841085
+      "acc": 1.0
     },
     {
       "region": 46,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9992905592469545,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 0,
       "n_rest": 19322,
       "false_flags": 0,
-      "missed": 43,
+      "missed": 6,
       "normal_sensors": 0,
       "false_flag_sensors": 0,
-      "acc": 0.9977745574992237
+      "acc": 0.9996894731394266
     },
     {
       "region": 47,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9990651202196967,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 0,
       "n_rest": 13989,
       "false_flags": 0,
-      "missed": 20,
+      "missed": 0,
       "normal_sensors": 0,
       "false_flag_sensors": 0,
-      "acc": 0.9985703052398313
+      "acc": 1.0
     },
     {
       "region": 48,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9990683229813664,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 0,
       "n_rest": 3138,
       "false_flags": 0,
@@ -158,39 +203,481 @@
     },
     {
       "region": 50,
-      "T": 130,
+      "T": 125,
       "k": 8,
-      "train_balanced_acc": 0.9991373618181432,
+      "k_range": [
+        8,
+        9
+      ],
+      "test_partition_same_over_k_range": true,
       "n_normal": 0,
       "n_rest": 1269,
       "false_flags": 0,
-      "missed": 3,
+      "missed": 0,
       "normal_sensors": 0,
       "false_flag_sensors": 0,
-      "acc": 0.9976359338061466
+      "acc": 1.0
     }
   ],
   "pooled_loro": {
     "n_normal": 22166,
     "n_rest": 48218,
     "false_flags": 0,
-    "missed": 84
+    "missed": 6,
+    "normal_sensors": 1244,
+    "false_flag_sensors": 0
   },
   "far_regions_loro": {
     "n_normal": 22121,
     "n_rest": 4005,
     "false_flags": 0,
-    "missed": 8,
+    "missed": 0,
     "normal_sensors": 1239,
     "false_flag_sensors": 0
   },
   "pooled_fit": {
-    "T": 130,
+    "T": 125,
     "k": 8,
-    "balanced_acc": 0.9991289559915384
+    "k_range": [
+      8,
+      9
+    ]
   },
   "lrate_recovery_at_pooled_T": {
     "normal_hits_le_lrate": 1.0,
-    "normal_hits_eq_lrate": 0.7826851935396554
+    "normal_hits_eq_lrate": 1.0,
+    "lrate_lt90_hits_eq_lrate": 1.0
+  },
+  "count_histogram_at_pooled_T": {
+    "normal": [
+      0,
+      0,
+      0,
+      7229,
+      5034,
+      3807,
+      3109,
+      2987,
+      0,
+      0,
+      0
+    ],
+    "non_normal": [
+      3,
+      1,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      2186,
+      46026
+    ]
+  },
+  "anomalies": [
+    {
+      "region": 46,
+      "site": "S-4677025029",
+      "sid": "S-0359369081459428",
+      "date": "20190628",
+      "label": 0,
+      "count": 3
+    },
+    {
+      "region": 46,
+      "site": "S-4672025033",
+      "sid": "S-0359369083948261",
+      "date": "20200106",
+      "label": 2,
+      "count": 0
+    },
+    {
+      "region": 46,
+      "site": "S-4677025029",
+      "sid": "S-0359369081334423",
+      "date": "20190628",
+      "label": 2,
+      "count": 1
+    },
+    {
+      "region": 46,
+      "site": "S-4677025029",
+      "sid": "S-0359369081312197",
+      "date": "20190628",
+      "label": 3,
+      "count": 6
+    },
+    {
+      "region": 46,
+      "site": "S-4672025033",
+      "sid": "S-0359369083971438",
+      "date": "20200106",
+      "label": 1,
+      "count": 0
+    },
+    {
+      "region": 46,
+      "site": "S-4672025033",
+      "sid": "S-0359369084274253",
+      "date": "20200106",
+      "label": 1,
+      "count": 0
+    }
+  ],
+  "grid_search": {
+    "grid10": {
+      "folds": [
+        {
+          "region": 27,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9991540646670566,
+          "n_normal": 4566,
+          "n_rest": 342,
+          "false_flags": 0,
+          "missed": 3,
+          "normal_sensors": 169,
+          "false_flag_sensors": 0,
+          "acc": 0.9993887530562348
+        },
+        {
+          "region": 29,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9991325069503961,
+          "n_normal": 4105,
+          "n_rest": 379,
+          "false_flags": 0,
+          "missed": 1,
+          "normal_sensors": 169,
+          "false_flag_sensors": 0,
+          "acc": 0.9997769848349688
+        },
+        {
+          "region": 36,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9991202714590925,
+          "n_normal": 0,
+          "n_rest": 476,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 41,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.999120382005529,
+          "n_normal": 0,
+          "n_rest": 470,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 42,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9991194599354271,
+          "n_normal": 0,
+          "n_rest": 520,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 43,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9991433003774108,
+          "n_normal": 45,
+          "n_rest": 5029,
+          "false_flags": 0,
+          "missed": 10,
+          "normal_sensors": 5,
+          "false_flag_sensors": 0,
+          "acc": 0.9980291683090264
+        },
+        {
+          "region": 44,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9991192568205172,
+          "n_normal": 1151,
+          "n_rest": 531,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 110,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 45,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9991202023534587,
+          "n_normal": 12299,
+          "n_rest": 2753,
+          "false_flags": 0,
+          "missed": 4,
+          "normal_sensors": 791,
+          "false_flag_sensors": 0,
+          "acc": 0.9997342545841085
+        },
+        {
+          "region": 46,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9992905592469545,
+          "n_normal": 0,
+          "n_rest": 19322,
+          "false_flags": 0,
+          "missed": 43,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 0.9977745574992237
+        },
+        {
+          "region": 47,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9990651202196967,
+          "n_normal": 0,
+          "n_rest": 13989,
+          "false_flags": 0,
+          "missed": 20,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 0.9985703052398313
+        },
+        {
+          "region": 48,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9990683229813664,
+          "n_normal": 0,
+          "n_rest": 3138,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 50,
+          "T": 130,
+          "k": 8,
+          "train_balanced_acc": 0.9991373618181432,
+          "n_normal": 0,
+          "n_rest": 1269,
+          "false_flags": 0,
+          "missed": 3,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 0.9976359338061466
+        }
+      ],
+      "pooled_loro": {
+        "n_normal": 22166,
+        "n_rest": 48218,
+        "false_flags": 0,
+        "missed": 84,
+        "normal_sensors": 1244,
+        "false_flag_sensors": 0
+      },
+      "far_regions_loro": {
+        "n_normal": 22121,
+        "n_rest": 4005,
+        "false_flags": 0,
+        "missed": 8,
+        "normal_sensors": 1239,
+        "false_flag_sensors": 0
+      }
+    },
+    "grid1": {
+      "folds": [
+        {
+          "region": 27,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.9999373381234857,
+          "n_normal": 4566,
+          "n_rest": 342,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 169,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 29,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.9999372896590648,
+          "n_normal": 4105,
+          "n_rest": 379,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 169,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 36,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.9999371622470781,
+          "n_normal": 0,
+          "n_rest": 476,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 41,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.999937170143252,
+          "n_normal": 0,
+          "n_rest": 470,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 42,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.9999371042811019,
+          "n_normal": 0,
+          "n_rest": 520,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 43,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.9999305378684387,
+          "n_normal": 45,
+          "n_rest": 5029,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 5,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 44,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.9999370897728941,
+          "n_normal": 1151,
+          "n_rest": 531,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 110,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 45,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.9999340151765095,
+          "n_normal": 12299,
+          "n_rest": 2753,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 791,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 46,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 1.0,
+          "n_normal": 0,
+          "n_rest": 19322,
+          "false_flags": 0,
+          "missed": 6,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 0.9996894731394266
+        },
+        {
+          "region": 47,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.9999123550205966,
+          "n_normal": 0,
+          "n_rest": 13989,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 48,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.9999334516415261,
+          "n_normal": 0,
+          "n_rest": 3138,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        },
+        {
+          "region": 50,
+          "T": 125,
+          "k": 8,
+          "train_balanced_acc": 0.999936100875418,
+          "n_normal": 0,
+          "n_rest": 1269,
+          "false_flags": 0,
+          "missed": 0,
+          "normal_sensors": 0,
+          "false_flag_sensors": 0,
+          "acc": 1.0
+        }
+      ],
+      "pooled_loro": {
+        "n_normal": 22166,
+        "n_rest": 48218,
+        "false_flags": 0,
+        "missed": 6,
+        "normal_sensors": 1244,
+        "false_flag_sensors": 0
+      },
+      "far_regions_loro": {
+        "n_normal": 22121,
+        "n_rest": 4005,
+        "false_flags": 0,
+        "missed": 0,
+        "normal_sensors": 1239,
+        "false_flag_sensors": 0
+      }
+    }
   }
 }

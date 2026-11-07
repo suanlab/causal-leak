@@ -1,16 +1,17 @@
-region 27: T=130 k=8  normal   4566 false   0 (0 sensors)  rest    342 missed    3
-region 29: T=130 k=8  normal   4105 false   0 (0 sensors)  rest    379 missed    1
-region 36: T=130 k=8  normal      0 false   0 (0 sensors)  rest    476 missed    0
-region 41: T=130 k=8  normal      0 false   0 (0 sensors)  rest    470 missed    0
-region 42: T=130 k=8  normal      0 false   0 (0 sensors)  rest    520 missed    0
-region 43: T=130 k=8  normal     45 false   0 (0 sensors)  rest   5029 missed   10
-region 44: T=130 k=8  normal   1151 false   0 (0 sensors)  rest    531 missed    0
-region 45: T=130 k=8  normal  12299 false   0 (0 sensors)  rest   2753 missed    4
-region 46: T=130 k=8  normal      0 false   0 (0 sensors)  rest  19322 missed   43
-region 47: T=130 k=8  normal      0 false   0 (0 sensors)  rest  13989 missed   20
-region 48: T=130 k=8  normal      0 false   0 (0 sensors)  rest   3138 missed    0
-region 50: T=130 k=8  normal      0 false   0 (0 sensors)  rest   1269 missed    3
+region 27: T=125 k=8-9  normal   4566 false   0  rest    342 missed    0
+region 29: T=125 k=8-9  normal   4105 false   0  rest    379 missed    0
+region 36: T=125 k=8-9  normal      0 false   0  rest    476 missed    0
+region 41: T=125 k=8-9  normal      0 false   0  rest    470 missed    0
+region 42: T=125 k=8-9  normal      0 false   0  rest    520 missed    0
+region 43: T=125 k=8-9  normal     45 false   0  rest   5029 missed    0
+region 44: T=125 k=8-9  normal   1151 false   0  rest    531 missed    0
+region 45: T=125 k=8-9  normal  12299 false   0  rest   2753 missed    0
+region 46: T=125 k=8-9  normal      0 false   0  rest  19322 missed    6
+region 47: T=125 k=8-9  normal      0 false   0  rest  13989 missed    0
+region 48: T=125 k=8-9  normal      0 false   0  rest   3138 missed    0
+region 50: T=125 k=8-9  normal      0 false   0  rest   1269 missed    0
 
-LORO pooled: false flags 0/22166, missed 84/48218
-FAR regions: false flags 0/22121 (0/1239 sensors), missed 8/4005
-pooled fit T=130 k=8 bal.acc=0.9991; normal hits<=lrate 1.0000, ==lrate 0.7827
+identified rule: LORO pooled false flags 0/22166, missed 6/48218; FAR false flags 0/22121, missed 0/4005
+pooled T=125 k=8-9; count histogram normal [0, 0, 0, 7229, 5034, 3807, 3109, 2987, 0, 0, 0], non-normal [3, 1, 0, 1, 0, 0, 1, 0, 0, 2186, 46026]
+grid10: (T,k) [(130, 8)]  missed 84, false flags 0
+grid1: (T,k) [(125, 8)]  missed 6, false flags 0

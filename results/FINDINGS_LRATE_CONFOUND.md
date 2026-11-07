@@ -31,23 +31,42 @@ and it is not an annotation. Every `in`, `out`, `noise` and `other` recording
 has `lrate = 90`; every `normal` recording has 30-70.
 
 The 20 `MAX` columns alternate: even index = peak frequency, odd index = peak
-amplitude, one pair per check. Counting the checks whose peak amplitude is at
-least 130 (`src/run_device_rule.py`) recovers `lrate` for normal recordings:
-the count never exceeds `lrate` and equals it for 78 % of them. For non-normal
-recordings `lrate` is 90 whatever the recovered count (8, 9 or 10; 45,486 of
-48,218 are at 10). Whether 90 is a cap or was assigned afterwards cannot be
-determined from the release. What can be determined is that the class
-boundary coincides with the trigger count.
+amplitude, one pair per check.
 
-That boundary needs no learning. The rule "non-normal iff at least k of the 10
-per-check peak amplitudes are >= T", with (T, k) chosen by balanced accuracy on
-the training regions under leave-one-region-out, selects T = 130 and k = 8 in
-every fold. It flags 0 of 22,166 normal recordings and misses 84 of 48,218
-non-normal ones. On the four regions that can measure false alarms (27, 29,
-44, 45) that is 0 of 22,121 normals (0 of 1,239 sensors) and 8 of 4,005
-non-normals missed. Any learned normal-vs-rest gate on the 534-column signal
-set has these columns as input, which explains the AUC of 1.000 in every
-region and every mixed installation.
+> **Correction (8 November 2026).** The first version of this note chose the
+> amplitude threshold by a balanced-accuracy search over T in steps of 10,
+> which never tested 125, and reported T = 130, k = 8 with 84 misses. That
+> result is archived in `results/superseded_grid10/`. The device threshold is
+> in fact identified exactly, as below; a step-1 search selects the same rule.
+
+**The threshold is identified, not fitted.** On every recording with
+`lrate < 90`, `lrate = 10 * #{checks with peak amplitude >= 125}` holds
+exactly, and T = 125 is the only threshold for which it holds
+(`src/run_device_rule.py` searches T = 20..1000 in steps of 1). It is
+recovered uniquely from the training regions in every leave-one-region-out
+fold. In this release `lrate < 90` coincides with the normal class, so this
+uses the device's logged field, not a classifier, but it is not independent
+of the label partition.
+
+**The release is truncated at the device's count.** At T = 125, normal
+recordings have counts 3-7 only, non-normal recordings have 9 (2,186) or 10
+(46,026), and **no recording has a count of 8**. Counts 0-2 occur only in four
+anomalous non-normal rows. The same holds in the raw AI Hub Training and
+Validation files, so the truncation is in the release, not in the 2023
+preprocessing. `lrate = 90` is an assigned code (a count of 10 would read
+100), but the state it encodes, at least 9 of 10 checks over threshold, is
+what the amplitudes show for all but 6 recordings.
+
+**The class boundary needs no learning.** The rule "non-normal iff at least k
+of the 10 per-check peak amplitudes are >= 125" flags 0 of 22,166 normal
+recordings and misses 6 of 48,218 non-normal ones under leave-one-region-out.
+k is identified only up to the gap: k = 8 and k = 9 give the same partition.
+The 6 misses are two site-days in region 46 (three sensors at S-4677025029 on
+2019-06-28 and three at S-4672025033 on 2020-01-06). On the four regions that
+can measure false alarms (27, 29, 44, 45) the rule flags 0 of 22,121 normals
+(0 of 1,239 sensors) and misses 0 of 4,005 non-normals. Any learned
+normal-vs-rest gate on the 534-column signal set has these columns as input,
+which explains the AUC of 1.000 in every region and every mixed installation.
 
 `lrate` is excluded from the 534-column `signal` set used for every detector
 here. It is one of the identifier and metadata columns in the 544-column
@@ -119,9 +138,10 @@ scored above 0.5 had `lrate = 70`.
 - **Campaign confound: not supported.** Leak recordings at normal-bearing
   installations are not consistently distinguishable from other leak recordings.
 - **Device-trigger shortcut: confirmed.** `lrate` is the device detector's hit
-  rate. A two-parameter count rule on the device's own per-check amplitudes,
-  chosen on training regions only, reproduces the normal/non-normal boundary to
-  within 84 of 70,384 recordings with no training. Normal-vs-rest "detection"
+  rate. A count rule on the device's own per-check amplitudes, with the
+  threshold (125) identified from the device's logged field, reproduces the
+  normal/non-normal boundary to within 6 of 70,384 recordings with no
+  training, and the release contains no recording at the boundary count of 8. Normal-vs-rest "detection"
   on this benchmark reproduces the device's trigger logic. It cannot show
   that anything detects leaks among recordings the device did not pre-select.
 - **Residual sensor-level limit:** no sensor ever carries both labels, so a

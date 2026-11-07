@@ -75,10 +75,11 @@ leakage-free features:
    of 10 early-morning checks in which the device's leak response exceeded
    its threshold. Every in/out/noise/other recording has `lrate = 90`, and
    every normal one 30–70. The 20 `MAX` columns alternate between peak
-   frequency and peak amplitude for each check. A training-free rule, chosen
-   on training regions only, separates normal from non-normal recordings with
-   84 errors in 70,384: non-normal if at least 8 of the 10 peak amplitudes are
-   at or above 130. Every learned normal-vs-rest gate re-learns this rule,
+   frequency and peak amplitude for each check. The device threshold is
+   identified exactly (`lrate` = 10 x the number of peak amplitudes >= 125 on
+   every normal recording), and the rule "non-normal if at least 9 of the 10
+   peak amplitudes are >= 125" separates normal from non-normal recordings
+   with 6 errors in 70,384; no recording has a count of 8. Every learned normal-vs-rest gate re-learns this rule,
    which explains its AUC of 1.000 everywhere. Binary detection on this
    benchmark therefore cannot be evaluated as leak detection
    (`src/run_device_rule.py`, `results/FINDINGS_LRATE_CONFOUND.md`).

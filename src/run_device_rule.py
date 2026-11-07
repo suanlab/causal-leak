@@ -7,13 +7,26 @@ index) and peak amplitude (odd index) of each of those 10 checks. Every
 in/out/noise/other recording has lrate = 90 and every normal one 30-70, so
 class membership is conditioned on how often the device's threshold fired.
 
-This script fits no model. It scores the rule
+This script fits no classifier. Under leave-one-region-out it
 
-    non-normal  iff  #{checks with peak amplitude >= T} >= k
+1. identifies the device threshold T from the training regions' device fields
+   alone: the T for which lrate == 10 * #{checks with peak amplitude >= T}
+   holds on every training row with lrate < 90 (an arithmetic identity, not a
+   fit; the fold fails if the solution is not unique);
+2. takes k from the same fields: k_lo is one more than the largest count on
+   those rows, and k_hi the largest k that leaves the same lrate = 90 rows
+   below it (no recording has a count of exactly 8, so k is identified only
+   up to that gap);
+3. applies  non-normal  iff  #{checks with peak amplitude >= T} >= k
+   unchanged to the held-out region.
 
-with (T, k) chosen on the training regions only, by balanced accuracy, under
-leave-one-region-out; then applies it unchanged to the held-out region. It
-also reports how closely the count recovers lrate itself.
+In this release lrate < 90 coincides with the normal class, so "no
+classifier" means T and k come from logged device fields, not that they are
+independent of the label partition.
+
+For comparison it also reports the balanced-accuracy grid search used in the
+first version (T in steps of 10, which never tested 125; archived in
+results/superseded_grid10/) and the same search in steps of 1.
 
 The rule uses only MAX columns, which are in the 534-column signal set, so any
 learned normal-vs-rest gate on that set has it available.
@@ -31,34 +44,51 @@ from data import load_all  # noqa: E402
 
 RES = os.path.join(os.path.dirname(__file__), '..', 'results')
 NORMAL = 4
+ALARM_CODE = 90
 AMP_COLS = [f'MAX{i}' for i in range(1, 20, 2)]     # odd index = amplitude
-T_GRID = np.arange(20, 1001, 10)
+T_SEARCH = np.arange(20, 1001, 1)
+GRIDS = {'grid10': np.arange(20, 1001, 10), 'grid1': T_SEARCH}
 K_GRID = np.arange(1, 11)
 
 
-def counts(amp, T):
-    return (amp[:, None, :] >= T[None, :, None]).sum(2)        # n x len(T)
+def count_at(amp, T):
+    return (amp >= T).sum(1)
 
 
-def balanced_acc(is_norm, flagged):
-    tpr = flagged[~is_norm].mean(0)                              # non-normal flagged
-    tnr = (~flagged[is_norm]).mean(0)                            # normal not flagged
-    return (tpr + tnr) / 2
+def identify_T(amp, lrate):
+    """Every T with lrate == 10 * count on all rows with lrate < ALARM_CODE."""
+    m = lrate < ALARM_CODE
+    return [int(T) for T in T_SEARCH
+            if np.array_equal(count_at(amp[m], T) * 10, lrate[m])]
 
 
-def fit_rule(amp, is_norm):
-    c = counts(amp, T_GRID)                                      # n x T
-    best = (-1, None, None)
-    for k in K_GRID:
-        ba = balanced_acc(is_norm, c >= k)
-        j = int(ba.argmax())
-        if ba[j] > best[0]:
-            best = (float(ba[j]), int(T_GRID[j]), int(k))
+def identify_k(amp, lrate, T):
+    c = count_at(amp, T)
+    k_lo = int(c[lrate < ALARM_CODE].max()) + 1
+    below = lambda k: int((c[lrate == ALARM_CODE] < k).sum())  # noqa: E731
+    k_hi = max(int(k) for k in K_GRID if k >= k_lo and below(k) == below(k_lo))
+    return k_lo, k_hi
+
+
+def fit_rule_grid(amp, is_norm, T_grid):
+    """Balanced-accuracy search over (T, k); ties keep the first found."""
+    best = (-1.0, None, None)
+    n_norm, n_rest = is_norm.sum(), (~is_norm).sum()
+    for T in T_grid:
+        c = count_at(amp, T)
+        h_norm = np.bincount(c[is_norm], minlength=11)
+        h_rest = np.bincount(c[~is_norm], minlength=11)
+        for k in K_GRID:
+            tpr = h_rest[k:].sum() / n_rest
+            tnr = h_norm[:k].sum() / n_norm
+            ba = float((tpr + tnr) / 2)
+            if ba > best[0]:
+                best = (ba, int(T), int(k))
     return best
 
 
 def score(amp, is_norm, sid, T, k):
-    flagged = (amp >= T).sum(1) >= k
+    flagged = count_at(amp, T) >= k
     fa = is_norm & flagged
     miss = ~is_norm & ~flagged
     return {
@@ -70,56 +100,95 @@ def score(amp, is_norm, sid, T, k):
     }
 
 
+def pool(folds, regions=None):
+    keys = ('n_normal', 'n_rest', 'false_flags', 'missed', 'normal_sensors',
+            'false_flag_sensors')
+    sel = [f for f in folds if regions is None or f['region'] in regions]
+    return {k: sum(f[k] for f in sel) for k in keys}
+
+
 def main():
     df = load_all()
     y = df['label'].to_numpy()
     is_norm = y == NORMAL
-    amp = df[AMP_COLS].to_numpy(dtype=np.float32)
+    amp = df[AMP_COLS].to_numpy(dtype=np.int64)
     reg = df['region_lvl1'].to_numpy()
     sid = df['sid'].astype(str).to_numpy()
     lrate = df['lrate'].to_numpy()
+    far = (27, 29, 44, 45)
 
-    folds = []
+    folds, grid_folds = [], {g: [] for g in GRIDS}
     for r in sorted(set(reg.tolist())):
         tr, te = reg != r, reg == r
-        ba, T, k = fit_rule(amp[tr], is_norm[tr])
-        rec = {'region': int(r), 'T': T, 'k': k, 'train_balanced_acc': ba,
-               **score(amp[te], is_norm[te], sid[te], T, k)}
+        Ts = identify_T(amp[tr], lrate[tr])
+        assert len(Ts) == 1, f'region {r}: T not unique ({Ts})'
+        T = Ts[0]
+        k_lo, k_hi = identify_k(amp[tr], lrate[tr], T)
+        c_te = count_at(amp[te], T)
+        same = all(np.array_equal(c_te >= k_lo, c_te >= k)
+                   for k in range(k_lo, k_hi + 1))
+        rec = {'region': int(r), 'T': T, 'k': k_lo, 'k_range': [k_lo, k_hi],
+               'test_partition_same_over_k_range': bool(same),
+               **score(amp[te], is_norm[te], sid[te], T, k_lo)}
         folds.append(rec)
-        print(f"region {r}: T={T} k={k}  normal {rec['n_normal']:>6} "
-              f"false {rec['false_flags']:>3} ({rec['false_flag_sensors']} sensors)"
-              f"  rest {rec['n_rest']:>6} missed {rec['missed']:>4}", flush=True)
+        print(f"region {r}: T={T} k={k_lo}-{k_hi}  normal {rec['n_normal']:>6} "
+              f"false {rec['false_flags']:>3}  rest {rec['n_rest']:>6} "
+              f"missed {rec['missed']:>4}", flush=True)
+        for g, grid in GRIDS.items():
+            ba, Tg, kg = fit_rule_grid(amp[tr], is_norm[tr], grid)
+            grid_folds[g].append({'region': int(r), 'T': Tg, 'k': kg,
+                                  'train_balanced_acc': ba,
+                                  **score(amp[te], is_norm[te], sid[te], Tg, kg)})
 
-    tot = {k: sum(f[k] for f in folds)
-           for k in ('n_normal', 'n_rest', 'false_flags', 'missed')}
-    far = [f for f in folds if f['region'] in (27, 29, 44, 45)]
-    tot_far = {k: sum(f[k] for f in far) for k in
-               ('n_normal', 'n_rest', 'false_flags', 'missed', 'normal_sensors',
-                'false_flag_sensors')}
-
-    # How closely does the count recover lrate? Use the pooled rule threshold.
-    ba, T_all, k_all = fit_rule(amp, is_norm)
-    hits = (amp >= T_all).sum(1) * 10
-    norm_le = float((hits[is_norm] <= lrate[is_norm]).mean())
-    norm_eq = float((hits[is_norm] == lrate[is_norm]).mean())
+    # Pooled identification and the count histogram that shows the gaps.
+    T_all = identify_T(amp, lrate)
+    assert len(T_all) == 1
+    T_all = T_all[0]
+    k_lo, k_hi = identify_k(amp, lrate, T_all)
+    c = count_at(amp, T_all)
+    hits = c * 10
+    miss = ~is_norm & (c < k_lo)
+    anomalies = [{'region': int(reg[i]), 'site': str(df['site'].iloc[i]),
+                  'sid': str(sid[i]), 'date': str(df['ldate'].iloc[i]),
+                  'label': int(y[i]), 'count': int(c[i])}
+                 for i in np.flatnonzero(miss)]
 
     out = {
         'rule': 'non-normal iff #(per-check peak amplitude >= T) >= k',
-        'amp_cols': AMP_COLS, 'folds': folds, 'pooled_loro': tot,
-        'far_regions_loro': tot_far,
-        'pooled_fit': {'T': T_all, 'k': k_all, 'balanced_acc': ba},
+        'identification': ('T: unique solution of lrate == 10*count on training '
+                           'rows with lrate < 90; k: gap between the largest such '
+                           'count and the counts of lrate = 90 rows'),
+        'amp_cols': AMP_COLS, 'folds': folds,
+        'pooled_loro': pool(folds), 'far_regions_loro': pool(folds, far),
+        'pooled_fit': {'T': T_all, 'k': k_lo, 'k_range': [k_lo, k_hi]},
         'lrate_recovery_at_pooled_T': {
-            'normal_hits_le_lrate': norm_le, 'normal_hits_eq_lrate': norm_eq},
+            'normal_hits_le_lrate': float((hits[is_norm] <= lrate[is_norm]).mean()),
+            'normal_hits_eq_lrate': float((hits[is_norm] == lrate[is_norm]).mean()),
+            'lrate_lt90_hits_eq_lrate': float(
+                (hits[lrate < ALARM_CODE] == lrate[lrate < ALARM_CODE]).mean())},
+        'count_histogram_at_pooled_T': {
+            'normal': np.bincount(c[is_norm], minlength=11).tolist(),
+            'non_normal': np.bincount(c[~is_norm], minlength=11).tolist()},
+        'anomalies': anomalies,
+        'grid_search': {g: {'folds': f, 'pooled_loro': pool(f),
+                            'far_regions_loro': pool(f, far)}
+                        for g, f in grid_folds.items()},
     }
     with open(os.path.join(RES, 'device_rule_results.json'), 'w') as fh:
         json.dump(out, fh, indent=2)
-    print(f"\nLORO pooled: false flags {tot['false_flags']}/{tot['n_normal']}, "
-          f"missed {tot['missed']}/{tot['n_rest']}")
-    print(f"FAR regions: false flags {tot_far['false_flags']}/{tot_far['n_normal']}"
-          f" ({tot_far['false_flag_sensors']}/{tot_far['normal_sensors']} sensors),"
-          f" missed {tot_far['missed']}/{tot_far['n_rest']}")
-    print(f"pooled fit T={T_all} k={k_all} bal.acc={ba:.4f}; normal hits<=lrate "
-          f"{norm_le:.4f}, ==lrate {norm_eq:.4f}")
+    tot, tot_far = out['pooled_loro'], out['far_regions_loro']
+    print(f"\nidentified rule: LORO pooled false flags "
+          f"{tot['false_flags']}/{tot['n_normal']}, missed "
+          f"{tot['missed']}/{tot['n_rest']}; FAR false flags "
+          f"{tot_far['false_flags']}/{tot_far['n_normal']}, missed "
+          f"{tot_far['missed']}/{tot_far['n_rest']}")
+    print(f"pooled T={T_all} k={k_lo}-{k_hi}; count histogram normal "
+          f"{out['count_histogram_at_pooled_T']['normal']}, non-normal "
+          f"{out['count_histogram_at_pooled_T']['non_normal']}")
+    for g, v in out['grid_search'].items():
+        Tk = sorted({(f['T'], f['k']) for f in v['folds']})
+        print(f"{g}: (T,k) {Tk}  missed {v['pooled_loro']['missed']}, "
+              f"false flags {v['pooled_loro']['false_flags']}")
 
 
 if __name__ == '__main__':
