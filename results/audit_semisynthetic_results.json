@@ -1,0 +1,342 @@
+{
+  "n_windows": 2953,
+  "n_bearings": 10,
+  "class_counts": {
+    "B": 708,
+    "IR": 709,
+    "OR": 708,
+    "normal": 828
+  },
+  "T": 650,
+  "count_histogram_all": [
+    1591,
+    63,
+    55,
+    77,
+    109,
+    78,
+    20,
+    29,
+    61,
+    111,
+    759
+  ],
+  "a1_real": {
+    "bearing": {
+      "lift": 1.0,
+      "lookup_accuracy": 1.0,
+      "p_max": 0.28103837471783294,
+      "null_mean": -0.04870329670329668,
+      "null_q95": 0.3328885400313971,
+      "p_value": 0.000999000999000999,
+      "n_perm": 1000,
+      "overlap": 1.0,
+      "n_units": 10
+    },
+    "load": {
+      "lift": 0.025117739403453698,
+      "lookup_accuracy": 0.29909706546275394,
+      "p_max": 0.28103837471783294,
+      "null_mean": -0.014629513343799038,
+      "null_q95": 0.025117739403453698,
+      "p_value": 0.2547452547452547,
+      "n_perm": 1000,
+      "overlap": 1.0,
+      "n_units": 4
+    },
+    "bearing_held_out": {
+      "lift": -0.49999999999999994,
+      "lookup_accuracy": 0.0,
+      "p_max": 0.3333333333333333,
+      "null_mean": -0.49999999999999994,
+      "null_q95": -0.49999999999999994,
+      "p_value": 1.0,
+      "n_perm": 1000,
+      "overlap": 0.0,
+      "n_units": 7
+    }
+  },
+  "a2": {
+    "S1": {
+      "n": 1183,
+      "count_histogram": [
+        0,
+        0,
+        0,
+        77,
+        109,
+        78,
+        20,
+        29,
+        0,
+        111,
+        759
+      ],
+      "T1": {
+        "solutions": [
+          650
+        ],
+        "n_solutions": 1,
+        "pass": true
+      },
+      "k_range": [
+        8,
+        9
+      ],
+      "T2": {
+        "model_errors": 24,
+        "rule_errors": 0,
+        "n": 1183,
+        "pass": true
+      },
+      "T3": {
+        "boundary": {
+          "bin": 8,
+          "observed": 0,
+          "expected": 29.0,
+          "ratio": 0.0,
+          "p_value": 2.5436656473769243e-13
+        },
+        "floor": {
+          "bin": 2,
+          "observed": 0,
+          "expected": 77.0,
+          "ratio": 0.0,
+          "p_value": 3.6251409191435734e-34
+        },
+        "pass": true
+      }
+    },
+    "S2": {
+      "n": 2953,
+      "count_histogram": [
+        1591,
+        63,
+        55,
+        77,
+        109,
+        78,
+        20,
+        29,
+        61,
+        111,
+        759
+      ],
+      "T1": {
+        "solutions": [
+          650
+        ],
+        "n_solutions": 1,
+        "pass": true
+      },
+      "k_range": [
+        9,
+        9
+      ],
+      "T2": {
+        "model_errors": 45,
+        "rule_errors": 0,
+        "n": 2953,
+        "pass": true
+      },
+      "T3": {
+        "boundary": {
+          "bin": 8,
+          "observed": 61,
+          "expected": 29.0,
+          "ratio": 2.103448275862069,
+          "p_value": 0.9999999308942199
+        },
+        "pass": false
+      }
+    },
+    "S3": {
+      "n": 2953,
+      "count_histogram": [
+        1591,
+        63,
+        55,
+        77,
+        109,
+        78,
+        20,
+        29,
+        61,
+        111,
+        759
+      ],
+      "T1": {
+        "solutions": [],
+        "pass": false,
+        "note": "no logged field"
+      },
+      "rule_k": 1,
+      "T2": {
+        "model_errors": 0,
+        "rule_errors": 763,
+        "n": 2953,
+        "pass": false
+      },
+      "T3": {
+        "boundary": {
+          "bin": 1,
+          "observed": 63,
+          "expected": 55.0,
+          "ratio": 1.1454545454545455,
+          "p_value": 0.872928023471027
+        },
+        "pass": false
+      }
+    }
+  },
+  "t3_power": [
+    {
+      "epsilon": 0,
+      "reject_rate": 1.0,
+      "mean_ratio": 0.0
+    },
+    {
+      "epsilon": 0.01,
+      "reject_rate": 1.0,
+      "mean_ratio": 0.03448275862068966
+    },
+    {
+      "epsilon": 0.05,
+      "reject_rate": 1.0,
+      "mean_ratio": 0.10344827586206896
+    },
+    {
+      "epsilon": 0.1,
+      "reject_rate": 1.0,
+      "mean_ratio": 0.20689655172413793
+    },
+    {
+      "epsilon": 0.25,
+      "reject_rate": 1.0,
+      "mean_ratio": 0.517241379310345
+    },
+    {
+      "epsilon": 0.5,
+      "reject_rate": 0.0,
+      "mean_ratio": 1.03448275862069
+    },
+    {
+      "epsilon": 1.0,
+      "reject_rate": 0.0,
+      "mean_ratio": 2.1034482758620685
+    }
+  ],
+  "a1_simulation": {
+    "50": [
+      {
+        "lambda": 0,
+        "reject_rate": 0.055,
+        "mean_lift": -0.07420154161639625
+      },
+      {
+        "lambda": 0.02,
+        "reject_rate": 0.065,
+        "mean_lift": -0.0760399128048678
+      },
+      {
+        "lambda": 0.05,
+        "reject_rate": 0.09,
+        "mean_lift": -0.06945509563168896
+      },
+      {
+        "lambda": 0.1,
+        "reject_rate": 0.14,
+        "mean_lift": -0.04908311252869739
+      },
+      {
+        "lambda": 0.2,
+        "reject_rate": 0.795,
+        "mean_lift": 0.02576560351764147
+      },
+      {
+        "lambda": 0.5,
+        "reject_rate": 1.0,
+        "mean_lift": 0.4079766372077839
+      },
+      {
+        "lambda": 1.0,
+        "reject_rate": 1.0,
+        "mean_lift": 1.0
+      }
+    ],
+    "500": [
+      {
+        "lambda": 0,
+        "reject_rate": 0.035,
+        "mean_lift": -0.06274468200405316
+      },
+      {
+        "lambda": 0.02,
+        "reject_rate": 0.05,
+        "mean_lift": -0.06551226580833248
+      },
+      {
+        "lambda": 0.05,
+        "reject_rate": 0.115,
+        "mean_lift": -0.058945494350445486
+      },
+      {
+        "lambda": 0.1,
+        "reject_rate": 0.65,
+        "mean_lift": -0.042594177786709785
+      },
+      {
+        "lambda": 0.2,
+        "reject_rate": 1.0,
+        "mean_lift": 0.03136310248695877
+      },
+      {
+        "lambda": 0.5,
+        "reject_rate": 1.0,
+        "mean_lift": 0.42155073322304987
+      },
+      {
+        "lambda": 1.0,
+        "reject_rate": 1.0,
+        "mean_lift": 1.0
+      }
+    ],
+    "2700": [
+      {
+        "lambda": 0,
+        "reject_rate": 0.015,
+        "mean_lift": -0.06577685558945874
+      },
+      {
+        "lambda": 0.02,
+        "reject_rate": 0.05,
+        "mean_lift": -0.06387321505603107
+      },
+      {
+        "lambda": 0.05,
+        "reject_rate": 0.24,
+        "mean_lift": -0.05922821648302694
+      },
+      {
+        "lambda": 0.1,
+        "reject_rate": 0.995,
+        "mean_lift": -0.041570260997492295
+      },
+      {
+        "lambda": 0.2,
+        "reject_rate": 1.0,
+        "mean_lift": 0.03307585685847748
+      },
+      {
+        "lambda": 0.5,
+        "reject_rate": 1.0,
+        "mean_lift": 0.4223410569997352
+      },
+      {
+        "lambda": 1.0,
+        "reject_rate": 1.0,
+        "mean_lift": 1.0
+      }
+    ]
+  }
+}

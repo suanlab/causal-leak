@@ -40,6 +40,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
+from audit_tests import depletion_test, identify_k as _identify_k, identify_threshold  # noqa: E402
 from data import load_all  # noqa: E402
 
 RES = os.path.join(os.path.dirname(__file__), '..', 'results')
@@ -57,17 +58,11 @@ def count_at(amp, T):
 
 def identify_T(amp, lrate):
     """Every T with lrate == 10 * count on all rows with lrate < ALARM_CODE."""
-    m = lrate < ALARM_CODE
-    return [int(T) for T in T_SEARCH
-            if np.array_equal(count_at(amp[m], T) * 10, lrate[m])]
+    return identify_threshold(amp, lrate, ALARM_CODE, scale=10, grid=T_SEARCH)
 
 
 def identify_k(amp, lrate, T):
-    c = count_at(amp, T)
-    k_lo = int(c[lrate < ALARM_CODE].max()) + 1
-    below = lambda k: int((c[lrate == ALARM_CODE] < k).sum())  # noqa: E731
-    k_hi = max(int(k) for k in K_GRID if k >= k_lo and below(k) == below(k_lo))
-    return k_lo, k_hi
+    return _identify_k(amp, lrate, ALARM_CODE, T)
 
 
 def fit_rule_grid(amp, is_norm, T_grid):
@@ -170,6 +165,8 @@ def main():
             'normal': np.bincount(c[is_norm], minlength=11).tolist(),
             'non_normal': np.bincount(c[~is_norm], minlength=11).tolist()},
         'anomalies': anomalies,
+        'depletion_at_pooled_T': depletion_test(
+            np.bincount(c, minlength=11), boundary=k_lo, floor=int(c[lrate < ALARM_CODE].min())),
         'grid_search': {g: {'folds': f, 'pooled_loro': pool(f),
                             'far_regions_loro': pool(f, far)}
                         for g, f in grid_folds.items()},

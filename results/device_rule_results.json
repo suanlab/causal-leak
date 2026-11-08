@@ -326,6 +326,22 @@
       "count": 0
     }
   ],
+  "depletion_at_pooled_T": {
+    "boundary": {
+      "bin": 8,
+      "observed": 0,
+      "expected": 2186.0,
+      "ratio": 0.0,
+      "p_value": 0.0
+    },
+    "floor": {
+      "bin": 2,
+      "observed": 0,
+      "expected": 7230.0,
+      "ratio": 0.0,
+      "p_value": 0.0
+    }
+  },
   "grid_search": {
     "grid10": {
       "folds": [

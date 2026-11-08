@@ -107,6 +107,14 @@ run_py summarize_leak_f1     src/summarize_leak_f1.py
 # A2 sufficiency, A4 dispersion (reads dispatch_op/ and leak_f1_results.json)
 run_py run_sensor_holdout    src/run_sensor_holdout.py
 run_py run_audit_inference   src/run_audit_inference.py
+# Operating characteristics of A1/A2 on planted shortcuts (public CWRU data;
+# fetch with scripts/fetch_cwru.sh). Fails loudly if the data are missing.
+CWRU_DIR="${CWRU_DIR:-$(cd "$(dirname "$0")/.." && pwd)/../external/cwru}"
+if [ "$(ls "$CWRU_DIR"/*.mat 2>/dev/null | wc -l)" -ne 40 ]; then
+  echo "reproduce_all: CWRU data not found in $CWRU_DIR; run scripts/fetch_cwru.sh" >&2
+  exit 1
+fi
+CWRU_DIR="$CWRU_DIR" run_py run_audit_semisynthetic src/run_audit_semisynthetic.py
 
 # ---------- analysis + figures ----------
 run_py analyze_results       src/analyze_results.py
@@ -128,6 +136,7 @@ run_py make_figB3_models      src/make_figB3_models.py
 FIG_TERM=alarm run_py make_figB1_ladder_alarm src/make_figB1_ladder.py
 FIG_TERM=alarm run_py make_figB3_models_alarm src/make_figB3_models.py
 run_py make_figB4_tradeoff    src/make_figB4_tradeoff.py
+run_py make_figB5_operating   src/make_figB5_operating.py
 
 # ---------- manuscript (optional) ----------
 # The LaTeX manuscript is not part of the public code release; this step

@@ -177,6 +177,11 @@ python3 -m venv .venv
 #   (a) place under ../kcc-water/Dataset/ so the default path works, or
 #   (b) export CAUSAL_LEAK_DATA_DIR=/your/data/root before running.
 
+# Public CWRU bearing data (40 files, ~134 MB) for the planted-shortcut
+# experiment (src/run_audit_semisynthetic.py); default destination
+# ../external/cwru, override with CWRU_DIR.
+scripts/fetch_cwru.sh
+
 # Full pipeline; hard-fails on any non-zero exit.
 scripts/reproduce_all.sh
 

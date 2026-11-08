@@ -1,0 +1,57 @@
+2953 windows, T=650, counts [1591, 63, 55, 77, 109, 78, 20, 29, 61, 111, 759]
+A1 real: {'bearing': 1.0, 'load': 0.025, 'bearing_held_out': -0.5}
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  S1: n 1183  T1 True  T2 model 24 vs rule 0  T3 p 2.5436656473769243e-13
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  S2: n 2953  T1 True  T2 model 45 vs rule 0  T3 p 0.9999999308942199
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  S3: n 2953  T1 False  T2 model 0 vs rule 763  T3 p 0.872928023471027
+  T3 power eps=0: reject 1.000
+  T3 power eps=0.01: reject 1.000
+  T3 power eps=0.05: reject 1.000
+  T3 power eps=0.1: reject 1.000
+  T3 power eps=0.25: reject 1.000
+  T3 power eps=0.5: reject 0.000
+  T3 power eps=1.0: reject 0.000
+  A1 sim G=50 lambda=0: reject 0.055 lift -0.074
+  A1 sim G=50 lambda=0.02: reject 0.065 lift -0.076
+  A1 sim G=50 lambda=0.05: reject 0.090 lift -0.069
+  A1 sim G=50 lambda=0.1: reject 0.140 lift -0.049
+  A1 sim G=50 lambda=0.2: reject 0.795 lift +0.026
+  A1 sim G=50 lambda=0.5: reject 1.000 lift +0.408
+  A1 sim G=50 lambda=1.0: reject 1.000 lift +1.000
+  A1 sim G=500 lambda=0: reject 0.035 lift -0.063
+  A1 sim G=500 lambda=0.02: reject 0.050 lift -0.066
+  A1 sim G=500 lambda=0.05: reject 0.115 lift -0.059
+  A1 sim G=500 lambda=0.1: reject 0.650 lift -0.043
+  A1 sim G=500 lambda=0.2: reject 1.000 lift +0.031
+  A1 sim G=500 lambda=0.5: reject 1.000 lift +0.422
+  A1 sim G=500 lambda=1.0: reject 1.000 lift +1.000
+  A1 sim G=2700 lambda=0: reject 0.015 lift -0.066
+  A1 sim G=2700 lambda=0.02: reject 0.050 lift -0.064
+  A1 sim G=2700 lambda=0.05: reject 0.240 lift -0.059
+  A1 sim G=2700 lambda=0.1: reject 0.995 lift -0.042
+  A1 sim G=2700 lambda=0.2: reject 1.000 lift +0.033
+  A1 sim G=2700 lambda=0.5: reject 1.000 lift +0.422
+  A1 sim G=2700 lambda=1.0: reject 1.000 lift +1.000

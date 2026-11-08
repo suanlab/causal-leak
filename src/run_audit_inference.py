@@ -48,6 +48,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from analyze_dispatch import (LEAK, MODELS, NORMAL, NUISANCE,  # noqa: E402
                               REGIONS as DISPATCH_REGIONS, calibrate,
                               dispatch_score, load)
+from audit_tests import lift_test  # noqa: E402
 from data import HZ_COLS, get_xy, load_all  # noqa: E402
 from summarize_leak_f1 import leak_f1, per_class_from_cm, present_from_cm  # noqa: E402
 
@@ -290,30 +291,8 @@ def margin(df):
 
 def lift(df, rng, n_perm=1000):
     tr, va = df[df['split'] == 'train'], df[df['split'] == 'val']
-    majority = tr.groupby('sid')['label'].agg(lambda s: s.value_counts().idxmax())
-    y = va['label'].to_numpy()
-    p_max = float(np.bincount(y).max() / len(y))
-
-    def acc(maj):
-        pred = va['sid'].map(maj).to_numpy()
-        return float(np.mean(np.where(pd_isna(pred), -1, pred) == y))
-
-    a = acc(majority)
-    null = []
-    for _ in range(n_perm):
-        perm = majority.copy()
-        perm[:] = rng.permutation(majority.to_numpy())
-        null.append(acc(perm))
-    to_l = lambda v: (v - p_max) / (1 - p_max)  # noqa: E731
-    nl = np.array([to_l(v) for v in null])
-    return {'lookup_accuracy_uncovered_as_errors': a, 'p_max': p_max,
-            'lift': to_l(a), 'null_mean': float(nl.mean()),
-            'null_q95': float(np.quantile(nl, 0.95)), 'n_perm': n_perm,
-            'val_sensor_overlap': float(va['sid'].isin(majority.index).mean())}
-
-
-def pd_isna(a):
-    return np.array([v is None or v != v for v in a], dtype=bool)
+    return lift_test(tr['sid'], tr['label'], va['sid'], va['label'],
+                     n_perm=n_perm, rng=rng)
 
 
 SECTIONS = ('region_level', 'canonical_ci', 'calibration_dispersion', 'variance',
