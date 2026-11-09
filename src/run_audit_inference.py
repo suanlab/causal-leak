@@ -112,10 +112,19 @@ def summarise(excess, rng):
             'mde80': mde(e.std(ddof=1), len(e)) if len(e) > 1 else None}
 
 
+def guess_f1(p, q):
+    """Expected macro-F1 (large-sample) of an input-blind guess drawing class
+    k with probability q_k, on test shares p, over classes with p_k > 0."""
+    p, q = np.asarray(p, float), np.asarray(q, float)
+    m = p > 0
+    return float(np.mean(2 * p[m] * q[m] / (p[m] + q[m])))
+
+
 def region_level(rng):
     out = {}
     for run in L('loro_results.json'):
         rows = []
+        tot = sum(np.asarray(f['cm'])[:4].sum(1) for f in run['per_region'])
         for f in run['per_region']:
             pres = present_from_cm(f['cm'])
             if len(pres) < 2:
@@ -123,11 +132,22 @@ def region_level(rng):
             K = len(pres)
             a = leak_f1(per_class_from_cm(f['cm']), pres)
             b = balanced_acc_from_cm(f['cm'])
+            te_n = np.asarray(f['cm'])[:4].sum(1)
+            p_te = te_n / te_n.sum()
+            tr_n = tot - te_n
+            p_tr = tr_n / tr_n.sum()
             rows.append({'region': f['region'], 'K': K,
+                         'oracle_reference': 1 / K,
+                         'uniform_guess': guess_f1(p_te, np.where(p_te > 0, 1 / K, 0)),
+                         'training_prior_guess': guess_f1(p_te, p_tr),
                          'alarm_rows': int(np.asarray(f['cm'])[:4].sum()),
                          'alarm_f1': a, 'alarm_f1_excess': a - 1 / K,
                          'balanced_acc': b, 'balanced_acc_excess': b - 1 / K})
         res = {'per_region': rows}
+        k4 = [r for r in rows if r['K'] == 4]
+        res['k4_references'] = {k: float(np.mean([r[k] for r in k4])) for k in
+                                ('oracle_reference', 'uniform_guess', 'training_prior_guess',
+                                 'alarm_f1')}
         for name, sel in (('k2', lambda r: True), ('k4', lambda r: r['K'] == 4)):
             rs = [r for r in rows if sel(r)]
             res[name] = {m: summarise([r[f'{m}_excess'] for r in rs], rng)

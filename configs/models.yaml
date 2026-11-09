@@ -1,0 +1,94 @@
+# Model configurations used in the DMKD article, with the command that trains
+# each model and the result file it writes. Values are copied from the code
+# (file:function given); the code is authoritative.
+# Seeds: data partition SPLIT_SEED = 42 (fixed); model seed CAUSAL_SEED
+# (default 42; five-seed runs use 0, 1, 2, 3, 42).
+
+trees:
+  gbt_flat:
+    source: src/run_operational_folds.py:fit_flat
+    model: xgboost.XGBClassifier
+    params: {n_estimators: 200, max_depth: 6, learning_rate: 0.1, objective: multi:softprob}
+  gbt_hierarchical:
+    source: src/run_operational_folds.py:fit_hier
+    model: stage-1 normal-vs-rest + stage-2 four-class XGBClassifier, same params as gbt_flat
+    combination: "P(normal) = p1; P(k) = (1 - p1) * p2(k)"
+  tree_only_soft_average:
+    source: src/run_dispatch_operating_points.py:fit_all
+    combination: "0.5 * gbt_flat + 0.5 * gbt_hierarchical"
+  lightgbm:
+    source: src/run_operational_folds.py:fit_lightgbm
+    params: {n_estimators: 200, learning_rate: 0.1, num_leaves: 63, max_depth: 6,
+             sample_weight: inverse class frequency}
+  catboost:
+    source: src/run_extra_baselines.py:run_catboost
+    params: {iterations: 200, depth: 6, learning_rate: 0.1, loss: MultiClass,
+             class_weights: inverse class frequency}
+    validation: random 10 % of the training pool (not used for early stopping)
+  random_forest:
+    source: src/run_extra_baselines.py:run_random_forest
+    params: {n_estimators: 400, max_depth: 20, class_weight: balanced}
+  # The four trees above (except CatBoost / RF) are trained on the full training
+  # pool of each fold; CatBoost, RF and TabNet hold out 10 % for validation.
+
+tabular_deep:
+  tabnet:
+    source: src/run_extra_baselines.py:run_tabnet
+    params: {n_d: 32, n_a: 32, n_steps: 4, gamma: 1.5, lambda_sparse: 1.0e-4,
+             max_epochs: 80, patience: 15, batch_size: 2048, virtual_batch_size: 512,
+             weights: inverse class frequency}
+
+networks:
+  common:
+    source: src/irm_core.py:RunConfig, train_and_eval
+    optimizer: {name: Adam, lr: 1.0e-3, weight_decay: 1.0e-4}
+    batch_size: 528
+    sampler: EnvBalancedSampler (equal draws per training environment = region), every method incl. ERM
+    loss_weights: inverse class frequency
+    early_stopping_metric: five-class macro-F1 on the validation set (normal included)
+    inputs: StandardScaler fitted on training rows; no log transform
+    validation:
+      random10: random 10 % of the training pool's recordings (CAUSAL_VAL_MODE unset)
+      region: whole training regions 36, 41, 42, 44, 48, 50 (CAUSAL_VAL_MODE=region)
+  mlp:
+    source: src/run_irm_mlp.py
+    architecture: "Linear(d,256)-ReLU-Dropout(0.2)-Linear(256,128)-ReLU-Dropout(0.2)-Linear(128,5)"
+    input: nested band set of the canonical fold (503 columns)
+    epochs: 120
+    patience: 25
+  cnn:
+    source: src/run_irm_cnn.py
+    architecture: "Conv1d(1,32,k9)-BN-ReLU-MaxPool2-Conv1d(32,64,k7)-BN-ReLU-MaxPool2-Conv1d(64,128,k5)-BN-ReLU-AdaptiveAvgPool1d(1); concat tabular; Linear(128+t,128)-ReLU-Dropout(0.2)-Linear(128,5)"
+    input: 513-bin spectrum (Conv1d) + remaining columns
+    epochs: 60
+    patience: 15
+  irm: {penalty_weight: 100, warmup_epochs: {mlp: 30, cnn: 15}, tuned: false}
+  irm_sweep: {source: src/run_irm_sweep.py, penalty_weight: [1, 10, 100, 1000, 10000], warmup_epochs: [10, 30]}
+  groupdro: {eta: 0.01, tuned: false}
+  alignment:
+    source: src/run_domain_alignment.py
+    backbone: mlp
+    weights: {deepcoral: 1.0, mmd_dg: 1.0, dann: 0.5}
+    tuned: false
+    epochs: 120
+    patience: 25
+
+runs:
+  - {command: "python src/run_matrix.py", writes: results/matrix_results.json}
+  - {command: "python src/run_loro.py", writes: results/loro_results.json}
+  - {command: "python src/run_sensor_holdout.py", writes: results/sensor_holdout_results.json}
+  - {command: "python src/run_identifier_audit.py", writes: results/identifier_audit_results.json}
+  - {command: "python src/run_device_rule.py", writes: results/device_rule_results.json}
+  - {command: "python src/run_dispatch_operating_points.py <region>", writes: "results/dispatch_op/region<region>.{npz,json}"}
+  - {command: "DISPATCH_FEATURES=all python src/run_dispatch_operating_points.py <region>", writes: "results/dispatch_op_all/region<region>.{npz,json}"}
+  - {command: "python src/analyze_dispatch.py", writes: results/dispatch_operating_points_results.json}
+  - {command: "DISPATCH_FEATURES=all python src/analyze_dispatch.py", writes: results/dispatch_operating_points_all_results.json}
+  - {command: "python src/run_audit_inference.py", writes: results/audit_inference_results.json}
+  - {command: "python src/run_audit_semisynthetic.py", writes: results/audit_semisynthetic_results.json}
+  - {command: "python src/run_extra_baselines_multiseed.py", writes: results/extra_baselines_multiseed.json}
+  - {command: "CAUSAL_SEED=<s> python src/run_irm_mlp.py", writes: "results/irm_mlp_results[_seed<s>].json"}
+  - {command: "CAUSAL_SEED=<s> python src/run_irm_cnn.py", writes: "results/irm_cnn_results[_seed<s>].json"}
+  - {command: "CAUSAL_VAL_MODE=region CAUSAL_SEED=<s> python src/run_irm_{mlp,cnn}.py", writes: "results/irm_{mlp,cnn}_regionval*.json"}
+  - {command: "python src/run_domain_alignment.py", writes: results/domain_alignment_results.json}
+  - {command: "python src/check_provenance.py", writes: results/provenance_results.json}
+  - {command: "python src/cited_numbers.py", writes: "stdout: every number the article cites"}

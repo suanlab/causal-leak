@@ -38,7 +38,12 @@ from data import LABEL_NAMES  # noqa: E402
 from sensor_stats import cluster_bootstrap, mcnemar_exact, sign_test  # noqa: E402
 
 RES = os.path.join(os.path.dirname(__file__), '..', 'results')
-OP_DIR = os.path.join(RES, 'dispatch_op')
+# DISPATCH_FEATURES=all reads the all-signal run (results/dispatch_op_all/) and
+# writes dispatch_operating_points_all_results.json.
+FEATURES = os.environ.get('DISPATCH_FEATURES', 'nested')
+OP_DIR = os.path.join(RES, 'dispatch_op' if FEATURES == 'nested' else 'dispatch_op_all')
+OUT_NAME = ('dispatch_operating_points_results.json' if FEATURES == 'nested'
+            else 'dispatch_operating_points_all_results.json')
 
 MODELS = ['xgb_flat', 'xgb_hier', 'tree_only_soft_avg', 'lightgbm']
 REGIONS = [27, 29, 43, 44, 45, 46, 47, 48]
@@ -473,7 +478,7 @@ def main():
         'diagnostic_test_fitted_matched_miss': matched_test_diagnostic(data),
         'curves_test_fitted': curves(data),
     }
-    path = os.path.join(RES, 'dispatch_operating_points_results.json')
+    path = os.path.join(RES, OUT_NAME)
     with open(path, 'w') as fh:
         json.dump(out, fh, indent=2)
 

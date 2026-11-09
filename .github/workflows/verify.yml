@@ -1,0 +1,26 @@
+name: verify
+
+# Code-level gate for the public release: the sources compile, retired
+# phrases are absent, the article's figures exist, and every number the
+# article cites is recomputed from the committed result files. The AI Hub
+# data are licensed and not available here, so experiments are not re-run.
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the packages the gate needs (pinned as in requirements-lock.txt)
+        run: |
+          grep -E '^(numpy|pandas|scipy)==' requirements-lock.txt > ci-requirements.txt
+          python -m pip install -r ci-requirements.txt
+      - name: Code gate
+        run: PYTHON=python PAPER_DIR=__none__ bash scripts/verify.sh
+      - name: Cited numbers
+        run: python src/cited_numbers.py

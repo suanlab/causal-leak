@@ -1,9 +1,30 @@
 # End-to-End Replication Recipe
 
-This document is the replication appendix referenced from the EAAI
-manuscript (Section "Hardware and Reproducibility"). It walks
-through everything required to reproduce every numeric claim in the
-paper from a clean machine.
+This document is the replication appendix for the article *Identifier
+Leakage and Selection-Defined Classes in a Sensor Benchmark: An Audit of
+Water-Leak Classification* (submitted to Data Mining and Knowledge Discovery).
+It covers everything needed to reproduce every number the article cites from
+a clean machine.
+
+## Quick path
+
+```bash
+pip install -r requirements-lock.txt     # exact environment (Python 3.12.3)
+make provenance    # hashes and row checks of the AI Hub release (needs the data)
+make cwru          # public CWRU bearing data, ~134 MB, into ../external/cwru
+make experiments   # every experiment and figure (scripts/reproduce_all.sh)
+make numbers       # print every number the article cites, by section
+make verify        # code gate (manuscript checks run only where the source is)
+```
+
+`make reproduce` runs the five in order. Without the AI Hub data,
+`make numbers` and `make verify` still run: they read only the committed
+result files. The same gate runs in CI (`.github/workflows/verify.yml`).
+
+Every number in the article is printed by `src/cited_numbers.py` with the
+section it supports. The manuscript's own checker, which matches those numbers
+against the article's sentences, is kept with the (unreleased) manuscript
+source and is available on request.
 
 ## Hardware reference profile
 
@@ -29,30 +50,42 @@ Two equivalent ways:
 python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-pip install -r requirements-eaai.txt
+pip install -r requirements-eaai.txt   # or: pip install -r requirements-lock.txt (exact)
 ```
 
 ### Docker
 
 ```bash
-docker build -t causal-leak:eaai .
+docker build -t causal-leak:dmkd .
 docker run --rm --gpus all \
   -v "$(pwd)/results":/work/causal-leak/results \
-  causal-leak:eaai bash src/run_multiseed.sh
+  causal-leak:dmkd bash src/run_multiseed.sh
 ```
 
 ## Dataset
 
-The AI Hub water-pipe vibration dataset is openly distributed by NIA
-Korea AI Hub (dataset ID 138, accessed 5 October 2023). After
-download, place the CSVs under
+The AI Hub water-leak vibration dataset (dataset ID 138) is distributed by the
+National Information Society Agency of Korea through AI Hub; at the time of
+writing the portal accepts applications from users in Korea only. Download the
+Training and Validation archives and place them, with their extracted class
+CSVs, under
 
-    ../kcc-water/Dataset/
-        train_with_site_name_4.csv
-        val_with_site_name_4.csv
+    ../kcc-water/Dataset/Training/   (archive + in/out/noise/other/normal-training.csv)
+    ../kcc-water/Dataset/Validation/ (archive + ...-validation.csv)
 
-relative to the `causal-leak/` folder. The loader in `src/data.py`
-expects exactly this layout.
+The analyses read two derived files in `../kcc-water/Dataset/`,
+`train_with_site_name_4.csv` and `val_with_site_name_4.csv`, which add an
+address to each site code. `src/check_provenance.py` fixes their lineage:
+SHA-256 of the archives, the extracted CSVs and the derived files; each
+extracted CSV byte-identical to an archive member; every derived row matched
+to exactly one distributed row on (site, sid, ldate) with all 536 distributed
+columns equal; and the four administrative codes equal to the digits of the
+site code. Its output, `results/provenance_results.json`, is committed, so the
+hashes can be compared against a fresh download. Override the location with
+`CAUSAL_LEAK_DATA_DIR`.
+
+The public CWRU bearing data for the planted-shortcut experiment are fetched
+by `scripts/fetch_cwru.sh` (40 files; set `CWRU_DIR` to relocate).
 
 ## Reproducing every figure and table
 
@@ -72,7 +105,7 @@ This runs:
 2. Aggregation: `python src/aggregate_multiseed.py` produces
    `results/multiseed_summary.{json,md}`.
 
-For the additional EAAI experiments:
+For the additional baseline experiments:
 
 ```bash
 python src/run_sigungu_ood.py        # E2: 시군구-level OOD
@@ -109,6 +142,10 @@ All output is in `results/figs/*.pdf` (vector format, no PNG dependencies).
 | Compute cost (E6) | CPU + 1 GPU | ~10 min |
 | Device trigger rule, identifier audit | CPU | ~2 min |
 | Dispatch run (8 regions × outer + 3 inner folds, 3 in parallel) | CPU | ~4 h |
+| Dispatch run on all signal columns (`DISPATCH_FEATURES=all`) | CPU | ~4 h |
+| Planted shortcuts on CWRU (`run_audit_semisynthetic.py`) | CPU | ~20 min |
+| Region-level inference and sufficiency (`run_audit_inference.py`) | CPU | ~30 min |
+| Provenance checks | CPU | ~2 min |
 | `analyze_dispatch.py` (incl. 2,000-replicate cluster bootstraps) | CPU | ~10 min |
 | Networks with held-out-region early stopping (`CAUSAL_VAL_MODE=region`, 5 seeds + alignment) | 2 GPU | ~3 h |
 | Figures | CPU | <1 min |
@@ -120,7 +157,7 @@ All output is in `results/figs/*.pdf` (vector format, no PNG dependencies).
   `PYBIN=/path/to/.venv/bin/python bash src/run_multiseed.sh`.
 - CUDA OOM on TITAN Xp: reduce the batch size in `RunConfig` to 264.
 - LightGBM hangs under high CPU contention: reduce `n_jobs` to 4
-  (already done in the EAAI version of `run_extra_baselines.py`).
+  (already done in `run_extra_baselines.py`).
 - Mismatched seed-42 results vs paper: ensure `data.py` was not
   modified; the data partition seed is fixed at 42 in
   `irm_core.py:SPLIT_SEED`.

@@ -1,15 +1,30 @@
 SHELL := /usr/bin/env bash
 
-# Canonical interpreter: shared venv at ../.venv (EAAI revision)
+# Canonical interpreter: shared venv at ../.venv
 PYTHON ?= $(shell if [ -x ../.venv/bin/python ]; then echo ../.venv/bin/python; elif [ -x .venv/bin/python ]; then echo .venv/bin/python; else echo python3; fi)
 
-# Canonical manuscript target: paper-eaai/ (Engineering Applications of AI submission)
-PAPER_DIR := paper-eaai
+# Manuscript target: paper-dmkd/ (Data Mining and Knowledge Discovery). The
+# LaTeX source is kept locally and is not part of the public release.
+PAPER_DIR := paper-dmkd
 PAPER_BASE := paper
 
-.PHONY: all experiments multiseed figures paper verify clean-cache help
+.PHONY: all reproduce experiments multiseed figures paper verify numbers \
+        provenance cwru clean-cache help
 
 all: experiments multiseed figures verify
+
+# One command for the article: data lineage, public bearing data, every
+# experiment and figure, then the cited numbers and the gate.
+reproduce: provenance cwru experiments numbers verify
+
+provenance:
+	$(PYTHON) src/check_provenance.py
+
+cwru:
+	scripts/fetch_cwru.sh
+
+numbers:
+	$(PYTHON) src/cited_numbers.py
 
 experiments:
 	PYTHON="$(PYTHON)" scripts/reproduce_all.sh
@@ -19,7 +34,7 @@ multiseed:
 	PYBIN="$(PYTHON)" bash src/run_multiseed.sh
 	$(PYTHON) src/aggregate_multiseed.py
 
-# Regenerate every figure (Phase 1 + EAAI revision figs 9-14)
+# Regenerate every figure
 figures:
 	$(PYTHON) src/analyze_results.py
 	$(PYTHON) src/make_figures.py
@@ -37,6 +52,10 @@ figures:
 	$(PYTHON) src/make_figB2_falsealarms.py
 	$(PYTHON) src/make_figB3_models.py
 	$(PYTHON) src/make_figB4_tradeoff.py
+	FIG_TERM=alarm $(PYTHON) src/make_figB1_ladder.py
+	FIG_TERM=alarm $(PYTHON) src/make_figB3_models.py
+	$(PYTHON) src/make_figB2_dispatch.py
+	$(PYTHON) src/make_figB5_operating.py
 
 # Manuscript build — the LaTeX source is not part of the public code
 # release, so this target is a no-op unless the source tree is present.
@@ -45,8 +64,7 @@ paper:
 	  cd $(PAPER_DIR) && pdflatex -interaction=nonstopmode -halt-on-error $(PAPER_BASE).tex \
 	    && bibtex $(PAPER_BASE) \
 	    && pdflatex -interaction=nonstopmode -halt-on-error $(PAPER_BASE).tex \
-	    && pdflatex -interaction=nonstopmode -halt-on-error $(PAPER_BASE).tex \
-	    && pdflatex -interaction=nonstopmode -halt-on-error highlights.tex ; \
+	    && pdflatex -interaction=nonstopmode -halt-on-error $(PAPER_BASE).tex ; \
 	else \
 	  echo "paper: skipped ($(PAPER_DIR)/ not present in this checkout)" ; \
 	fi
@@ -59,9 +77,13 @@ clean-cache:
 
 help:
 	@echo "Targets:"
-	@echo "  experiments  - Phase 1 + EAAI E2-E7 experiments"
-	@echo "  multiseed    - E1 5-seed sweep + aggregation"
-	@echo "  figures      - Regenerate all figures (fig1-fig14)"
-	@echo "  paper        - Build paper-eaai/paper.pdf + highlights.pdf"
-	@echo "  verify       - Verify paper-eaai build and claims"
-	@echo "  all          - Full end-to-end reproduction"
+	@echo "  reproduce    - provenance + CWRU + experiments + cited numbers + gate"
+	@echo "  provenance   - hash and row-check the AI Hub release (needs the data)"
+	@echo "  cwru         - fetch the public CWRU bearing data"
+	@echo "  experiments  - every experiment (scripts/reproduce_all.sh)"
+	@echo "  numbers      - print every number the article cites"
+	@echo "  multiseed    - 5-seed sweep + aggregation"
+	@echo "  figures      - regenerate all figures"
+	@echo "  paper        - build paper-dmkd/paper.pdf (local source only)"
+	@echo "  verify       - code gate; manuscript checks when the source is present"
+	@echo "  all          - experiments + multiseed + figures + verify"

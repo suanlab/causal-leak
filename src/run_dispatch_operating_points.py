@@ -31,9 +31,15 @@ calibration folds reuse the outer fold's band set, which was selected with the
 held-out region excluded; the inner held-out regions did enter that selection,
 so calibration is mildly optimistic, never test-informed.
 
+DISPATCH_FEATURES=all uses all 534 signal columns with no band selection, so
+nothing in the inner calibration folds was chosen with any held-out region in
+view (fully nested by construction); it writes to results/dispatch_op_all/.
+The default (nested) keeps the outer fold's nested band set.
+
 One region per invocation (regions run in parallel):
 
   python src/run_dispatch_operating_points.py 45
+  DISPATCH_FEATURES=all python src/run_dispatch_operating_points.py 45
 
 Output: results/dispatch_op/region<R>.npz (per-recording probabilities) and
 results/dispatch_op/region<R>.json (fold metadata). analyze_dispatch.py turns
@@ -53,7 +59,10 @@ from data import HZ_COLS, MAX_COLS, load_all  # noqa: E402
 from run_operational_folds import (  # noqa: E402
     NORMAL, SEED, fit_flat, fit_hier, fit_lightgbm)
 
-OUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'results', 'dispatch_op')
+FEATURES = os.environ.get('DISPATCH_FEATURES', 'nested')
+assert FEATURES in ('nested', 'all'), FEATURES
+OUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'results',
+                       'dispatch_op' if FEATURES == 'nested' else 'dispatch_op_all')
 os.makedirs(OUT_DIR, exist_ok=True)
 
 N_INNER = 3
@@ -119,7 +128,10 @@ def main(r):
 
     te = np.where(regions == r)[0]
     tr = np.where(regions != r)[0]
-    cols, man = nested_bands_cached(df, X_sel, y, sel_cols, r, kind='region')
+    if FEATURES == 'all':
+        cols, man = sel_cols, {'selected_groups': 'all 534 signal columns'}
+    else:
+        cols, man = nested_bands_cached(df, X_sel, y, sel_cols, r, kind='region')
     X = df[cols].to_numpy(dtype=np.float32, copy=False)
     print(f'=== region {r}: n_test={len(te)} features={len(cols)} ===', flush=True)
 
@@ -154,7 +166,7 @@ def main(r):
         **{f'oof_{k}': oof[k] for k in MODELS},
     )
     meta = {
-        'region': int(r), 'seed': SEED, 'n_test': int(len(te)),
+        'region': int(r), 'seed': SEED, 'features': FEATURES, 'n_test': int(len(te)),
         'n_train': int(len(tr)), 'n_inner': N_INNER,
         'selected_groups': man['selected_groups'], 'n_features': len(cols),
         'inner_split_rule': split_rule,

@@ -16,7 +16,7 @@ A1 real: {'bearing': 1.0, 'load': 0.025, 'bearing_held_out': -0.5}
   warnings.warn(
 /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
   warnings.warn(
-  S1: n 1183  T1 True  T2 model 24 vs count 0  T3 ratio 0.0 upper 0.00
+  S1: n 1183  T1 True  T2 model 24 vs count 0  T3 ratio 0.0 upper 0.10
 /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
   warnings.warn(
 /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
@@ -61,10 +61,10 @@ A1 real: {'bearing': 1.0, 'load': 0.025, 'bearing_held_out': -0.5}
   T3 size q=0.3 T=364: worst-bin reject 0.075
 /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:4596: RuntimeWarning: invalid value encountered in scalar subtract
   diff_b_a = b - a
-  T3 size q=0.4 T=432: worst-bin reject 0.035
+  T3 size q=0.4 T=432: worst-bin reject 0.015
   T3 size q=0.5 T=650: worst-bin reject 0.005
   T3 size q=0.6 T=1083: worst-bin reject 0.095
-  T3 size q=0.7 T=1342: worst-bin reject 0.215
+  T3 size q=0.7 T=1342: worst-bin reject 0.210
   T3 size q=0.8 T=1979: worst-bin reject 0.015
 /home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
   warnings.warn(

@@ -1,0 +1,184 @@
+{
+  "data_dir": "kcc-water/Dataset (CAUSAL_LEAK_DATA_DIR)",
+  "archives": [
+    {
+      "file": "Training/누수감지데이터셋(Training).zip",
+      "bytes": 15022832,
+      "sha256": "8e5b36daa6091a847716ed857b780af257607d65fe06343b72aa8a9147c751a8"
+    },
+    {
+      "file": "Validation/누수감지데이터셋(Validation).zip",
+      "bytes": 1881418,
+      "sha256": "e5ebe330e50cc5ff527da9eda80a151c83b7ebdf04e04de7fd28e6225cabb175"
+    }
+  ],
+  "distributed_csv": [
+    {
+      "file": "Training/in-training.csv",
+      "bytes": 17666329,
+      "sha256": "b2283fcabf6fe56dce6c39ffda59c377903cf21c99dcc0e516130853802ef76f",
+      "identical_to_archive_member": true
+    },
+    {
+      "file": "Training/out-training.csv",
+      "bytes": 23057847,
+      "sha256": "fa4f4b602f11e447207910701449f5c40b3a231ba2528756ea94d1aec05d0eb7",
+      "identical_to_archive_member": true
+    },
+    {
+      "file": "Training/noise-training.csv",
+      "bytes": 6267068,
+      "sha256": "9ced28733eab3389459a6c2192f3446e8b52afe72b304f96461a01d6ac95d81f",
+      "identical_to_archive_member": true
+    },
+    {
+      "file": "Training/other-training.csv",
+      "bytes": 9231547,
+      "sha256": "0f02c76c891ded6a39b3df9c0d7fb8f9801061790e97d13ed6e0dfe1475d7b17",
+      "identical_to_archive_member": true
+    },
+    {
+      "file": "Training/normal-training.csv",
+      "bytes": 23818831,
+      "sha256": "1cacf99795825c1671cd4c289e0514588c58d653ddd7458fe18879b24c885261",
+      "identical_to_archive_member": true
+    },
+    {
+      "file": "Validation/in-validation.csv",
+      "bytes": 2198345,
+      "sha256": "0e8f6cb6d9eac7317b74d5332191b39a928fe06102141cf2023226b8dcaa5387",
+      "identical_to_archive_member": true
+    },
+    {
+      "file": "Validation/out-validation.csv",
+      "bytes": 2894531,
+      "sha256": "2796edcaac92cb5ad449c8a1a77286e23636004bdbdadc137bd80707935ff765",
+      "identical_to_archive_member": true
+    },
+    {
+      "file": "Validation/noise-validation.csv",
+      "bytes": 781679,
+      "sha256": "c254c71bda78ae7017ee7b5ff72e854ed347c94b591847b128e334ba490a5576",
+      "identical_to_archive_member": true
+    },
+    {
+      "file": "Validation/other-validation.csv",
+      "bytes": 1156827,
+      "sha256": "cb124fb29ad710ca586b99b2a157fd405bf211072eceef0b400b4a9bad19a887",
+      "identical_to_archive_member": true
+    },
+    {
+      "file": "Validation/normal-validation.csv",
+      "bytes": 2973956,
+      "sha256": "3f144f278202aca2652c02168f8492b4d607d91096485f8da39446f9b8f8bd14",
+      "identical_to_archive_member": true
+    }
+  ],
+  "derived_csv": [
+    {
+      "file": "train_with_site_name_4.csv",
+      "bytes": 86547244,
+      "sha256": "f5dbce9997ec45d95c5f26f0f870b96ab7296393a8effa0546911207bef598b1"
+    },
+    {
+      "file": "val_with_site_name_4.csv",
+      "bytes": 10791228,
+      "sha256": "c2d7cde78ed72ff0de5e8fc32e90929bc9e61db3e6846f2579854a186f5b20e7"
+    }
+  ],
+  "splits": {
+    "train": {
+      "distributed_rows": 62564,
+      "derived_rows": 62564,
+      "distributed_by_class": {
+        "normal": 19704,
+        "out": 17539,
+        "in": 13273,
+        "other": 7019,
+        "noise": 5029
+      },
+      "derived_by_class": {
+        "normal": 19704,
+        "out": 17539,
+        "in": 13273,
+        "other": 7019,
+        "noise": 5029
+      },
+      "distributed_key_unique": true,
+      "derived_key_unique": true,
+      "derived_rows_matched": 62564,
+      "distributed_rows_missing_from_derived": 0,
+      "numeric_cells_compared": 33471740,
+      "numeric_cells_differing": 0,
+      "label_mismatches": 0,
+      "added_columns": [
+        "Unnamed: 0.1",
+        "Unnamed: 0",
+        "site_name",
+        "site_광역시도",
+        "site_시군구",
+        "site_읍면동",
+        "site_통리",
+        "site_광역시도n",
+        "site_시군구n",
+        "site_읍면동n",
+        "site_통리n"
+      ],
+      "region_codes_from_site_code": {
+        "site_광역시도n": true,
+        "site_시군구n": true,
+        "site_읍면동n": true,
+        "site_통리n": true
+      },
+      "site_name_missing": 0
+    },
+    "val": {
+      "distributed_rows": 7820,
+      "derived_rows": 7820,
+      "distributed_by_class": {
+        "normal": 2462,
+        "out": 2192,
+        "in": 1659,
+        "other": 878,
+        "noise": 629
+      },
+      "derived_by_class": {
+        "normal": 2462,
+        "out": 2192,
+        "in": 1659,
+        "other": 878,
+        "noise": 629
+      },
+      "distributed_key_unique": true,
+      "derived_key_unique": true,
+      "derived_rows_matched": 7820,
+      "distributed_rows_missing_from_derived": 0,
+      "numeric_cells_compared": 4183700,
+      "numeric_cells_differing": 0,
+      "label_mismatches": 0,
+      "added_columns": [
+        "Unnamed: 0.1",
+        "Unnamed: 0",
+        "site_name",
+        "site_광역시도",
+        "site_시군구",
+        "site_읍면동",
+        "site_통리",
+        "site_광역시도n",
+        "site_시군구n",
+        "site_읍면동n",
+        "site_통리n"
+      ],
+      "region_codes_from_site_code": {
+        "site_광역시도n": true,
+        "site_시군구n": true,
+        "site_읍면동n": true,
+        "site_통리n": true
+      },
+      "site_name_missing": 0
+    }
+  },
+  "extracted_csv_match_archives": true,
+  "all_checks_pass": true,
+  "total_rows": 70384
+}

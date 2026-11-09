@@ -11,14 +11,19 @@ A2  identify_threshold  T1: every threshold T for which a logged device field
                      carry a measured (non-code) value. Unique solution = pass.
     identify_k       the range of k that leaves the coded rows' partition
                      unchanged at the identified threshold (the boundary gap).
-    depletion_test   T3: ratio of the mass in a boundary bin, fixed in advance
-                     from the logged code, to the smaller of its two
-                     neighbours (and of the bin below an inclusion floor to
-                     the first kept bin). Passes when the one-sided 95 %
-                     upper bound of the ratio, from resampling clusters of
-                     recordings (sensors, files), is below 0.5. A one-sided
-                     Poisson p is kept for reference only: it ignores
-                     clustering and rejects at natural troughs.
+    depletion_test   T3, a support diagnostic: ratio of the mass in a
+                     boundary bin, fixed in advance from the logged code, to
+                     the smaller of its two neighbours (and of the bin below
+                     an inclusion floor to the first kept bin). Passes when
+                     the one-sided 95 % upper bound of the ratio is below 0.5.
+                     The bound is the larger of a cluster-bootstrap bound
+                     (resampling sensors or files) and an exact Poisson bound
+                     on the boundary count over the reference: a cluster
+                     bootstrap of an empty bin returns zero in every
+                     resample, so on its own it would claim certainty about
+                     a bin that was simply not observed. A pass shows the
+                     release is depleted at the boundary, which selection
+                     would produce; it does not identify the mechanism.
 
 T2 (sufficiency) compares a fitted classifier with the rule and lives with the
 model code that fits it.
@@ -128,10 +133,14 @@ def depletion_test(g, clusters, boundary=None, floor=None, max_ratio=0.5,
         with np.errstate(divide='ignore', invalid='ignore'):
             rb = boot[:, b_obs] / np.min(boot[:, b_refs], axis=1)
         rb = np.where(np.isfinite(rb), rb, np.inf)
-        upper = float(np.quantile(rb, 0.95))
+        boot_upper = float(np.quantile(rb, 0.95))
+        # Exact one-sided 95 % Poisson upper limit of the boundary count.
+        exact_upper = float(stats.chi2.ppf(0.95, 2 * (obs + 1)) / 2 / ref) if ref > 0 else np.inf
+        upper = max(boot_upper, exact_upper)
         return {'bin': int(b_obs), 'observed': int(obs), 'expected': float(ref),
                 'ratio': float(obs / ref) if ref > 0 else None,
-                'ratio_upper95': upper, 'pass': bool(upper < max_ratio),
+                'ratio_upper95': upper, 'ratio_upper95_bootstrap': boot_upper,
+                'ratio_upper95_exact': exact_upper, 'pass': bool(upper < max_ratio),
                 'p_value': float(stats.poisson.cdf(obs, ref)) if ref > 0 else None}
 
     out = {'n_clusters': int(len(keys)), 'max_ratio': max_ratio}

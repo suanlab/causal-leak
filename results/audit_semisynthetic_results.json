@@ -103,7 +103,9 @@
           "observed": 0,
           "expected": 29.0,
           "ratio": 0.0,
-          "ratio_upper95": 0.0,
+          "ratio_upper95": 0.10330111288117205,
+          "ratio_upper95_bootstrap": 0.0,
+          "ratio_upper95_exact": 0.10330111288117205,
           "pass": true,
           "p_value": 2.5436656473769243e-13
         },
@@ -112,7 +114,9 @@
           "observed": 0,
           "expected": 77.0,
           "ratio": 0.0,
-          "ratio_upper95": 0.0,
+          "ratio_upper95": 0.0389056139422596,
+          "ratio_upper95_bootstrap": 0.0,
+          "ratio_upper95_exact": 0.0389056139422596,
           "pass": true,
           "p_value": 3.6251409191435734e-34
         },
@@ -160,6 +164,8 @@
           "expected": 29.0,
           "ratio": 2.103448275862069,
           "ratio_upper95": 3.625,
+          "ratio_upper95_bootstrap": 3.625,
+          "ratio_upper95_exact": 2.6032660347500833,
           "pass": false,
           "p_value": 0.9999999308942199
         },
@@ -201,6 +207,8 @@
           "expected": 29.0,
           "ratio": 2.103448275862069,
           "ratio_upper95": 3.7060721062618596,
+          "ratio_upper95_bootstrap": 3.7060721062618596,
+          "ratio_upper95_exact": 2.6032660347500833,
           "pass": false,
           "p_value": 0.9999999308942199
         },
@@ -369,7 +377,7 @@
       "quantile": 0.4,
       "T": 432,
       "bin": 9,
-      "reject_rate": 0.035,
+      "reject_rate": 0.015,
       "poisson_reject_rate": 0.73
     },
     {
@@ -523,7 +531,7 @@
       "quantile": 0.7,
       "T": 1342,
       "bin": 4,
-      "reject_rate": 0.215,
+      "reject_rate": 0.21,
       "poisson_reject_rate": 0.965
     },
     {
@@ -565,7 +573,7 @@
       "quantile": 0.8,
       "T": 1979,
       "bin": 1,
-      "reject_rate": 0.015,
+      "reject_rate": 0.0,
       "poisson_reject_rate": 0.5
     },
     {

@@ -5,6 +5,9 @@
         {
           "region": 27,
           "K": 3,
+          "oracle_reference": 0.3333333333333333,
+          "uniform_guess": 0.3325534263385266,
+          "training_prior_guess": 0.2999746630425319,
           "alarm_rows": 342,
           "alarm_f1": 0.20802430235752256,
           "alarm_f1_excess": -0.12530903097581075,
@@ -14,6 +17,9 @@
         {
           "region": 29,
           "K": 2,
+          "oracle_reference": 0.5,
+          "uniform_guess": 0.49268828483284854,
+          "training_prior_guess": 0.4163554412017394,
           "alarm_rows": 379,
           "alarm_f1": 0.32929370384570505,
           "alarm_f1_excess": -0.17070629615429495,
@@ -23,6 +29,9 @@
         {
           "region": 41,
           "K": 2,
+          "oracle_reference": 0.5,
+          "uniform_guess": 0.44329637096774194,
+          "training_prior_guess": 0.38543015733349323,
           "alarm_rows": 470,
           "alarm_f1": 0.4317694317694317,
           "alarm_f1_excess": -0.06823056823056828,
@@ -32,6 +41,9 @@
         {
           "region": 42,
           "K": 2,
+          "oracle_reference": 0.5,
+          "uniform_guess": 0.41621220168313966,
+          "training_prior_guess": 0.36405578425151097,
           "alarm_rows": 520,
           "alarm_f1": 0.14673990924289465,
           "alarm_f1_excess": -0.35326009075710535,
@@ -41,6 +53,9 @@
         {
           "region": 43,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.23875572300384656,
+          "training_prior_guess": 0.21280106484356756,
           "alarm_rows": 5029,
           "alarm_f1": 0.2270750004528655,
           "alarm_f1_excess": -0.022924999547134506,
@@ -50,6 +65,9 @@
         {
           "region": 44,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.2348912975727332,
+          "training_prior_guess": 0.2225942834317453,
           "alarm_rows": 531,
           "alarm_f1": 0.1874939874939875,
           "alarm_f1_excess": -0.06250601250601251,
@@ -59,6 +77,9 @@
         {
           "region": 45,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.24505379349537387,
+          "training_prior_guess": 0.24455908836110254,
           "alarm_rows": 2753,
           "alarm_f1": 0.30995321942509424,
           "alarm_f1_excess": 0.05995321942509424,
@@ -68,6 +89,9 @@
         {
           "region": 46,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.22759691152896572,
+          "training_prior_guess": 0.2458873382293502,
           "alarm_rows": 19322,
           "alarm_f1": 0.2899271975074219,
           "alarm_f1_excess": 0.03992719750742191,
@@ -77,6 +101,9 @@
         {
           "region": 47,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.22681153473341653,
+          "training_prior_guess": 0.2439175424724574,
           "alarm_rows": 13989,
           "alarm_f1": 0.25580263671051995,
           "alarm_f1_excess": 0.005802636710519948,
@@ -86,6 +113,9 @@
         {
           "region": 48,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.21357904384105159,
+          "training_prior_guess": 0.18326409792693332,
           "alarm_rows": 3138,
           "alarm_f1": 0.1409554487904297,
           "alarm_f1_excess": -0.1090445512095703,
@@ -95,6 +125,9 @@
         {
           "region": 50,
           "K": 2,
+          "oracle_reference": 0.5,
+          "uniform_guess": 0.4647867944309757,
+          "training_prior_guess": 0.3982334138982338,
           "alarm_rows": 1269,
           "alarm_f1": 0.3883189491396624,
           "alarm_f1_excess": -0.11168105086033758,
@@ -102,6 +135,12 @@
           "balanced_acc_excess": -0.08790958737864074
         }
       ],
+      "k4_references": {
+        "oracle_reference": 0.25,
+        "uniform_guess": 0.2311147173625646,
+        "training_prior_guess": 0.22550390254419272,
+        "alarm_f1": 0.23520124839671977
+      },
       "k2": {
         "alarm_f1": {
           "n": 11,
@@ -188,6 +227,9 @@
         {
           "region": 27,
           "K": 3,
+          "oracle_reference": 0.3333333333333333,
+          "uniform_guess": 0.3325534263385266,
+          "training_prior_guess": 0.2999746630425319,
           "alarm_rows": 342,
           "alarm_f1": 0.12547619047619052,
           "alarm_f1_excess": -0.2078571428571428,
@@ -197,6 +239,9 @@
         {
           "region": 29,
           "K": 2,
+          "oracle_reference": 0.5,
+          "uniform_guess": 0.49268828483284854,
+          "training_prior_guess": 0.4163554412017394,
           "alarm_rows": 379,
           "alarm_f1": 0.3008649077242975,
           "alarm_f1_excess": -0.19913509227570247,
@@ -206,6 +251,9 @@
         {
           "region": 41,
           "K": 2,
+          "oracle_reference": 0.5,
+          "uniform_guess": 0.44329637096774194,
+          "training_prior_guess": 0.38543015733349323,
           "alarm_rows": 470,
           "alarm_f1": 0.5872103378598321,
           "alarm_f1_excess": 0.08721033785983212,
@@ -215,6 +263,9 @@
         {
           "region": 42,
           "K": 2,
+          "oracle_reference": 0.5,
+          "uniform_guess": 0.41621220168313966,
+          "training_prior_guess": 0.36405578425151097,
           "alarm_rows": 520,
           "alarm_f1": 0.3394930739758326,
           "alarm_f1_excess": -0.16050692602416738,
@@ -224,6 +275,9 @@
         {
           "region": 43,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.23875572300384656,
+          "training_prior_guess": 0.21280106484356756,
           "alarm_rows": 5029,
           "alarm_f1": 0.26847417934690804,
           "alarm_f1_excess": 0.018474179346908037,
@@ -233,6 +287,9 @@
         {
           "region": 44,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.2348912975727332,
+          "training_prior_guess": 0.2225942834317453,
           "alarm_rows": 531,
           "alarm_f1": 0.1659142724030972,
           "alarm_f1_excess": -0.0840857275969028,
@@ -242,6 +299,9 @@
         {
           "region": 45,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.24505379349537387,
+          "training_prior_guess": 0.24455908836110254,
           "alarm_rows": 2753,
           "alarm_f1": 0.2570561733929023,
           "alarm_f1_excess": 0.007056173392902321,
@@ -251,6 +311,9 @@
         {
           "region": 46,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.22759691152896572,
+          "training_prior_guess": 0.2458873382293502,
           "alarm_rows": 19322,
           "alarm_f1": 0.32664721516653805,
           "alarm_f1_excess": 0.07664721516653805,
@@ -260,6 +323,9 @@
         {
           "region": 47,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.22681153473341653,
+          "training_prior_guess": 0.2439175424724574,
           "alarm_rows": 13989,
           "alarm_f1": 0.2857116058671261,
           "alarm_f1_excess": 0.03571160586712607,
@@ -269,6 +335,9 @@
         {
           "region": 48,
           "K": 4,
+          "oracle_reference": 0.25,
+          "uniform_guess": 0.21357904384105159,
+          "training_prior_guess": 0.18326409792693332,
           "alarm_rows": 3138,
           "alarm_f1": 0.18567141668629966,
           "alarm_f1_excess": -0.06432858331370034,
@@ -278,6 +347,9 @@
         {
           "region": 50,
           "K": 2,
+          "oracle_reference": 0.5,
+          "uniform_guess": 0.4647867944309757,
+          "training_prior_guess": 0.3982334138982338,
           "alarm_rows": 1269,
           "alarm_f1": 0.467249473555253,
           "alarm_f1_excess": -0.03275052644474702,
@@ -285,6 +357,12 @@
           "balanced_acc_excess": -0.037070186084142365
         }
       ],
+      "k4_references": {
+        "oracle_reference": 0.25,
+        "uniform_guess": 0.2311147173625646,
+        "training_prior_guess": 0.22550390254419272,
+        "alarm_f1": 0.24824581047714522
+      },
       "k2": {
         "alarm_f1": {
           "n": 11,

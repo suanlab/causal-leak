@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
-# Verification gate for the EAAI submission.
-# Checks that paper-eaai/paper.tex compiles cleanly and that no
-# placeholder references / undefined cites remain.
+# Verification gate for the DMKD article (Identifier Leakage and
+# Selection-Defined Classes in a Sensor Benchmark).
+#
+# Code-level checks always run and need neither the AI Hub data nor the
+# manuscript: the sources compile, retired phrases are absent, every figure
+# the article uses exists, and src/cited_numbers.py prints every cited number
+# from the committed result files. When the manuscript source is present
+# (paper-dmkd/, kept locally), its build log is checked and its claim checker
+# is run.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-PAPER_DIR="${PAPER_DIR:-paper-eaai}"
+PAPER_DIR="${PAPER_DIR:-paper-dmkd}"
 PAPER_BASE="${PAPER_BASE:-paper}"
 
 if [[ -z "${PYTHON:-}" ]]; then
@@ -28,11 +34,10 @@ fi
 PAPER_LOG="${PAPER_DIR}/${PAPER_BASE}.log"
 PAPER_PDF="${PAPER_DIR}/${PAPER_BASE}.pdf"
 PAPER_TEX="${PAPER_DIR}/${PAPER_BASE}.tex"
-HIGHLIGHTS="${PAPER_DIR}/highlights.tex"
 
 # --- code-level checks (always run) ---
 
-# 1. stale phrase guard — strings retired during the EAAI revision.
+# 1. stale phrase guard — strings retired in earlier revisions.
 shopt -s nullglob
 STALE_TARGETS=(README.md results/*.md src/*.py scripts/reproduce_all.sh)
 shopt -u nullglob
@@ -43,69 +48,41 @@ if grep -n -E 'weighted_avg|cnn_best|make_fig0|bibtex cycle|final deployment rec
   exit 1
 fi
 
-# 2. EAAI revision figures present
-for fig in fig9_baselines fig10_threshold fig11_cost fig12_multiseed \
-           fig13_sigungu fig14_pareto; do
+# 2. figures used by the article
+for fig in figB1_ladder_alarm figB2_dispatch figB3_models_alarm figB5_operating; do
   if [[ ! -s "results/figs/${fig}.pdf" ]]; then
     echo "FAIL: results/figs/${fig}.pdf missing or empty" >&2
     exit 1
   fi
 done
 
-# --- manuscript checks (only when the LaTeX source is present locally;
-#     the manuscript is not part of the public code release) ---
+# 3. every cited number is computable from the committed result files
+if ! "${PYTHON}" src/cited_numbers.py > /dev/null; then
+  echo "FAIL: src/cited_numbers.py could not compute the cited numbers" >&2
+  exit 1
+fi
+
+# --- manuscript checks (only when the LaTeX source is present locally) ---
 if [[ -f "${PAPER_TEX}" ]]; then
   if [[ ! -f "${PAPER_LOG}" || ! -f "${PAPER_PDF}" ]]; then
     echo "ERROR: ${PAPER_DIR} build artifacts missing — run 'make paper' first." >&2
     exit 1
   fi
-
-  # natbib undefined citations
-  if grep -n -F 'undefined' "${PAPER_LOG}"; then
-    echo "FAIL: undefined cross-references in ${PAPER_LOG}" >&2
+  if grep -n -E 'undefined|Author undefined' "${PAPER_LOG}"; then
+    echo "FAIL: undefined references or citations in ${PAPER_LOG}" >&2
     exit 1
   fi
-  if grep -n -F 'Author undefined' "${PAPER_LOG}"; then
-    echo "FAIL: natbib author-undefined in ${PAPER_LOG}" >&2
-    exit 1
-  fi
-
-  # body-level rendered '?' tokens (broken \ref / \cite output)
-  if pdftotext "${PAPER_PDF}" - | grep -n -E 'author\?|Figure \?|Table \?|Section \?|\[\?\]|\?\?'; then
+  if pdftotext "${PAPER_PDF}" - | grep -n -E 'Figure \?|Table \?|Section \?|\[\?\]|\?\?'; then
     echo "FAIL: ${PAPER_PDF} contains rendered '?' placeholders" >&2
     exit 1
   fi
-
-  # EAAI required statements present in the manuscript
-  for tag in 'CRediT Authorship Contribution Statement' \
-             'Declaration of Competing Interests' \
-             'Funding' 'Data Availability' \
-             'Declaration of Generative AI'; do
-    if ! grep -q "${tag}" "${PAPER_TEX}"; then
-      echo "FAIL: ${PAPER_TEX} is missing required section: ${tag}" >&2
-      exit 1
-    fi
-  done
-
-  # highlights file present (3-5 bullets, each <= 85 chars)
-  if [[ ! -f "${HIGHLIGHTS}" ]]; then
-    echo "FAIL: ${HIGHLIGHTS} not found (EAAI requires a separate highlights file)" >&2
-    exit 1
-  fi
-  BAD=$(awk '
-    /^\\item/ {
-      line=$0
-      sub(/^\\item[[:space:]]*/, "", line)
-      if (length(line) > 85) { print length(line) ": " line }
-    }
-  ' "${HIGHLIGHTS}")
-  if [[ -n "${BAD}" ]]; then
-    echo "FAIL: highlights bullets exceed 85 chars:" >&2
-    echo "${BAD}" >&2
-    exit 1
+  if [[ -f "${PAPER_DIR}/verify_claims.py" ]]; then
+    PYABS="${PYTHON}"
+    [[ "${PYTHON}" == */* ]] && PYABS="$(cd "$(dirname "${PYTHON}")" && pwd)/$(basename "${PYTHON}")"
+    (cd "${PAPER_DIR}" && "${PYABS}" verify_claims.py)
   fi
 else
-  echo "Manuscript source (${PAPER_DIR}/) not in this checkout — skipping LaTeX/highlights checks."
+  echo "Manuscript source (${PAPER_DIR}/) not in this checkout — skipping manuscript checks."
 fi
 
 echo "Verification passed."
