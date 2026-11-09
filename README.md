@@ -152,6 +152,13 @@ causal-leak/
 │   ├── summarize_leak_f1.py          leak-class macro-F1 for every result
 │   ├── sensor_stats.py               sensor-level McNemar, cluster bootstrap,
 │   │                                 installation sign test
+│   ├── audit_tests.py                audit statistics: A1 lift test, T1 threshold
+│   │                                 identity, T3 cluster-bootstrap depletion
+│   ├── run_sensor_holdout.py         new-sensor rung; sensor vs site grouping
+│   ├── run_audit_inference.py        region-level inference, T2 sufficiency,
+│   │                                 variance shares, site-level paired tests
+│   ├── run_audit_semisynthetic.py    planted shortcuts on CWRU bearing data
+│   │                                 (size and power of the audit tests)
 │   ├── run_cost_metrics.py, run_compute_cost.py
 │   ├── run_multiseed.sh, aggregate_multiseed.py
 │   └── make_fig*.py                  figure generators (vector PDF)
@@ -161,6 +168,10 @@ causal-leak/
     ├── FINDINGS_LRATE_CONFOUND.md    device trigger count and binary detection
     ├── dispatch_op/                  per-region probabilities for the dispatch run
     ├── retracted_fixed_band_65_422/  artefacts computed with the retracted band
+    ├── superseded_grid10/            device rule from the step-10 threshold grid
+    ├── audit_external_*.json         SUPERSEDED, not reported: MIMII grouped on a
+    │                                 field whose purity equals the class prior,
+    │                                 SECOM on a constructed identifier
     ├── *.json, *.log                 raw fold-level metrics and logs
     └── figs/                         figures
 ```

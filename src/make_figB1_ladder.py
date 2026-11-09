@@ -28,6 +28,11 @@ SUFFIX = '' if TERM == 'leak' else f'_{TERM}'
 os.makedirs(FIGS, exist_ok=True)
 
 TIERS = ['Row-CV', 'Group-CV\n(by installation)', 'LORO\n(by region)']
+# The alarm variant adds the group-CV-by-sensor rung (run_sensor_holdout.py)
+# between row-CV and group-CV by site.
+WITH_SENSOR = TERM != 'leak'
+if WITH_SENSOR:
+    TIERS = ['Row-CV', 'Group-CV\n(by sensor)', 'Group-CV\n(by site)', 'LORO\n(by region)']
 
 
 def main():
@@ -37,6 +42,8 @@ def main():
     lo = {s['feat_mode']: s for s in loro}
     lf = json.load(open(os.path.join(R, 'leak_f1_results.json')))['ladder']
 
+    sh = (json.load(open(os.path.join(R, 'sensor_holdout_results.json')))['ladder_group_sensor']
+          if WITH_SENSOR else None)
     series = {}
     for feat, label in [('full', 'with identifiers (544)'),
                         ('signal', 'signal only (534)')]:
@@ -51,11 +58,17 @@ def main():
                      lf[f'{feat}_group_site']['f1_macro_leak'],
                      lf[f'{feat}_loro']['leak_rows_weighted']['k2']['leak_weighted']],
         }
+        if WITH_SENSOR:
+            g = sh[feat]
+            f5 = float(np.mean([x['f1_macro'] for x in g['folds']]))
+            for key, v in (('acc', g['acc_mean']), ('f1', f5), ('leak', g['alarm_f1_mean'])):
+                series[label][key].insert(1, v)
     # LORO leak-F1 weights regions by leak recordings over the regions with at
     # least two leak classes; its class-share reference is weighted the same way.
     ref = lf['signal_loro']['leak_rows_weighted']['k2']['leak_weighted_chance']
 
-    fig, axes = plt.subplots(1, 3, figsize=(11.5, 3.4), sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(13.5 if WITH_SENSOR else 11.5, 3.4),
+                             sharey=True)
     x = np.arange(len(TIERS))
     w = 0.36
     colours = ['#b2182b', '#4393c3']
@@ -78,9 +91,10 @@ def main():
         for sp in ('top', 'right'):
             ax.spines[sp].set_visible(False)
 
-    axes[2].plot([1.55, 2.45], [ref, ref], ls='--', lw=1, color='black')
-    axes[2].annotate(f'class-share reference {ref:.3f}', xy=(2.3, ref),
-                     xytext=(2.45, ref + 0.22), fontsize=6.5, ha='right',
+    last = len(TIERS) - 1
+    axes[2].plot([last - 0.45, last + 0.45], [ref, ref], ls='--', lw=1, color='black')
+    axes[2].annotate(f'class-share reference {ref:.3f}', xy=(last + 0.3, ref),
+                     xytext=(last + 0.45, ref + 0.22), fontsize=6.5, ha='right',
                      arrowprops=dict(arrowstyle='-', lw=0.6))
     axes[0].set_ylabel('score', fontsize=9)
     axes[0].legend(fontsize=7.5, frameon=False, loc='upper right')

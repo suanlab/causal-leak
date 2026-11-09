@@ -28,6 +28,10 @@ retrains a network.
 7. lift           For step A1: lift of the sensor lookup over the largest
                   class share on the benchmark's own validation split, against
                   a null that permutes the training sensors' labels.
+8. site_tests     Paired false-dispatch comparisons of Appendix A tested by
+                  normal-bearing site (exact sign test) with Holm adjustment
+                  over the same 18 comparisons, from the stored dispatch
+                  results.
 
 Usage: run_audit_inference.py [section ...]  (default: all; named sections
 are recomputed and merged into the existing result file).
@@ -87,7 +91,19 @@ def summarise(excess, rng):
     boots = [rng.choice(e, len(e)).mean() for _ in range(N_BOOT)]
     lo, hi = np.percentile(boots, [2.5, 97.5])
     t = stats.ttest_1samp(e, 0.0) if len(e) > 1 else None
+    n = len(e)
+    t_ci = (None, None)
+    if n > 1:
+        h = stats.t.ppf(0.975, n - 1) * e.std(ddof=1) / np.sqrt(n)
+        t_ci = (float(e.mean() - h), float(e.mean() + h))
+    # Exact sign-flip test of mean zero (all 2^n sign patterns; n <= 16 here).
+    flip_p = None
+    if 1 < n <= 16:
+        signs = np.array(np.meshgrid(*[[-1, 1]] * n)).reshape(n, -1).T
+        means = np.abs((signs * np.abs(e)).mean(1))
+        flip_p = float((means >= abs(e.mean()) - 1e-12).mean())
     return {'n': int(len(e)), 'mean': float(e.mean()),
+            't_ci': list(t_ci), 'sign_flip_p': flip_p,
             'sd': float(e.std(ddof=1)) if len(e) > 1 else None,
             'n_above': int((e > 0).sum()), 'n_below': int((e < 0).sum()),
             'resample_units_ci': [float(lo), float(hi)],
@@ -199,7 +215,8 @@ def sufficiency(df):
     params = dict(n_estimators=300, num_leaves=63, learning_rate=0.05,
                   random_state=SEED, verbose=-1, n_jobs=-1)
     res = {}
-    for name, XX in (('signal', X), ('signal_plus_count', Xc)):
+    for name, XX in (('signal', X), ('signal_plus_count', Xc),
+                     ('count_only', count.reshape(-1, 1))):
         pred = np.zeros(len(y), dtype=int)
         score = np.zeros(len(y))
         for r in np.unique(reg):
@@ -232,6 +249,7 @@ def variance(df):
     pca = PCA(n_components=10, random_state=SEED).fit(X)
     Z = pca.transform(X)
     site = df.loc[a, 'site'].astype(str).to_numpy()
+    sensor = df.loc[a, 'sid'].astype(str).to_numpy()
     cls = df.loc[a, 'label'].to_numpy()
     cell = np.char.add(np.char.add(site, '|'), cls.astype(str))
 
@@ -245,12 +263,16 @@ def variance(df):
     for j in range(Z.shape[1]):
         z = Z[:, j]
         e_site, e_cls, e_cell = eta2(z, site), eta2(z, cls), eta2(z, cell)
+        e_sens = eta2(z, sensor)
         comps.append({'explained_variance_ratio': float(pca.explained_variance_ratio_[j]),
                       'site': float(e_site), 'class': float(e_cls),
-                      'class_within_site': float(e_cell - e_site)})
+                      'class_within_site': float(e_cell - e_site),
+                      'sensor': float(e_sens),
+                      'sensor_beyond_site_class': float(e_sens - e_cell)})
     w = np.array([c['explained_variance_ratio'] for c in comps])
     wavg = {k: float(np.average([c[k] for c in comps], weights=w))
-            for k in ('site', 'class', 'class_within_site')}
+            for k in ('site', 'class', 'class_within_site', 'sensor',
+                      'sensor_beyond_site_class')}
     return {'n_rows': int(a.sum()), 'n_sites': int(len(np.unique(site))),
             'components': comps, 'weighted': wavg,
             'total_explained': float(w.sum())}
@@ -295,8 +317,27 @@ def lift(df, rng, n_perm=1000):
                      n_perm=n_perm, rng=rng)
 
 
+def site_tests():
+    import importlib
+    holm = importlib.import_module('analyze_dispatch').holm
+    d = L('dispatch_operating_points_results.json')
+    rows = []
+    for op, lst in d['comparisons'].items():
+        for c in lst:
+            rows.append({'op': op, 'a': c['a'], 'b': c['b'],
+                         'sensors_a': c['false_dispatch_sensors_a'],
+                         'sensors_b': c['false_dispatch_sensors_b'],
+                         **c['install_sign_test']})
+    adj = holm([r['p_value'] for r in rows])
+    for r, a in zip(rows, adj):
+        r['p_holm'] = float(a)
+    return {'n_tests': len(rows), 'n_sites': len(d['comparisons']['argmax'][0]['install_counts']),
+            'min_p': min(r['p_value'] for r in rows),
+            'min_p_holm': min(r['p_holm'] for r in rows), 'tests': rows}
+
+
 SECTIONS = ('region_level', 'canonical_ci', 'calibration_dispersion', 'variance',
-            'margin', 'sufficiency', 'lift')
+            'margin', 'sufficiency', 'lift', 'site_tests')
 
 
 def main():
@@ -311,7 +352,8 @@ def main():
              'canonical_ci': lambda: canonical_ci(rng),
              'calibration_dispersion': calibration_dispersion,
              'variance': lambda: variance(df), 'margin': lambda: margin(df),
-             'sufficiency': lambda: sufficiency(df), 'lift': lambda: lift(df, rng)}
+             'sufficiency': lambda: sufficiency(df), 'lift': lambda: lift(df, rng),
+             'site_tests': site_tests}
     for sec in SECTIONS:
         if sec in want:
             out[sec] = calls[sec]()

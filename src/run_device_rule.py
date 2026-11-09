@@ -165,8 +165,11 @@ def main():
             'normal': np.bincount(c[is_norm], minlength=11).tolist(),
             'non_normal': np.bincount(c[~is_norm], minlength=11).tolist()},
         'anomalies': anomalies,
+        # The boundary bin k_lo is fixed in advance by the logged code (the
+        # first count above every measured lrate); clusters are sensors.
         'depletion_at_pooled_T': depletion_test(
-            np.bincount(c, minlength=11), boundary=k_lo, floor=int(c[lrate < ALARM_CODE].min())),
+            c, sid, boundary=k_lo, floor=int(c[lrate < ALARM_CODE].min()),
+            rng=np.random.default_rng(42)),
         'grid_search': {g: {'folds': f, 'pooled_loro': pool(f),
                             'far_regions_loro': pool(f, far)}
                         for g, f in grid_folds.items()},

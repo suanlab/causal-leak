@@ -2,18 +2,23 @@
 
 A1  lift_test        lift of a majority-label lookup on a unit over the
                      largest class share, against a null that permutes the
-                     units' lookup labels across units.
+                     units' lookup labels across units. Rejects when the
+                     permutation p <= 0.05 AND the lift reaches a minimum
+                     effect (default 0.25): with thousands of units the test
+                     alone rejects lifts near zero.
 A2  identify_threshold  T1: every threshold T for which a logged device field
                      equals scale * #{checks with peak >= T} on the rows that
                      carry a measured (non-code) value. Unique solution = pass.
     identify_k       the range of k that leaves the coded rows' partition
                      unchanged at the identified threshold (the boundary gap).
-    depletion_test   T3: mass in a boundary bin of the count histogram against
-                     the smaller of its two neighbours (one-sided Poisson), and
-                     below an inclusion floor against the first kept bin. The
-                     smaller neighbour is a conservative reference: a censored
-                     edge bin (count 0) cannot make an ordinary bin look
-                     depleted.
+    depletion_test   T3: ratio of the mass in a boundary bin, fixed in advance
+                     from the logged code, to the smaller of its two
+                     neighbours (and of the bin below an inclusion floor to
+                     the first kept bin). Passes when the one-sided 95 %
+                     upper bound of the ratio, from resampling clusters of
+                     recordings (sensors, files), is below 0.5. A one-sided
+                     Poisson p is kept for reference only: it ignores
+                     clustering and rejects at natural troughs.
 
 T2 (sufficiency) compares a fitted classifier with the rule and lives with the
 model code that fits it.
@@ -23,7 +28,8 @@ from scipy import stats
 
 
 # ---------------------------------------------------------------- A1
-def lift_test(train_units, train_y, test_units, test_y, n_perm=1000, rng=None):
+def lift_test(train_units, train_y, test_units, test_y, n_perm=1000, rng=None,
+              min_lift=0.25, alpha=0.05):
     """Lift L = (a - p_max) / (1 - p_max) of a majority-label lookup.
 
     a is the lookup's accuracy on the test rows, with rows whose unit never
@@ -62,7 +68,9 @@ def lift_test(train_units, train_y, test_units, test_y, n_perm=1000, rng=None):
             'null_mean': float(null.mean()), 'null_q95': float(np.quantile(null, 0.95)),
             'p_value': float((1 + (null >= L).sum()) / (1 + n_perm)),
             'n_perm': int(n_perm), 'overlap': float(seen.mean()),
-            'n_units': int(len(units))}
+            'n_units': int(len(units)), 'min_lift': min_lift,
+            'reject': bool((1 + (null >= L).sum()) / (1 + n_perm) <= alpha
+                           and L >= min_lift)}
 
 
 # ---------------------------------------------------------------- A2 / T1
@@ -93,27 +101,42 @@ def identify_k(amp, logged, code, T):
 
 
 # ---------------------------------------------------------------- A2 / T3
-def depletion_test(hist, boundary=None, floor=None):
-    """T3 on a count histogram (index = count).
+def depletion_test(g, clusters, boundary=None, floor=None, max_ratio=0.5,
+                   n_boot=2000, rng=None):
+    """T3 on a count-valued device statistic g with recording clusters.
 
-    boundary: interior bin b; expected mass min(n[b-1], n[b+1]).
-    floor:    first bin f whose recordings the release keeps; the bin below
-              it is compared with n[f].
-    Each returns observed, expected, ratio and the one-sided Poisson
-    probability of observing at most that many under the expectation.
+    boundary: interior bin b, fixed in advance from the logged code; ratio
+              n[b] / min(n[b-1], n[b+1]).
+    floor:    first bin f the release keeps; ratio n[f-1] / n[f].
+    Each result gives observed and reference mass, the ratio, its one-sided
+    95 % upper bound from resampling clusters with replacement, 'pass' (upper
+    bound below max_ratio), and a one-sided Poisson p for reference.
     """
-    h = np.asarray(hist, dtype=float)
-    out = {}
+    rng = np.random.default_rng(0) if rng is None else rng
+    g = np.asarray(g).astype(int)
+    clusters = np.asarray(clusters).astype(str)
+    keys, inv = np.unique(clusters, return_inverse=True)
+    H = np.zeros((len(keys), max(11, g.max() + 2)), dtype=float)
+    np.add.at(H, (inv, g), 1)                      # clusters x bins
+    h = H.sum(0)
+    picks = rng.integers(0, len(keys), (n_boot, len(keys)))
+    boot = np.stack([H[p].sum(0) for p in picks])  # n_boot x bins
 
-    def res(obs, exp):
-        return {'observed': int(obs), 'expected': float(exp),
-                'ratio': float(obs / exp) if exp > 0 else None,
-                'p_value': float(stats.poisson.cdf(obs, exp)) if exp > 0 else None}
+    def one(b_obs, b_refs):
+        obs = h[b_obs]
+        ref = min(h[r] for r in b_refs)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            rb = boot[:, b_obs] / np.min(boot[:, b_refs], axis=1)
+        rb = np.where(np.isfinite(rb), rb, np.inf)
+        upper = float(np.quantile(rb, 0.95))
+        return {'bin': int(b_obs), 'observed': int(obs), 'expected': float(ref),
+                'ratio': float(obs / ref) if ref > 0 else None,
+                'ratio_upper95': upper, 'pass': bool(upper < max_ratio),
+                'p_value': float(stats.poisson.cdf(obs, ref)) if ref > 0 else None}
 
+    out = {'n_clusters': int(len(keys)), 'max_ratio': max_ratio}
     if boundary is not None:
-        b = boundary
-        out['boundary'] = {'bin': int(b), **res(h[b], min(h[b - 1], h[b + 1]))}
+        out['boundary'] = one(boundary, [boundary - 1, boundary + 1])
     if floor is not None:
-        f = floor
-        out['floor'] = {'bin': int(f - 1), **res(h[f - 1], h[f])}
+        out['floor'] = one(floor - 1, [floor])
     return out

@@ -29,11 +29,17 @@ logged as lrate = 10 g for g <= 8 and as the code 90 for g >= 9.
       device code (g <= 8) relabelled 'quiet'.
   S3  easy class, not rule-defined: original labels, target = normal baseline,
       no logged field.
-T1 (identity), T2 (sufficiency: LightGBM vs the count rule for target vs rest
-under load-grouped 4-fold; bearing grouping would leave the single normal
-bearing out of training whenever it is tested) and T3 (depletion at the boundary bin and the
-inclusion floor) are applied to each. T3 power: S1 with a fraction epsilon of
-the boundary-bin windows put back.
+T1 (identity), T2 (sufficiency: LightGBM on the spectrum, peaks and count
+against LightGBM on the count alone, target vs rest, under load-grouped
+4-fold; both learners see the same folds, and bearing grouping would leave the
+single normal bearing out of training whenever it is tested) and T3 (cluster
+-bootstrap ratio at the boundary bin, fixed at 8 by the code, and at the
+inclusion floor; clusters are recording files) are applied to each.
+T3 power: S1 with a fraction epsilon of the boundary-bin windows put back.
+T3 size: unselected releases at six thresholds, every interior bin, each
+replicate release resampled by recording file.
+A3 on CWRU: fault-type typing (inner race / ball / outer race) with each
+fault size held out, against 1/K.
 
 The planted 'quiet' class correlates with the real normal baseline, whose
 amplitudes are low; the water release has the same structure.
@@ -69,7 +75,7 @@ WATER_SHARES = np.array([14932, 19731, 5658, 7897, 22166]) / 70384
 
 
 def load_cwru():
-    feats, peaks, label, bearing, load = [], [], [], [], []
+    feats, peaks, label, bearing, load, rec = [], [], [], [], [], []
     for b, ids in BEARINGS.items():
         for hp, fid in enumerate(ids):
             path = os.path.join(CWRU_DIR, f'{fid}.mat')
@@ -86,8 +92,9 @@ def load_cwru():
             label += ['normal' if b == 'normal' else b[:-3]] * n
             bearing += [b] * n
             load += [hp] * n
+            rec += [fid] * n
     return (np.vstack(feats), np.vstack(peaks), np.array(label),
-            np.array(bearing), np.array(load))
+            np.array(bearing), np.array(load), np.array(rec))
 
 
 def a1_real(label, bearing, load, rng):
@@ -113,7 +120,7 @@ def a1_simulation(rng, lambdas=(0, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0),
     for G in sizes:
         rows = []
         for lam in lambdas:
-            rej, lifts = 0, []
+            rej, rej_eff, lifts = 0, 0, []
             for _ in range(reps):
                 home = rng.choice(K, G, p=WATER_SHARES)
                 unit = np.repeat(np.arange(G), m)
@@ -122,10 +129,13 @@ def a1_simulation(rng, lambdas=(0, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0),
                 te = rng.random(G * m) < 0.3
                 r = lift_test(unit[~te], y[~te], unit[te], y[te], n_perm=n_perm, rng=rng)
                 rej += r['p_value'] <= 0.05
+                rej_eff += r['reject']
                 lifts.append(r['lift'])
-            rows.append({'lambda': lam, 'reject_rate': rej / reps,
+            rows.append({'lambda': lam, 'reject_rate_permutation': rej / reps,
+                         'reject_rate': rej_eff / reps,
                          'mean_lift': float(np.mean(lifts))})
-            print(f'  A1 sim G={G} lambda={lam}: reject {rej / reps:.3f} '
+            print(f'  A1 sim G={G} lambda={lam}: reject {rej_eff / reps:.3f} '
+                  f'(permutation only {rej / reps:.3f}) '
                   f'lift {np.mean(lifts):+.3f}', flush=True)
         out[str(G)] = rows
     return out
@@ -155,25 +165,25 @@ def release(peaks, label, T, scenario, eps=0.0, rng=None):
     return keep, y, logged, c
 
 
-def sufficiency(X, c, target, groups, rule_k=None):
-    """LightGBM target-vs-rest under load-grouped folds, against a count rule
-    (target iff count < k). With rule_k None, k is chosen on each training
-    fold by balanced accuracy."""
-    pred = np.zeros(len(target), bool)
-    rule = np.zeros(len(target), bool)
-    for tr, te in GroupKFold(n_splits=len(np.unique(groups))).split(X, target, groups):
-        k = rule_k if rule_k is not None else best_count_rule(c[tr], target[tr])
-        rule[te] = c[te] < k
-        if len(np.unique(target[tr])) < 2:
-            pred[te] = target[tr][0]
-            continue
-        clf = lgb.LGBMClassifier(n_estimators=200, num_leaves=31, learning_rate=0.05,
-                                 random_state=SEED, verbose=-1, n_jobs=8)
-        clf.fit(X[tr], target[tr])
-        pred[te] = clf.predict(X[te]).astype(bool)
-    return {'model_errors': int((pred != target).sum()),
-            'rule_errors': int((rule != target).sum()),
-            'n': int(len(target))}
+def _lgbm():
+    return lgb.LGBMClassifier(n_estimators=200, num_leaves=31, learning_rate=0.05,
+                              random_state=SEED, verbose=-1, n_jobs=8)
+
+
+def sufficiency(X, c, target, groups):
+    """T2: LightGBM on (x, g) against LightGBM on g alone, target vs rest,
+    under the same load-grouped folds."""
+    errs = {}
+    for name, XX in (('model', X), ('count', c.reshape(-1, 1))):
+        pred = np.zeros(len(target), bool)
+        for tr, te in GroupKFold(n_splits=len(np.unique(groups))).split(XX, target, groups):
+            if len(np.unique(target[tr])) < 2:
+                pred[te] = target[tr][0]
+                continue
+            pred[te] = _lgbm().fit(XX[tr], target[tr]).predict(XX[te]).astype(bool)
+        errs[name] = int((pred != target).sum())
+    return {'model_errors': errs['model'], 'count_errors': errs['count'],
+            'n': int(len(target)), 'pass': errs['model'] >= errs['count']}
 
 
 def best_count_rule(c, target):
@@ -186,20 +196,17 @@ def best_count_rule(c, target):
     return best[1]
 
 
-def a2(feats, peaks, label, load, T, rng):
+def a2(feats, peaks, label, load, rec_id, T, rng):
     X = np.hstack([feats, peaks])
     out = {}
     for sc in ('S1', 'S2', 'S3'):
         keep, y, logged, c = release(peaks, label, T, sc)
-        Xk, ck, yk, gk = X[keep], c[keep], y[keep], load[keep]
+        Xk, ck, yk, gk, rk = X[keep], c[keep], y[keep], load[keep], rec_id[keep]
         hist = np.bincount(ck, minlength=11).tolist()
         rec = {'n': int(keep.sum()), 'count_histogram': hist}
         if logged is None:
             rec['T1'] = {'solutions': [], 'pass': False, 'note': 'no logged field'}
             target = yk == 'normal'
-            k = best_count_rule(ck, target)
-            rec['rule_k'] = k
-            rule_k = None
         else:
             lk = logged[keep]
             sols = identify_threshold(peaks[keep], lk, CODE, scale=10,
@@ -208,24 +215,22 @@ def a2(feats, peaks, label, load, T, rng):
                          'pass': len(sols) == 1 and sols[0] == T}
             k_lo, k_hi = identify_k(peaks[keep], lk, CODE, T)
             rec['k_range'] = [k_lo, k_hi]
-            k = k_lo
             target = yk == 'quiet'
-            rule_k = k
-        rec['T2'] = sufficiency(Xk, ck, target, gk, rule_k)
-        rec['T2']['pass'] = rec['T2']['model_errors'] >= rec['T2']['rule_errors']
+        rec['T2'] = sufficiency(Xk, ck, target, gk)
+        # The boundary bin is fixed at 8 by the code (counts of 9 and 10 read
+        # 90) in every release, S3 included.
         floor = 3 if sc == 'S1' else None
-        bnd = 8 if sc != 'S3' else min(max(k, 1), 9)
-        rec['T3'] = depletion_test(hist, boundary=bnd, floor=floor)
-        rec['T3']['pass'] = bool(rec['T3']['boundary']['p_value'] is not None
-                                 and rec['T3']['boundary']['p_value'] < 0.05)
+        rec['T3'] = depletion_test(ck, rk, boundary=8, floor=floor, rng=rng)
+        rec['T3']['pass'] = rec['T3']['boundary']['pass']
         out[sc] = rec
         print(f'  {sc}: n {rec["n"]}  T1 {rec["T1"]["pass"]}  T2 model '
-              f'{rec["T2"]["model_errors"]} vs rule {rec["T2"]["rule_errors"]}  '
-              f'T3 p {rec["T3"]["boundary"]["p_value"]}', flush=True)
+              f'{rec["T2"]["model_errors"]} vs count {rec["T2"]["count_errors"]}  '
+              f'T3 ratio {rec["T3"]["boundary"]["ratio"]} upper '
+              f'{rec["T3"]["boundary"]["ratio_upper95"]:.2f}', flush=True)
     return out
 
 
-def t3_power(peaks, label, T, rng, eps_list=(0, 0.01, 0.05, 0.1, 0.25, 0.5, 1.0),
+def t3_power(peaks, label, rec_id, T, rng, eps_list=(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0),
              reps=200):
     rows = []
     for eps in eps_list:
@@ -233,9 +238,9 @@ def t3_power(peaks, label, T, rng, eps_list=(0, 0.01, 0.05, 0.1, 0.25, 0.5, 1.0)
         ratios = []
         for _ in range(reps):
             keep, _, _, c = release(peaks, label, T, 'S1', eps=eps, rng=rng)
-            hist = np.bincount(c[keep], minlength=11)
-            t = depletion_test(hist, boundary=8)['boundary']
-            rej += t['p_value'] < 0.05
+            t = depletion_test(c[keep], rec_id[keep], boundary=8, n_boot=500,
+                               rng=rng)['boundary']
+            rej += t['pass']
             ratios.append(t['ratio'])
         rows.append({'epsilon': eps, 'reject_rate': rej / reps,
                      'mean_ratio': float(np.mean(ratios))})
@@ -243,9 +248,63 @@ def t3_power(peaks, label, T, rng, eps_list=(0, 0.01, 0.05, 0.1, 0.25, 0.5, 1.0)
     return rows
 
 
+def t3_size(peaks, label, rec_id, rng, qs=(0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+            reps=200):
+    """Unselected releases: every interior bin at six thresholds. Each
+    replicate resamples recording files with replacement, then applies T3
+    (500 inner resamples). Also counts how often the Poisson p would reject."""
+    faulty = peaks[label != 'normal']
+    files = np.unique(rec_id)
+    idx = {f: np.flatnonzero(rec_id == f) for f in files}
+    rows = []
+    for q in qs:
+        T = int(np.quantile(faulty, q))
+        c = counts_at(peaks, T)
+        for b in range(1, 10):
+            rej = rej_p = 0
+            for _ in range(reps):
+                pick = rng.choice(files, len(files))
+                ii = np.concatenate([idx[f] for f in pick])
+                rid = np.concatenate([[f'{k}'] * len(idx[f]) for k, f in enumerate(pick)])
+                t = depletion_test(c[ii], rid, boundary=b, n_boot=500, rng=rng)['boundary']
+                rej += t['pass']
+                rej_p += (t['p_value'] is not None and t['p_value'] < 0.05)
+            rows.append({'quantile': q, 'T': T, 'bin': b, 'reject_rate': rej / reps,
+                         'poisson_reject_rate': rej_p / reps})
+        worst = max(r['reject_rate'] for r in rows if r['quantile'] == q)
+        print(f'  T3 size q={q} T={T}: worst-bin reject {worst:.3f}', flush=True)
+    return rows
+
+
+def a3_cwru(feats, peaks, label, bearing):
+    """Fault-type typing with each fault size held out (step A3)."""
+    from sklearn.metrics import balanced_accuracy_score, f1_score
+    X = np.hstack([feats, peaks])
+    f = label != 'normal'
+    size = np.array([b[-3:] for b in bearing])
+    out = {}
+    idx = np.flatnonzero(f)
+    tr, te = train_test_split(idx, test_size=0.3, random_state=SEED, stratify=label[idx])
+    p = _lgbm().fit(X[tr], label[tr]).predict(X[te])
+    out['random_windows'] = {'macro_f1': float(f1_score(label[te], p, average='macro')),
+                             'balanced_acc': float(balanced_accuracy_score(label[te], p)),
+                             'reference': 1 / 3}
+    for s_ in ('007', '014', '021'):
+        te = idx[size[idx] == s_]
+        tr = idx[size[idx] != s_]
+        p = _lgbm().fit(X[tr], label[tr]).predict(X[te])
+        out[f'held_out_{s_}'] = {
+            'macro_f1': float(f1_score(label[te], p, average='macro')),
+            'balanced_acc': float(balanced_accuracy_score(label[te], p)),
+            'reference': 1 / 3}
+        print(f'  A3 CWRU held-out size {s_}: macro-F1 {out[f"held_out_{s_}"]["macro_f1"]:.3f}',
+              flush=True)
+    return out
+
+
 def main():
     rng = np.random.default_rng(SEED)
-    feats, peaks, label, bearing, load = load_cwru()
+    feats, peaks, label, bearing, load, rec_id = load_cwru()
     T = choose_T(peaks, label)
     c = counts_at(peaks, T)
     out = {'n_windows': int(len(label)), 'n_bearings': int(len(np.unique(bearing))),
@@ -254,8 +313,10 @@ def main():
     print(f'{len(label)} windows, T={T}, counts {out["count_histogram_all"]}', flush=True)
     out['a1_real'] = a1_real(label, bearing, load, rng)
     print('A1 real:', {k: round(v['lift'], 3) for k, v in out['a1_real'].items()}, flush=True)
-    out['a2'] = a2(feats, peaks, label, load, T, rng)
-    out['t3_power'] = t3_power(peaks, label, T, rng)
+    out['a2'] = a2(feats, peaks, label, load, rec_id, T, rng)
+    out['t3_power'] = t3_power(peaks, label, rec_id, T, rng)
+    out['t3_size'] = t3_size(peaks, label, rec_id, rng)
+    out['a3_cwru'] = a3_cwru(feats, peaks, label, bearing)
     out['a1_simulation'] = a1_simulation(rng)
     with open(os.path.join(RES, 'audit_semisynthetic_results.json'), 'w') as fh:
         json.dump(out, fh, indent=2)
