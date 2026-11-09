@@ -1,0 +1,37 @@
+{
+  "region": 45,
+  "seed": 42,
+  "features": "all",
+  "n_test": 15052,
+  "n_train": 55332,
+  "n_inner": 3,
+  "selected_groups": "all 534 signal columns",
+  "n_features": 534,
+  "inner_split_rule": "rebalanced",
+  "inner_heldout_regions": [
+    [
+      36,
+      41,
+      42,
+      43,
+      44,
+      48,
+      50
+    ],
+    [
+      27,
+      47
+    ],
+    [
+      29,
+      46
+    ]
+  ],
+  "models": [
+    "xgb_flat",
+    "xgb_hier",
+    "tree_only_soft_avg",
+    "lightgbm"
+  ],
+  "time_s": 6560.327705383301
+}

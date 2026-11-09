@@ -133,7 +133,7 @@ def main():
     put('5.5 families', 'region 43 alarm sensors / at largest site',
         f"{cc['alarm_sensors']} / {cc['alarm_sensors_at_largest_site']}")
 
-    d = L('dispatch_operating_points_results.json')
+    d = L('dispatch_operating_points_all_results.json')
     au = d['auc_leak_vs_nuisance_pooled']
     put('5.6 A4', 'leak-vs-noise AUC, pooled (range over models)',
         f"{min(au.values()):.3f}--{max(au.values()):.3f}")
@@ -145,11 +145,11 @@ def main():
           for r in d['regions'] for mm in ('tree_only_soft_avg', 'lightgbm')
           if d['per_region'][str(r)]['miss10'][mm]['n_leak']]
     put('5.6 A4', 'per-region missed leaks at miss10 (%)', f'{min(tr):.1f}--{max(tr):.1f}')
-    cd = ai['calibration_dispersion']
+    cd = ai['calibration_dispersion_all']
     mx = [v['tree_only_soft_avg']['miss10']['max'] for v in cd.values()]
     put('5.6 A4', 'training regions own miss at the 10 % threshold: max over folds (%)',
         f'{100 * min(mx):.0f}--{100 * max(mx):.0f}')
-    st = ai['site_tests']
+    st = ai['site_tests_all']
     put('App. A', 'site-level sign tests: smallest p / smallest Holm p',
         f"{st['min_p']:.3f} / {st['min_p_holm']:.2f}")
 

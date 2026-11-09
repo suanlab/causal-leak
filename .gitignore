@@ -50,3 +50,4 @@ results/operational_folds_results.pre_sensor.json
 results/dispatch_op/batch_status.txt
 results/regionval_logs/status.txt
 paper-dmkd/
+results/dispatch_op_all/status.txt

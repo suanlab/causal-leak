@@ -33,6 +33,10 @@ retrains a network.
                   over the same 18 comparisons, from the stored dispatch
                   results.
 
+With DISPATCH_FEATURES=all, the sections that read the dispatch run
+(canonical_ci, calibration_dispersion, margin, site_tests) read the all-signal
+run and are stored with the suffix _all.
+
 Usage: run_audit_inference.py [section ...]  (default: all; named sections
 are recomputed and merged into the existing result file).
 
@@ -339,8 +343,9 @@ def lift(df, rng, n_perm=1000):
 
 def site_tests():
     import importlib
-    holm = importlib.import_module('analyze_dispatch').holm
-    d = L('dispatch_operating_points_results.json')
+    ad = importlib.import_module('analyze_dispatch')
+    holm = ad.holm
+    d = L(ad.OUT_NAME)
     rows = []
     for op, lst in d['comparisons'].items():
         for c in lst:
@@ -374,15 +379,19 @@ def main():
              'variance': lambda: variance(df), 'margin': lambda: margin(df),
              'sufficiency': lambda: sufficiency(df), 'lift': lambda: lift(df, rng),
              'site_tests': site_tests}
+    dispatch_secs = ('canonical_ci', 'calibration_dispersion', 'margin', 'site_tests')
+    all_run = os.environ.get('DISPATCH_FEATURES', 'nested') == 'all'
     for sec in SECTIONS:
         if sec in want:
-            out[sec] = calls[sec]()
+            key = sec + '_all' if all_run and sec in dispatch_secs else sec
+            out[key] = calls[sec]()
             print(f'{sec} done', flush=True)
     with open(path, 'w') as fh:
         json.dump(out, fh, indent=2)
     if sys.argv[1:]:
         for sec in want:
-            print(sec, json.dumps(out[sec])[:600])
+            key = sec + '_all' if all_run and sec in dispatch_secs else sec
+            print(key, json.dumps(out[key])[:600])
         return
 
     rl = out['region_level']

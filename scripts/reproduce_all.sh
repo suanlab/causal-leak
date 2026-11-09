@@ -102,11 +102,20 @@ for seed in 42 0 1 2 3; do
 done
 CAUSAL_VAL_MODE=region run_py run_domain_alignment_regionval src/run_domain_alignment.py
 run_py analyze_dispatch      src/analyze_dispatch.py
+# Dispatch comparison on all 534 signal columns (no band selection, so the
+# inner calibration folds are fully nested): the DMKD article's main A4 run.
+for r in 27 29 43 44 45 46 47 48; do
+  DISPATCH_FEATURES=all run_py "run_dispatch_operating_points_all_r${r}" \
+    src/run_dispatch_operating_points.py "${r}"
+done
+DISPATCH_FEATURES=all run_py analyze_dispatch_all src/analyze_dispatch.py
 run_py summarize_leak_f1     src/summarize_leak_f1.py
 # DMKD round-1 checks: new-sensor rung, region-level inference, A1 lift,
 # A2 sufficiency, A4 dispersion (reads dispatch_op/ and leak_f1_results.json)
 run_py run_sensor_holdout    src/run_sensor_holdout.py
 run_py run_audit_inference   src/run_audit_inference.py
+DISPATCH_FEATURES=all run_py run_audit_inference_all src/run_audit_inference.py \
+  canonical_ci calibration_dispersion margin site_tests
 # Operating characteristics of A1/A2 on planted shortcuts (public CWRU data;
 # fetch with scripts/fetch_cwru.sh). Fails loudly if the data are missing.
 CWRU_DIR="${CWRU_DIR:-$(cd "$(dirname "$0")/.." && pwd)/../external/cwru}"
@@ -137,6 +146,7 @@ FIG_TERM=alarm run_py make_figB1_ladder_alarm src/make_figB1_ladder.py
 FIG_TERM=alarm run_py make_figB3_models_alarm src/make_figB3_models.py
 run_py make_figB4_tradeoff    src/make_figB4_tradeoff.py
 run_py make_figB5_operating   src/make_figB5_operating.py
+FIG_DISPATCH=all run_py make_figB2_dispatch_all src/make_figB2_dispatch.py
 
 # ---------- manuscript (optional) ----------
 # The LaTeX manuscript is not part of the public code release; this step

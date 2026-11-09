@@ -1,0 +1,67 @@
+=== argmax ===
+  model                    miss(4)   FD(4)     nuis(4)       miss(8)       nuis(8)
+  xgb_flat               533/2625        4   948/1380    5041/31928   10069/13555 
+  xgb_hier               572/2625        2   926/1380    5212/31928    9939/13555 
+  tree_only_soft_avg     550/2625        2   927/1380    5037/31928    9972/13555 
+  lightgbm              1006/2625       13   741/1380    7901/31928    8624/13555 
+  tree_only_soft_avg vs lightgbm: FD sensors 2 v 12 p=0.002; never-dispatched leak sensors 43 v 70 p=3.47e-06
+  xgb_hier vs lightgbm: FD sensors 2 v 12 p=0.002; never-dispatched leak sensors 41 v 70 p=2.43e-06
+  xgb_flat vs lightgbm: FD sensors 4 v 12 p=0.021; never-dispatched leak sensors 36 v 70 p=5.4e-09
+=== miss01 ===
+  model                    miss(4)   FD(4)     nuis(4)       miss(8)       nuis(8)
+  xgb_flat                 8/2625      142  1306/1380     142/31928   13222/13555 
+  xgb_hier                 9/2625       57  1329/1380     155/31928   13282/13555 
+  tree_only_soft_avg       7/2625      109  1325/1380     179/31928   13241/13555 
+  lightgbm                 8/2625      126  1315/1380     176/31928   13207/13555 
+  tree_only_soft_avg vs lightgbm: FD sensors 65 v 76 p=0.169; never-dispatched leak sensors 2 v 2 p=1
+  xgb_hier vs lightgbm: FD sensors 46 v 76 p=0.000; never-dispatched leak sensors 2 v 2 p=1
+  xgb_flat vs lightgbm: FD sensors 79 v 76 p=0.775; never-dispatched leak sensors 3 v 2 p=1
+=== miss05 ===
+  model                    miss(4)   FD(4)     nuis(4)       miss(8)       nuis(8)
+  xgb_flat               116/2625       37  1149/1380    1267/31928   12241/13555 
+  xgb_hier               138/2625       12  1106/1380    1221/31928   12117/13555 
+  tree_only_soft_avg     127/2625       14  1129/1380    1239/31928   12168/13555 
+  lightgbm               165/2625       47  1128/1380    1317/31928   12169/13555 
+  tree_only_soft_avg vs lightgbm: FD sensors 13 v 37 p=0.000; never-dispatched leak sensors 8 v 10 p=0.688
+  xgb_hier vs lightgbm: FD sensors 12 v 37 p=0.000; never-dispatched leak sensors 8 v 10 p=0.688
+  xgb_flat vs lightgbm: FD sensors 30 v 37 p=0.265; never-dispatched leak sensors 8 v 10 p=0.688
+=== miss10 ===
+  model                    miss(4)   FD(4)     nuis(4)       miss(8)       nuis(8)
+  xgb_flat               325/2625        7  1029/1380    2913/31928   11004/13555 
+  xgb_hier               349/2625        2  1009/1380    3020/31928   10935/13555 
+  tree_only_soft_avg     343/2625        3  1012/1380    2997/31928   10908/13555 
+  lightgbm               439/2625       26   979/1380    3386/31928   10796/13555 
+  tree_only_soft_avg vs lightgbm: FD sensors 3 v 23 p=0.000; never-dispatched leak sensors 28 v 25 p=0.453
+  xgb_hier vs lightgbm: FD sensors 2 v 23 p=0.000; never-dispatched leak sensors 26 v 25 p=1
+  xgb_flat vs lightgbm: FD sensors 6 v 23 p=0.000; never-dispatched leak sensors 26 v 25 p=1
+=== miss20 ===
+  model                    miss(4)   FD(4)     nuis(4)       miss(8)       nuis(8)
+  xgb_flat               791/2625        2   824/1380    7323/31928    8589/13555 
+  xgb_hier               827/2625        0   825/1380    7512/31928    8588/13555 
+  tree_only_soft_avg     824/2625        1   821/1380    7464/31928    8555/13555 
+  lightgbm               919/2625       12   763/1380    8194/31928    8325/13555 
+  tree_only_soft_avg vs lightgbm: FD sensors 1 v 11 p=0.002; never-dispatched leak sensors 74 v 73 p=1
+  xgb_hier vs lightgbm: FD sensors 0 v 11 p=0.001; never-dispatched leak sensors 76 v 73 p=0.728
+  xgb_flat vs lightgbm: FD sensors 2 v 11 p=0.004; never-dispatched leak sensors 63 v 73 p=0.0755
+=== match_lgbm_argmax ===
+  model                    miss(4)   FD(4)     nuis(4)       miss(8)       nuis(8)
+  xgb_flat               866/2625        2   789/1380    6985/31928    8741/13555 
+  xgb_hier               898/2625        0   776/1380    7214/31928    8733/13555 
+  tree_only_soft_avg     886/2625        0   783/1380    7138/31928    8696/13555 
+  lightgbm               994/2625       11   719/1380    7891/31928    8477/13555 
+  tree_only_soft_avg vs lightgbm: FD sensors 0 v 10 p=0.002; never-dispatched leak sensors 66 v 69 p=0.701
+  xgb_hier vs lightgbm: FD sensors 0 v 10 p=0.002; never-dispatched leak sensors 68 v 69 p=1
+  xgb_flat vs lightgbm: FD sensors 2 v 10 p=0.008; never-dispatched leak sensors 60 v 69 p=0.136
+
+AUC in/out vs noise/other among non-normal recordings:
+  xgb_flat             pooled 0.588  per region 0.61 -- 0.61 0.39 0.64 0.64 0.59 0.54
+  xgb_hier             pooled 0.583  per region 0.63 -- 0.62 0.39 0.64 0.63 0.58 0.53
+  tree_only_soft_avg   pooled 0.586  per region 0.62 -- 0.62 0.39 0.64 0.64 0.58 0.53
+  lightgbm             pooled 0.587  per region 0.53 -- 0.61 0.43 0.63 0.63 0.57 0.49
+AUC in vs out among true leaks:
+  xgb_flat             pooled 0.541  per region 0.29 0.27 0.61 0.65 0.44 0.54 0.58 0.57
+  xgb_hier             pooled 0.540  per region 0.29 0.26 0.62 0.65 0.45 0.55 0.57 0.53
+  tree_only_soft_avg   pooled 0.541  per region 0.29 0.26 0.62 0.65 0.44 0.55 0.58 0.55
+  lightgbm             pooled 0.534  per region 0.25 0.33 0.60 0.57 0.43 0.53 0.57 0.48
+
+Saved /home/suan/Projects/Water/causal-leak/src/../results/dispatch_operating_points_all_results.json

@@ -49,7 +49,7 @@ if grep -n -E 'weighted_avg|cnn_best|make_fig0|bibtex cycle|final deployment rec
 fi
 
 # 2. figures used by the article
-for fig in figB1_ladder_alarm figB2_dispatch figB3_models_alarm figB5_operating; do
+for fig in figB1_ladder_alarm figB2_dispatch_all figB3_models_alarm figB5_operating; do
   if [[ ! -s "results/figs/${fig}.pdf" ]]; then
     echo "FAIL: results/figs/${fig}.pdf missing or empty" >&2
     exit 1

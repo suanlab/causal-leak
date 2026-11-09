@@ -1,0 +1,15 @@
+=== region 48: n_test=3138 features=534 ===
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  outer fit 1632s
+  inner split rule: groupkfold
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  inner 0: held-out regions [41, 42, 44, 46] classes_in_train=[0, 1, 2, 3, 4] (1685s)
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  inner 1: held-out regions [27, 36, 45, 50] classes_in_train=[0, 1, 2, 3, 4] (1537s)
+/home/suan/Projects/Water/.venv/lib/python3.12/site-packages/sklearn/utils/validation.py:2691: UserWarning: X does not have valid feature names, but LGBMClassifier was fitted with feature names
+  warnings.warn(
+  inner 2: held-out regions [29, 43, 47] classes_in_train=[0, 1, 2, 3, 4] (1481s)
+Saved region 48 (6343s)

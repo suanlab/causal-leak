@@ -12,7 +12,7 @@ protocol-valid operating points: argmax (circle) and thresholds calibrated on
 the training pool for 5 % and 10 % miss (triangle, square).
 
 Reads results/dispatch_operating_points_results.json.
-Writes results/figs/figB2_dispatch.pdf.
+Writes results/figs/figB2_dispatch.pdf (figB2_dispatch_all.pdf with FIG_DISPATCH=all).
 """
 import json
 import os
@@ -32,8 +32,15 @@ MODELS = [('lightgbm', 'LightGBM', '#b2182b'),
 OPS = [('argmax', 'o'), ('miss05', '^'), ('miss10', 's')]
 
 
+# FIG_DISPATCH=all draws the all-signal run (figB2_dispatch_all.pdf).
+_ALL = os.environ.get('FIG_DISPATCH', 'nested') == 'all'
+IN_NAME = ('dispatch_operating_points_all_results.json' if _ALL
+           else 'dispatch_operating_points_results.json')
+OUT_SUFFIX = '_all' if _ALL else ''
+
+
 def main():
-    d = json.load(open(os.path.join(R, 'dispatch_operating_points_results.json')))
+    d = json.load(open(os.path.join(R, IN_NAME)))
     cur, pooled = d['curves_test_fitted'], d['pooled']
     fig, axes = plt.subplots(1, 2, figsize=(10.0, 3.9))
 
@@ -87,7 +94,7 @@ def main():
     axes[1].legend(h, ['argmax', 'calibrated, 5 % miss', 'calibrated, 10 % miss'],
                    fontsize=7, frameon=False, loc='upper right')
     fig.tight_layout()
-    out = os.path.join(FIGS, 'figB2_dispatch.pdf')
+    out = os.path.join(FIGS, 'figB2_dispatch' + OUT_SUFFIX + '.pdf')
     fig.savefig(out, bbox_inches='tight')
     print(f'wrote {out}')
 
