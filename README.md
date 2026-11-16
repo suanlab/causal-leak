@@ -8,11 +8,13 @@ This repository is the follow-up to our 2023 Sensors paper. It measures how
 much of the reported 99.79 % accuracy on the Korean AI Hub water-leak benchmark
 comes from recognising which sensor produced a recording or re-learning the
 sensor's own trigger. It evaluates leak typing with whole regions, counties or
-later dates held out, and scores models under a crew-dispatch rule at
+later dates held out, and compares models in a post-alarm triage simulation at
 thresholds calibrated on training data.
 
-It is the reproducibility harness for a manuscript in preparation: experiment
-code, raw result files, logs, and the scripts that render every figure.
+It is the reproducibility harness for an article submitted to *Data Mining and
+Knowledge Discovery*: experiment code, raw result files, logs, the scripts that
+render every figure, and `src/cited_numbers.py`, which prints the article's
+numbers from the result files. See `REPLICATION.md` (`make reproduce`).
 
 > **Correction (October 2026).** An earlier version of this repository reported
 > a 121–422 Hz "causal band" as carrying the generalisable leak signal. That band
@@ -27,14 +29,15 @@ code, raw result files, logs, and the scripts that render every figure.
 
 Five-class leak typing, gradient-boosted classifier unless stated.
 
-| Evaluation | Accuracy | Macro-F1 (5) | Leak-class macro-F1 |
+| Evaluation | Accuracy | Macro-F1 (5) | Alarm-class macro-F1 |
 |---|---:|---:|---:|
 | Sensor-identifier lookup + one `lrate` rule (no spectrum used) | 0.9977 | – | – |
 | Row-level cross-validation, with identifier columns | 0.945 | 0.933 | 0.916 |
 | Group-CV by installation, with identifier columns | 0.553 | 0.419 | 0.274 |
 | Leave-one-region-out, signal only (weighted) | 0.568 | 0.301 | 0.298 |
 
-*Leak-class macro-F1* is the mean F1 over the leak classes (in/out/noise/other)
+*Alarm-class macro-F1* (called leak-class macro-F1 in older result files) is the
+mean F1 over the four classes the device alarmed on (in/out/noise/other)
 present in the evaluation set. The normal class is excluded from the average
 because the device's own trigger count separates it (finding 3). Its
 reference is 1/K for K leak classes present, which is what a guess matched to
@@ -45,7 +48,7 @@ classes; its reference is 0.264.
 Typing on the canonical held-out region (Chungbuk, region 43; reference 0.25),
 leakage-free features:
 
-| Model | Leak-class macro-F1 |
+| Model | Alarm-class macro-F1 |
 |---|---:|
 | LightGBM | 0.311 |
 | Tree-only soft average (flat + hierarchical) | 0.298 |
@@ -83,8 +86,8 @@ leakage-free features:
    which explains its AUC of 1.000 everywhere. Binary detection on this
    benchmark therefore cannot be evaluated as leak detection
    (`src/run_device_rule.py`, `results/FINDINGS_LRATE_CONFOUND.md`).
-4. **Leak typing near chance under holdout.** Typing among
-   in/out/noise/other reaches leak-class macro-F1 0.298 with regions held out
+4. **Typing near a class-share guess under holdout.** Typing among
+   in/out/noise/other reaches alarm-class macro-F1 0.298 with regions held out
    (reference 0.264). It is 0.234 over 16 county holdouts (reference 0.260),
    and 0.26–0.28 on recordings after a date cutoff (reference 0.25). On the six
    four-class regions it is 0.045 above the reference. That excess is above
@@ -101,20 +104,22 @@ leakage-free features:
    regions, the 121–422 Hz band is selected in 2 of 7 regions. Selecting along a
    temporal axis instead retains it, so a band's generalisation claim depends on
    the axis named.
-7. **Crew dispatch.** A crew is sent when a recording is typed in or out.
-   Thresholds are calibrated on training regions only, through region-grouped
-   inner folds. Once the device has triggered, every candidate separates in/out
-   leaks from noise/other with AUC 0.594–0.598 pooled over eight regions.
-   Pooled over eight regions, calibrated miss rates transfer, but catching
-   90 % of leaks sends crews to 78.5–81.0 % of noise/other recordings. Region
-   by region, the 10 % target misses 2.4–50.2 % of leaks. Averaging scores per
-   sensor does not help (AUC 0.59). Models differ
-   by a few points, and the direction changes with the target, so no model is
-   recommended. An earlier version of this repository recommended a tree
-   ensemble over LightGBM on argmax false alarms (4 against 14 sensors). That
-   comparison is withdrawn: under the dispatch rule it is a trade-off, and the
-   normal-class false alarms it counted are all removed by the device's own
-   trigger (`src/analyze_dispatch.py`, `results/FINDINGS_DISPATCH.md`).
+7. **Post-alarm triage simulation.** Rows are sensor-days, not incidents, so
+   this is a triage simulation, not a field evaluation: a crew would be sent
+   when a recording is typed in or out. Thresholds are calibrated on training
+   regions only, through region-grouped inner folds, on all 534 signal columns
+   (`DISPATCH_FEATURES=all`, so calibration is fully nested). Once the device
+   has triggered, every candidate separates in/out leaks from noise/other with
+   AUC 0.583–0.588 pooled over eight regions. Pooled, calibrated miss rates
+   transfer (9.1–10.6 % at a 10 % target), but catching 90 % of leaks still
+   dispatches to 79.6–81.2 % of noise/other recordings. Region by region, the
+   10 % target misses 1.5–59.4 % of leaks. Models differ by a few points and
+   the direction changes with the target, so no model is recommended. The same
+   comparison on the nested band set (`results/dispatch_op/`) is kept as a
+   sensitivity analysis (AUC 0.594–0.598; 2.4–50.2 % by region). An earlier
+   version of this repository recommended a tree ensemble over LightGBM on
+   argmax false alarms; that comparison is withdrawn (`src/analyze_dispatch.py`,
+   `results/FINDINGS_DISPATCH.md`).
 
 ## Layout
 

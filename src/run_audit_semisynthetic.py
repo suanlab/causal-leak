@@ -40,6 +40,11 @@ T3 size: unselected releases at six thresholds, every interior bin, each
 replicate release resampled by recording file.
 A3 on CWRU: fault-type typing (inner race / ball / outer race) with each
 fault size held out, against 1/K.
+T3 by number of clusters (simulation): G clusters of 18 recordings, counts
+Binomial(10, p) with p ~ Beta(2, 2) per cluster; the selected release drops
+count 8 (and counts below 3), the unselected one drops nothing; T3 at bin 8.
+The 40-file CWRU release has too few clusters for T3 to pass once the
+design effect is accounted for; this shows how many are needed.
 
 The planted 'quiet' class correlates with the real normal baseline, whose
 amplitudes are low; the water release has the same structure.
@@ -302,6 +307,27 @@ def a3_cwru(feats, peaks, label, bearing):
     return out
 
 
+def t3_cluster_sim(rng, sizes=(40, 100, 300, 1000, 2710), m=18, reps=200,
+                   eps_list=(0.0, 0.1, 0.25, 1.0)):
+    out = {}
+    for G in sizes:
+        rows = []
+        for eps in eps_list:
+            rej = 0
+            for _ in range(reps):
+                p = rng.beta(2, 2, G)
+                g = rng.binomial(10, np.repeat(p, m))
+                cl = np.repeat(np.arange(G), m)
+                keep = (g >= 3) & ((g != 8) | (rng.random(len(g)) < eps))
+                t = depletion_test(g[keep], cl[keep], boundary=8, n_boot=300,
+                                   rng=rng)['boundary']
+                rej += t['pass']
+            rows.append({'epsilon_kept': eps, 'reject_rate': rej / reps})
+            print(f'  T3 cluster sim G={G} eps={eps}: pass rate {rej / reps:.3f}', flush=True)
+        out[str(G)] = rows
+    return out
+
+
 def main():
     rng = np.random.default_rng(SEED)
     feats, peaks, label, bearing, load, rec_id = load_cwru()
@@ -317,6 +343,7 @@ def main():
     out['t3_power'] = t3_power(peaks, label, rec_id, T, rng)
     out['t3_size'] = t3_size(peaks, label, rec_id, rng)
     out['a3_cwru'] = a3_cwru(feats, peaks, label, bearing)
+    out['t3_cluster_sim'] = t3_cluster_sim(rng)
     out['a1_simulation'] = a1_simulation(rng)
     with open(os.path.join(RES, 'audit_semisynthetic_results.json'), 'w') as fh:
         json.dump(out, fh, indent=2)

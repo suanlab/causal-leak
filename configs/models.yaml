@@ -35,7 +35,8 @@ tabular_deep:
   tabnet:
     source: src/run_extra_baselines.py:run_tabnet
     params: {n_d: 32, n_a: 32, n_steps: 4, gamma: 1.5, lambda_sparse: 1.0e-4,
-             max_epochs: 80, patience: 15, batch_size: 2048, virtual_batch_size: 512,
+             max_epochs: 80, patience: 15, early_stopping_metric: validation accuracy,
+             batch_size: 2048, virtual_batch_size: 512,
              weights: inverse class frequency}
 
 networks:

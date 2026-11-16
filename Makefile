@@ -15,7 +15,7 @@ all: experiments multiseed figures verify
 
 # One command for the article: data lineage, public bearing data, every
 # experiment and figure, then the cited numbers and the gate.
-reproduce: provenance cwru experiments numbers verify
+reproduce: provenance cwru experiments multiseed numbers verify
 
 provenance:
 	$(PYTHON) src/check_provenance.py
@@ -77,7 +77,7 @@ clean-cache:
 
 help:
 	@echo "Targets:"
-	@echo "  reproduce    - provenance + CWRU + experiments + cited numbers + gate"
+	@echo "  reproduce    - provenance + CWRU + experiments + multiseed + cited numbers + gate"
 	@echo "  provenance   - hash and row-check the AI Hub release (needs the data)"
 	@echo "  cwru         - fetch the public CWRU bearing data"
 	@echo "  experiments  - every experiment (scripts/reproduce_all.sh)"

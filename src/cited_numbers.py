@@ -1,12 +1,16 @@
-"""Print every number the DMKD article cites, from the released result files.
+"""Print the numbers the DMKD article reports, from the released result files.
 
 Each line is  <section>  <quantity>  <value>, with values formatted as the
-article prints them. Only result files under results/ are read, so the
-script runs without the AI Hub data. Recompute the result files with
-scripts/reproduce_all.sh, then run this script to see what the article
-should say.
+article prints them; --tables also prints the rows of every data table
+(src/article_tables.py). Only result files under results/ are read, so the
+script runs without the AI Hub data. It covers the results computed from
+result files; counts read from the raw release (provenance, per-site sensor
+counts) come from src/check_provenance.py and the experiment scripts, and
+fixed settings (thresholds, hyperparameters) from configs/models.yaml.
+Recompute the result files with scripts/reproduce_all.sh, then run this
+script to see what the article should say.
 
-Usage: python src/cited_numbers.py [--json]
+Usage: python src/cited_numbers.py [--json] [--tables]
 """
 import json
 import os
@@ -78,6 +82,10 @@ def main():
         f"{dp['boundary']['observed']} / {num(int(dp['boundary']['expected']))}")
     put('5.2 A2', 'T3 floor bin: observed / reference',
         f"{dp['floor']['observed']} / {num(int(dp['floor']['expected']))}")
+    put('5.2 A2', 'T3 design effects (boundary / floor)',
+        f"{dp['boundary']['design_effect']:.1f} / {dp['floor']['design_effect']:.1f}")
+    put('5.2 A2', 'T3 95 % upper bounds of the ratios (boundary / floor)',
+        f"{dp['boundary']['ratio_upper95']:.3f} / {dp['floor']['ratio_upper95']:.3f}")
     put('5.2 A2', 'superseded step-10 grid: misses',
         dr['grid_search']['grid10']['pooled_loro']['missed'])
     su = ai['sufficiency']
@@ -161,17 +169,109 @@ def main():
             f"{'pass' if r['T1']['pass'] else 'fail'} / {r['T2']['model_errors']} / "
             f"{r['T2']['count_errors']} / {r['T3']['boundary']['observed']} / "
             f"{r['T3']['boundary']['expected']:.0f}; {r['T3']['boundary']['ratio_upper95']:.2f}")
+    put('3.3 planted', 'S1 T3 design effect', ss['a2']['S1']['T3']['boundary']['design_effect'], '{:.1f}')
     put('3.3 planted', 'A1 lift: bearing / load (p)',
         f"{ss['a1_real']['bearing']['lift']:.3f} ({ss['a1_real']['bearing']['p_value']:.3f}) / "
         f"{ss['a1_real']['load']['lift']:.3f} ({ss['a1_real']['load']['p_value']:.2f})")
     rr = np.array([x['reject_rate'] for x in ss['t3_size']])
-    put('3.3 planted', 'T3 size: mean false rejection / worst case',
-        f'{rr.mean():.3f} / {rr.max():.3f}')
+    put('3.3 planted', 'T3 false passes: mean / largest',
+        f'{rr.mean():.4f} / {rr.max():.3f}')
+    cs = ss['t3_cluster_sim']
+    q = {G: [r['reject_rate'] for r in rows if r['epsilon_kept'] == 0.25][0] for G, rows in cs.items()}
+    put('3.3 planted', 'T3 pass rate with a quarter kept: 40 / 300 clusters (1 from 1,000 up)',
+        f"{q['40']:.3f} / {q['300']:.3f}")
     put('3.3 planted', 'T3 power by share restored',
-        ', '.join(f"{x['epsilon']:g}: {x['reject_rate']:.1f}" for x in ss['t3_power']))
+        ', '.join(f"{x['epsilon']:g}: {x['reject_rate']:.3f}" for x in ss['t3_power']))
     a3 = ss['a3_cwru']
     put('3.3 planted', 'A3 CWRU macro-F1, fault size held out (007 / 014 / 021)',
         ' / '.join(num(a3[f'held_out_{k}']['macro_f1']) for k in ('007', '014', '021')))
+
+    # ---- further text numbers -------------------------------------------
+    k4r = ai['region_level']['signal']['k4_references']
+    put('5.4 A3', 'six regions: uniform / training-prior guess / oracle 1/K / typing',
+        f"{k4r['uniform_guess']:.3f} / {k4r['training_prior_guess']:.3f} / "
+        f"{k4r['oracle_reference']:.3f} / {k4r['alarm_f1']:.3f}")
+    ref = lad['signal_loro']['leak_rows_weighted']['k2']
+    g = sh['ladder_group_sensor']['signal']
+    put('5.3 ladder', 'excess over reference: sensor / site / region',
+        f"{g['alarm_f1_mean'] - 0.25:+.3f} / {lad['signal_group_site']['f1_macro_leak'] - 0.25:+.3f} / "
+        f"{ref['leak_weighted'] - ref['leak_weighted_chance']:+.3f}")
+    put('5.3 ladder', 'identifier gain in accuracy points: row-CV / sensor-held-out',
+        f"{100 * (m[('full', 'random')]['acc_mean'] - m[('signal', 'random')]['acc_mean']):.1f} / "
+        f"{100 * (sh['ladder_group_sensor']['full']['acc_mean'] - g['acc_mean']):.1f}")
+    put('5.3 ladder', 'region 47 site-fold reference', wr['47']['site']['chance_mean'])
+    fr = [f['alarm_f1'] for r_ in ('46', '47') for f in wr[r_]['site']['folds']]
+    put('5.3 ladder', 'site-fold range, regions 46/47', f'{min(fr):.2f}--{max(fr):.2f}')
+    lw = L('leak_f1_results.json')['ladder']['signal_loro']
+    put('5.3 ladder', 'LORO alarm-F1 weighted by all recordings / reference',
+        f"{lw['f1_macro_leak_weighted']:.3f} / {lw['chance_weighted']:.3f}")
+    k3 = lw['leak_rows_weighted']['k3']
+    put('5.3 ladder', 'K>=3 regions: alarm-weighted / reference; unweighted / reference',
+        f"{k3['leak_weighted']:.3f} / {k3['leak_weighted_chance']:.3f}; "
+        f"{k3['unweighted']:.3f} / {k3['unweighted_chance']:.3f}")
+    tm = L('leak_f1_results.json')['temporal']['models']
+    put('5.4 A3', 'temporal holdout alarm-F1 (range over tree models)',
+        f"{min(v['f1_macro_leak'] for v in tm.values()):.3f}--{max(v['f1_macro_leak'] for v in tm.values()):.3f}")
+    sw = L('irm_sweep_results.json')
+    sys.path.insert(0, os.path.dirname(__file__))
+    from summarize_leak_f1 import leak_f1, per_class_from_cm, present_from_cm
+    sv = [leak_f1(per_class_from_cm(r['test']['cm']), present_from_cm(r['test']['cm'])) for r in sw]
+    put('4.5 models', 'IRM sweep alarm-F1 range', f'{min(sv):.3f}--{max(sv):.3f}')
+    sa = d['sensor_level_auc']
+    put('5.6 A4', 'per-sensor AUC: leak vs noise / in vs out',
+        f"{min(v['auc_leak_vs_nuisance'] for v in sa.values()):.3f}--{max(v['auc_leak_vs_nuisance'] for v in sa.values()):.3f} / "
+        f"{min(v['auc_in_vs_out'] for v in sa.values()):.3f}--{max(v['auc_in_vs_out'] for v in sa.values()):.3f}")
+    io = d['auc_in_vs_out_pooled']
+    put('5.4 A3', 'in vs out AUC pooled', f"{min(io.values()):.2f}--{max(io.values()):.2f}")
+    lvn = {r: v['auc_leak_vs_nuisance'] for r, v in d['per_region'].items() if v['auc_leak_vs_nuisance']}
+    for r_ in ('44', '48'):
+        put('5.6 A4', f'leak-vs-noise AUC region {r_}',
+            f"{min(lvn[r_].values()):.2f}--{max(lvn[r_].values()):.2f}")
+    mq = ai['margin_all']['quartiles']
+    put('5.6 A4', 'leak-vs-noise AUC by amplitude quartile (soft avg; LightGBM first/last)',
+        ', '.join(f"{q['tree_only_soft_avg']['leak_vs_nuisance_auc']:.3f}" for q in mq) +
+        f"; {mq[0]['lightgbm']['leak_vs_nuisance_auc']:.3f} / {mq[3]['lightgbm']['leak_vs_nuisance_auc']:.3f}")
+    pn = [100 * d['per_region'][r_]['miss10'][mm]['nuisance_dispatch'] / d['per_region'][r_]['miss10'][mm]['n_nuisance']
+          for r_ in d['per_region'] for mm in ('tree_only_soft_avg', 'lightgbm')
+          if d['per_region'][r_]['miss10'][mm]['n_nuisance']]
+    put('5.6 A4', 'per-region nuisance share at miss10 (%)', f'{min(pn):.1f}--{max(pn):.1f}')
+    c43 = [100 * d['per_region']['43']['miss10'][mm]['missed'] / d['per_region']['43']['miss10'][mm]['n_leak']
+           for mm in ('tree_only_soft_avg', 'lightgbm')]
+    put('5.6 A4', 'canonical region missed leaks at miss10 (%)', f'{min(c43):.0f}--{max(c43):.0f}')
+    dn = L('dispatch_operating_points_results.json')
+    put('5.6 A4', 'nested band set (sensitivity): pooled AUC',
+        f"{min(dn['auc_leak_vs_nuisance_pooled'].values()):.3f}--{max(dn['auc_leak_vs_nuisance_pooled'].values()):.3f}")
+    pp = [100 * v['all_regions']['missed'] / v['all_regions']['n_leak'] for v in dn['pooled']['miss10'].values()]
+    pr = [100 * dn['per_region'][r_]['miss10'][mm]['missed'] / dn['per_region'][r_]['miss10'][mm]['n_leak']
+          for r_ in dn['per_region'] for mm in ('tree_only_soft_avg', 'lightgbm')]
+    put('5.6 A4', 'nested band set (sensitivity): miss10 pooled / per region (%)',
+        f'{min(pp):.1f}--{max(pp):.1f} / {min(pr):.1f}--{max(pr):.1f}')
+    a10 = d['pooled']['miss10']
+    base = a10['lightgbm']['all_regions']['n_leak'] / (a10['lightgbm']['all_regions']['n_leak'] + a10['lightgbm']['all_regions']['n_nuisance'])
+    prec = [(v['all_regions']['n_leak'] - v['all_regions']['missed']) /
+            (v['all_regions']['n_leak'] - v['all_regions']['missed'] + v['all_regions']['nuisance_dispatch'])
+            for v in a10.values()]
+    avoided = [100 - 100 * v['all_regions']['nuisance_dispatch'] / v['all_regions']['n_nuisance'] for v in a10.values()]
+    put('App. A', 'miss10: nuisance avoided (%) / base rate / precision (%)',
+        f"{min(avoided):.1f}--{max(avoided):.1f} / {100 * base:.1f} / {100 * min(prec):.1f}--{100 * max(prec):.1f}")
+    ex = d['typing_excess_over_reference']
+    for unit in ('sensor', 'site'):
+        e_ = ex[f'four_class_{unit}']
+        put('5.4 A3', f'alarm-weighted excess, {unit}-resampled (soft avg; LightGBM)',
+            f"{e_['tree_only_soft_avg']['excess']:.3f} [{e_['tree_only_soft_avg']['lo']:.3f}, {e_['tree_only_soft_avg']['hi']:.3f}]; "
+            f"{e_['lightgbm']['excess']:.3f} [{e_['lightgbm']['lo']:.3f}, {e_['lightgbm']['hi']:.3f}]")
+    be = d['cost_break_even']['argmax']['tree_only_soft_avg_vs_lightgbm']['all_regions']['ratio']
+    put('App. A', 'argmax break-even cost ratio (soft avg vs LightGBM)', be, '{:.2f}')
+
+    if '--tables' in sys.argv:
+        sys.path.insert(0, os.path.dirname(__file__))
+        import article_tables as at
+        for name, fn in (('Table ladder', at.ladder_rows), ('Table regions', at.regions_rows),
+                         ('Table typing', at.typing_rows), ('Table transfer', at.transfer_rows),
+                         ('Table A1 triage', at.dispatch_rows), ('Table B models', at.models_rows)):
+            for line in fn().splitlines():
+                if line.strip() and line.strip() != '\\midrule':
+                    put(name, 'row', line.replace('{,}', ',').replace('\\\\', '').strip())
 
     if '--json' in sys.argv:
         print(json.dumps([{'section': s, 'quantity': q, 'value': v} for s, q, v in ROWS],

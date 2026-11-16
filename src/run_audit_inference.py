@@ -152,6 +152,9 @@ def region_level(rng):
         res['k4_references'] = {k: float(np.mean([r[k] for r in k4])) for k in
                                 ('oracle_reference', 'uniform_guess', 'training_prior_guess',
                                  'alarm_f1')}
+        for ref_ in ('uniform_guess', 'training_prior_guess'):
+            res['k4_references'][f'excess_over_{ref_}'] = summarise(
+                [r['alarm_f1'] - r[ref_] for r in k4], rng)
         for name, sel in (('k2', lambda r: True), ('k4', lambda r: r['K'] == 4)):
             rs = [r for r in rows if sel(r)]
             res[name] = {m: summarise([r[f'{m}_excess'] for r in rs], rng)

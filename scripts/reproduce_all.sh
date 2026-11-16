@@ -1,21 +1,17 @@
 #!/usr/bin/env bash
-# End-to-end reproduction script for the EAAI submission.
+# End-to-end reproduction of every experiment and figure behind the DMKD
+# article (Identifier Leakage and a Device-Rule Class in a Sensor Benchmark).
 #
-# Phase 1  (original Sensors paper, kept for replication):
-#   matrix / LORO / freq / causal-bands / IRM-MLP / IRM-CNN / hierarchical
-#   / cross-region / robust-bands / IRM-sweep / augmentation / PGA / ensemble
+# Order: shortcut matrix and LORO; nested band selection (must precede
+# anything that reads the leakage-free band set); invariance, alignment and
+# tabular baselines; county and temporal holdouts; the audit steps (identifier
+# lookup, device rule, region-level inference, sensor holdout, planted
+# shortcuts on CWRU); the triage comparison on all signal columns (main) and
+# on the nested band set (sensitivity); figures.
 #
-# Phase 2  (EAAI revision E2-E7):
-#   sigungu OOD (E2) / extra tabular baselines (E3) / domain alignment (E4)
-#   / cost metrics (E5+E7) / compute cost benchmark (E6)
-#
-# Correction (October 2026): nested band selection, multi-seed tabular
-#   baselines, temporal split, calibrated-threshold sweep, sensor-level
-#   operational comparison, and the binary-detection confound check.
-# November 2026: the device trigger-count rule, and the dispatch-rule
-#   comparison at training-calibrated operating points.
-#
-# Multi-seed sweep (E1) is run via the dedicated `make multiseed` target.
+# The five-seed sweep is run by `make multiseed` (part of `make reproduce`).
+# Earlier stages of this repository served the 2023 Sensors replication and
+# an abandoned EAAI submission; their scripts are kept and still run here.
 #
 # Failure behaviour: hard-fail on the first non-zero exit so missing artifacts
 # can never be hidden from downstream summaries.
@@ -38,7 +34,7 @@ if [[ -z "${PYTHON:-}" ]]; then
   fi
 fi
 
-PAPER_DIR="${PAPER_DIR:-paper-eaai}"
+PAPER_DIR="${PAPER_DIR:-paper-dmkd}"
 
 mkdir -p results results/figs
 
@@ -160,10 +156,9 @@ if [[ -f "${PAPER_DIR}/paper.tex" ]]; then
     bibtex paper
     pdflatex -interaction=nonstopmode -halt-on-error paper.tex
     pdflatex -interaction=nonstopmode -halt-on-error paper.tex
-    pdflatex -interaction=nonstopmode -halt-on-error highlights.tex
   ) 2>&1 | tee "${ROOT}/results/run_paper.log"
   echo
-  echo "Outputs: ${PAPER_DIR}/paper.pdf, ${PAPER_DIR}/highlights.pdf"
+  echo "Outputs: ${PAPER_DIR}/paper.pdf"
 else
   echo
   echo "==> paper: skipped (${PAPER_DIR}/ not present in this checkout)"
