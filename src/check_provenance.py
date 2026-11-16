@@ -20,7 +20,10 @@ redistributing any data:
    (S-AABBBCCCDD), so the region of every recording follows from the site code
    distributed by AI Hub.
 
-Output: results/provenance_results.json (hashes, counts, check outcomes).
+5. The schema: column names and pandas dtypes of the distributed and derived
+   files, so a fresh download can be compared column by column.
+
+Output: results/provenance_results.json (hashes, counts, schema, check outcomes).
 """
 import glob
 import hashlib
@@ -105,6 +108,10 @@ def main():
             col: bool((site.str[lo:hi].astype(int) == der[col]).all())
             for col, (lo, hi) in CODES.items()}
         rec['site_name_missing'] = int(der['site_name'].isna().sum())
+        if split == 'train':
+            out['schema'] = {
+                'distributed_columns': [[c, str(t)] for c, t in raw.dtypes.items()],
+                'added_columns': [[c, str(der[c].dtype)] for c in added]}
         out['splits'][split] = rec
         print(f"{split}: distributed {rec['distributed_rows']}, derived {rec['derived_rows']}, "
               f"matched {rec['derived_rows_matched']}, missing {rec['distributed_rows_missing_from_derived']}, "

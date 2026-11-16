@@ -126,7 +126,7 @@ leakage-free features:
 ```
 causal-leak/
 ├── README.md, LICENSE (MIT), REPLICATION.md, Dockerfile, Makefile
-├── requirements.txt, requirements-eaai.txt
+├── requirements-lock.txt (exact), requirements.txt, requirements-eaai.txt (ranges)
 ├── scripts/
 │   ├── reproduce_all.sh              full experiment + figure pipeline
 │   └── verify.sh                     code / figure / phrase consistency gate
@@ -184,9 +184,9 @@ causal-leak/
 ## Reproducing
 
 ```bash
-# Environment (Python 3.12, CUDA 12.1 torch)
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt -r requirements-eaai.txt
+# Environment: Python 3.12.3 with the exact versions used for the article
+python3.12 -m venv .venv
+.venv/bin/pip install -r requirements-lock.txt
 
 # Data — download from AI Hub (https://www.aihub.or.kr/, dataset 138)
 # and either:

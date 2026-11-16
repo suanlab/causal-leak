@@ -1,10 +1,10 @@
 # End-to-End Replication Recipe
 
 This document is the replication appendix for the article *Identifier
-Leakage and Selection-Defined Classes in a Sensor Benchmark: An Audit of
+Leakage and a Device-Rule Class in a Sensor Benchmark: A Forensic Audit of
 Water-Leak Classification* (submitted to Data Mining and Knowledge Discovery).
-It covers everything needed to reproduce every number the article cites from
-a clean machine.
+It covers everything needed to reproduce the article's results from a clean
+machine.
 
 ## Quick path
 
@@ -94,46 +94,36 @@ by `scripts/fetch_cwru.sh` (40 files; set `CWRU_DIR` to relocate).
 
 ## Reproducing every figure and table
 
-A single shell command reproduces the entire results pipeline,
-including the multi-seed sweep:
+`make reproduce` (or `scripts/reproduce_all.sh` followed by `make multiseed`)
+runs every experiment in dependency order. The steps behind the article are:
 
-```bash
-bash src/run_multiseed.sh
-```
+| Article | Script(s) | Result file(s) |
+|---|---|---|
+| Data lineage (Sec. 4.6) | `src/check_provenance.py` | `provenance_results.json` |
+| Identifier lookup, A1 (Sec. 5.1) | `src/run_identifier_audit.py`, `src/run_audit_inference.py lift` | `identifier_audit_results.json`, `audit_inference_results.json` |
+| Device rule, T1–T3 (Sec. 5.2) | `src/run_device_rule.py`, `src/run_audit_inference.py sufficiency` | `device_rule_results.json` |
+| Evaluation ladder (Table 5, Fig. 2) | `src/run_matrix.py`, `src/run_sensor_holdout.py`, `src/run_loro.py`, `src/summarize_leak_f1.py` | `matrix_results.json`, `sensor_holdout_results.json`, `loro_results.json`, `leak_f1_results.json` |
+| Region-level inference (Sec. 5.4) | `src/run_audit_inference.py region_level` | `audit_inference_results.json` |
+| County and temporal holdouts | `src/run_sigungu_ood.py`, `src/run_temporal_split.py` | `sigungu_ood_results.json`, `temporal_split_results.json` |
+| Model families (Appendix B) | `src/run_extra_baselines*.py`, `src/run_irm_*.py`, `src/run_domain_alignment.py` (+ `CAUSAL_VAL_MODE=region`), `make multiseed` | `extra_baselines_multiseed.json`, `irm_*_results*.json`, `domain_alignment_results*.json`, `multiseed_summary.json` |
+| Triage simulation, A4 (Sec. 5.6, App. A) | `DISPATCH_FEATURES=all src/run_dispatch_operating_points.py <region>`, `DISPATCH_FEATURES=all src/analyze_dispatch.py` (nested-band sensitivity without the variable) | `dispatch_op_all/`, `dispatch_operating_points_all_results.json` |
+| Planted shortcuts (Sec. 3.3) | `scripts/fetch_cwru.sh`, `src/run_audit_semisynthetic.py` | `audit_semisynthetic_results.json` |
 
-This runs:
-
-1. Multi-seed re-runs of `run_irm_mlp.py`, `run_irm_cnn.py`,
-   `run_pga.py`, `run_augmentation.py` for seeds {0, 1, 2, 3}.
-   Combined with the existing seed-42 results, this populates the
-   five-seed numbers reported throughout the paper.
-2. Aggregation: `python src/aggregate_multiseed.py` produces
-   `results/multiseed_summary.{json,md}`.
-
-For the additional baseline experiments:
-
-```bash
-python src/run_sigungu_ood.py        # E2: 시군구-level OOD
-python src/run_extra_baselines.py    # E3: LightGBM, CatBoost, TabNet, RF
-python src/run_domain_alignment.py   # E4: DeepCORAL, DANN, MMD-DG
-python src/run_cost_metrics.py       # E5+E7: detection-rate@1%FAR, threshold sweep
-python src/run_compute_cost.py       # E6: train/infer time, RAM, GPU memory
-```
-
-Each script writes its results to `results/<name>_results.json`
-together with a `.log` file capturing console output.
+Each script writes its results to `results/<name>_results.json` together
+with a `.log` file capturing console output. `configs/models.yaml` gives every
+model's configuration with the command that trains it.
 
 ## Figure regeneration
 
 ```bash
-python src/make_figures.py        # fig 1, 2, 3 (matrix, LORO, bands)
-python src/make_fig5_causal.py    # fig 5 (causal-band retraining)
-python src/make_fig6_irm.py       # fig 6 (IRM/GroupDRO comparison)
-python src/make_fig7_robust.py    # fig 7 (bootstrap CIs + SHAP)
-python src/make_fig8_boost.py     # fig 8 (augmentation + ensemble)
+FIG_TERM=alarm python src/make_figB1_ladder.py      # Fig. 2 (evaluation ladder)
+FIG_TERM=alarm python src/make_figB3_models.py      # Fig. B2 (model families)
+FIG_DISPATCH=all python src/make_figB2_dispatch.py  # Fig. A1 (triage trade-off)
+python src/make_figB5_operating.py                  # Fig. 1 (operating characteristics)
 ```
 
-All output is in `results/figs/*.pdf` (vector format, no PNG dependencies).
+All output is in `results/figs/*.pdf` (vector format). `make figures` also
+regenerates the figures of the earlier analyses kept in this repository.
 
 ## Expected runtime
 
